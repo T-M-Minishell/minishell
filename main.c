@@ -28,6 +28,8 @@ int main() {
 
 		// Free the memory allocated by readline
 		free(line);
+		// test
+
 	}
 	return 0;
 }
