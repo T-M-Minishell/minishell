@@ -8,6 +8,7 @@ int main() {
 	while (1) {
 		// Print the prompt
 		printf("%s", prompt);
+		printf("merge test\n");
 
 		// Read user input using readline
 		line = readline("");  // Consider memory leaks from readline
