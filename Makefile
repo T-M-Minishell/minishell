@@ -19,5 +19,5 @@ clean:
 fclean :clean
 	rm -f $(NAME)
 
-re :fclean al
+re :fclean all
 
