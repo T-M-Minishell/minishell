@@ -16,6 +16,8 @@ int main() {
 			break;
 		}
 
+		for (int i = 0; i < 5; i++)
+			printf("here");
 		// Add the line to history
 		add_history(line1);
 
