@@ -3,21 +3,21 @@
 
 int main() {
 	char *prompt = "minishell$ ";
-	char *line;
+	char *line1;
 
 	while (1) {
 		// Print the prompt
 		printf("%s", prompt);
 
 		// Read user input using readline
-		line = readline("");  // Consider memory leaks from readline
+		line1 = readline("");  // Consider memory leaks from readline
 
-		if (line == NULL) {  // Handle Ctrl-D (EOF)
+		if (line1 == NULL) {  // Handle Ctrl-D (EOF)
 			break;
 		}
 
 		// Add the line to history
-		add_history(line);
+		add_history(line1);
 
 		// Parse the input: separate commands and arguments
 		// (implementation details in next step)
@@ -26,7 +26,7 @@ int main() {
 		// (implementation details in next step)
 
 		// Free the memory allocated by readline
-		free(line);
+		free(line1);
 		//heeeeeey
 		//heeeei
 		//heiiiii
