@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <termios.h>
 
  ///handle ctrl_fct
  void	ctrl_commands(void);

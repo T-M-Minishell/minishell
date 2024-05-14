@@ -4,7 +4,7 @@
 int main(int argc, char **argv)
 {
 	(void)argv;
-	char *prompt = "\033[31mminihell*$>\033[0m ";
+	char *prompt = "\033[31mminihell*$>\033[0m";
 	char *line;
 	if(argc != 1)
 	{
