@@ -36,4 +36,4 @@ Interesting one - https://github.com/alouane04/BashClone
 # Toughts
 
 -Based on what I got from today I would say best the approach for both of us is PARCING 
-Precedence Climbing  - for parcing it s the easiest to understand and apply 
+**Precedence Climbing**  - for parcing it s the easiest to understand and apply 
