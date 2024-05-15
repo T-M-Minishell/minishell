@@ -10,6 +10,7 @@ typedef enum s_token_type
 	PIPE,
 	WORD,
 	REDIRECT,
+	QUOTE,
 }						t_token_type;
 
 typedef struct s_list_token
