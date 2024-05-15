@@ -17,6 +17,7 @@ typedef struct s_input
 {
 	char	*prompt;
 	char	*line;
+	int		quote_open;
 
 }	t_input;
 
