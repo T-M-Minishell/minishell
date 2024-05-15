@@ -1,7 +1,7 @@
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
-SRC = main.c handle_ctrl_commands.c
+SRC = main.c handle_ctrl_commands.c handle_line_input.c
 LDFLAGS = -lreadline
 NAME = minishell
 OBJ = $(SRS:.c=.o)
@@ -20,4 +20,7 @@ fclean :clean
 	rm -f $(NAME)
 
 re :fclean all
+
+# run: $(NAME)
+# 	./$(NAME)
 

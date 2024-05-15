@@ -11,7 +11,25 @@
 #include <signal.h>
 #include <termios.h>
 
- ///handle ctrl_fct
- void	ctrl_commands(void);
+#define MAX_HISTORY 100
+
+typedef struct s_input
+{
+	char	*prompt;
+	char	*line;
+
+}	t_input;
+
+// typedef struct s_history {
+//     char *lines[MAX_HISTORY];
+//     int count;
+// } t_history;
+
+ ///handle ctrl_commands
+void	ctrl_commands();
+
+ // handle line_input
+void	handle_line(t_input *input);
+
 
 #endif

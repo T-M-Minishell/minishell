@@ -64,3 +64,25 @@ git merge origin/main
 ---
 
 ## Feel free to add more (50% of the info is from people wo did a good minishell, 50% from online)
+
+
+
+
+
+
+
+
+THINGS that are done,(hopefully :)
+	--Display a prompt when waiting for a new command.
+	--Interactive mode
+		-CTRL-C
+		-CTRL-D
+		-CTRL-\
+
+
+On going--
+	-Handle single quote
+	-Handle double quote
+	-history
+
+
