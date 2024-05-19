@@ -38,5 +38,11 @@ void	handle_line(t_input *input);
 	//history
 void	create_history(t_history *history, char *line);
 
+ /// built_ins
+ void	mini_echo(char **args);
+ int	mini_cd(char **args);
+ void	mini_pwd(void);
+ void	mini_exit(void);
+
 
 #endif

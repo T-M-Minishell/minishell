@@ -6,20 +6,14 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:05 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/19 15:12:21 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:15:57 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minishell.h"
 
-// void	ctrl_c_handler(int num)
-// {
-// 	(void)num;
-// 	printf("\n\033[31mminihell*$>\033[0;34m");
 
-
-// }
 void ctrl_c_handler(int sig) {
     (void)sig;
     write(STDOUT_FILENO, "\n", 1);  // Print newline for clean prompt display

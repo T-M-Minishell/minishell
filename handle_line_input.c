@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/15 14:57:54 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/19 17:17:56 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,42 @@ void print_pid(void)
 
 void	handle_line(t_input *input)
 {
+	char *args[99];
+	
 	int i;
 
-	if (input->prompt[0] == '\0')
-		return ;
-	if (input->line == NULL) // Handle Ctrl-D (EOF)
+	i = 0;
+		
+	// Handle Ctrl-D (EOF)
+	if (input->line == NULL) 
 	{
 		printf("exit\n");
 		exit(1);
 	}
-	i = -1;
+	args[i] = strtok(input->line, " "); //tokenize with space as delimiter ..
+
+	while(args[i] != NULL)
+	{
+		i++;
+		args[i] = strtok(NULL, " ");
+	}
+	if (args[0] != NULL)
+	{
+		if (strcmp(args[0], "echo") == 0)
+        	mini_echo(args);
+		if (strcmp(args[0], "cd") == 0)
+			mini_cd(args);
+		if (strcmp(args[0], "pwd") == 0)
+			mini_pwd();
+		if (strcmp (args[0], "exit") == 0)
+			mini_exit();
+	}
+		
+
+
+
+	
+	// i = -1;
 //	while (++input->line[i])
 //	{
 //		if(input->line[i] == '$' && input->line[i+1] == '$')
