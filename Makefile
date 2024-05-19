@@ -1,7 +1,7 @@
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
-SRC = main.c handle_ctrl_commands.c handle_line_input.c
+SRC = main.c handle_ctrl_commands.c handle_line_input.c history_functions.c
 LDFLAGS = -lreadline
 NAME = minishell
 OBJ = $(SRS:.c=.o)

@@ -6,15 +6,24 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/15 14:53:35 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/15 14:57:54 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void print_pid(void)
+{
+	pid_t	pid;
+
+	pid = getpid();
+	printf("%d: command not found\n",pid);
+}
+
 void	handle_line(t_input *input)
 {
-	
+	int i;
+
 	if (input->prompt[0] == '\0')
 		return ;
 	if (input->line == NULL) // Handle Ctrl-D (EOF)
@@ -22,15 +31,15 @@ void	handle_line(t_input *input)
 		printf("exit\n");
 		exit(1);
 	}
-	if (strchr(input->line, '\'') != NULL)
-	{	
-		if (input->quote_open) {
-			input->quote_open = 0;
-			input->prompt = "\033[31mminihell*$>\033[0;34m";  // Change back to original prompt
-		} else
-		{
-			input->quote_open = 1;
-			input->prompt = ">";
-		}
-	}
+	i = -1;
+//	while (++input->line[i])
+//	{
+//		if(input->line[i] == '$' && input->line[i+1] == '$')
+//		{
+//			print_pid();
+//		}
+//		if()
+//	}
+
+
 }

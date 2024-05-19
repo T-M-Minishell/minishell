@@ -27,9 +27,8 @@ int main(int argc, char **argv)
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
 		ctrl_commands();
 		// Read user input using readline
-		input.line = readline(input.prompt);  // Consider memory leaks from readline
+		input.line = readline(input.prompt);
 		// handle the line
-		// printf("%s\n",input.line);
 		handle_line(&input);
 		
 		// Add the line to history

@@ -12,6 +12,7 @@
 #include <termios.h>
 
 #define MAX_HISTORY 100
+#define PROMPT "\033[31mminihell*$>\033[0;34m"
 
 typedef struct s_input
 {
@@ -21,16 +22,21 @@ typedef struct s_input
 
 }	t_input;
 
-// typedef struct s_history {
-//     char *lines[MAX_HISTORY];
-//     int count;
-// } t_history;
+typedef struct s_history {
+    char *lines[MAX_HISTORY];
+    int count;
+} t_history;
+
+
 
  ///handle ctrl_commands
 void	ctrl_commands();
 
  // handle line_input
 void	handle_line(t_input *input);
+
+	//history
+void	create_history(t_history *history, char *line);
 
 
 #endif
