@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 11:27:59 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:15:11 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,26 @@
 
 // 1. echo with option -n
 
-void	mini_echo(char **args)
+void	mini_echo(t_list_token *data)
 {
-	int	i;
+	t_list_token *curr;
+
+	curr = data;
+	curr = curr->next;
 	int	print_new_line = 1; 
-	i = 1; //start from 1 to skip the command "echo"
-	
 	//check for -n function
-	if(args[i] != NULL && strcmp(args[i], "-n") == 0)
+	if(curr->word != NULL && strcmp(curr->word, "-n") == 0)
 	{
-		i++;
+	
 		print_new_line = 0; //supress new_line when -n 
+		curr = curr->next;
 	}
 	
 	// print each arg with space
-	while(args[i] != NULL)  /// problem here when i put quotes
+	while(curr != NULL)  /// problem here when i put quotes
 	{
-   		if (*args[i] != '\'' && *args[i] != '\"')
-        	printf("%s ", args[i]);
-    	i++;
+		printf("%s ", curr->word);
+    	curr = curr->next;
 	}
 	 // print new_line if -n is not specified
 	 if(print_new_line)
@@ -40,9 +41,14 @@ void	mini_echo(char **args)
 }
 
 /// change directory
-int mini_cd(char **args)
+int mini_cd(t_list_token *data)
 {
-    if (args[1] == NULL)
+	t_list_token *curr;
+
+	curr = data;
+	curr = curr->next;
+	
+    if (curr->word == NULL)
 	{  // No argument, use HOME directory
         if (chdir(getenv("HOME")) != 0)
 		{
@@ -52,7 +58,7 @@ int mini_cd(char **args)
     }
 	else
 	{  // Change directory to the provided path
-        if (chdir(args[1]) != 0)
+        if (chdir(curr->word) != 0)
 		{
             perror("cd");
             return 1;

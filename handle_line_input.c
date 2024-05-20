@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 11:28:44 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:13:55 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,47 +14,41 @@
 
 void print_pid(void)
 {
-	pid_t	pid;
+	pid_t pid;
 
 	pid = getpid();
-	printf("%d: command not found\n",pid);
+
+	printf("%d: command not found\n", pid);
 }
 
-void	handle_line(t_input *input)
+void handle_line(t_input *input, t_list_token *data)
 {
-	char *args[99]; // need to delete
-	
-	int i;
+	t_list_token *curr;
 
-	i = 0;
-		
 	// Handle Ctrl-D (EOF)
-	if (input->line == NULL) 
+	if (input->line == NULL)
 	{
 		printf("exit\n");
 		exit(1);
 	}
-	// change with linked lists 
-	// delete strtok
-	args[i] = strtok(input->line, " "); //tokenize with space as delimiter ..
 
-	while(args[i] != NULL)
+	curr = data->next;
+	while (curr != NULL && curr->word != NULL)
 	{
-		i++;
-		args[i] = strtok(NULL, " ");
+		// printf("words are: %s\n", curr->word);
+		if (curr->word != NULL)
+		{
+			if (strcmp(curr->word, "echo") == 0)
+				mini_echo(curr);
+			if (strcmp(curr->word, "cd") == 0)
+				mini_cd(curr);
+			if (strcmp(curr->word, "pwd") == 0)
+				mini_pwd();
+			if (strcmp(curr->word, "exit") == 0)
+				mini_exit();
+			// else
+			// 	printf("Unknown command: %s\n", args[0]);
+		}
+		curr = curr->next;
 	}
-	if (args[0] != NULL)
-	{
-		if (strcmp(args[0], "echo") == 0)
-        	mini_echo(args);
-		if (strcmp(args[0], "cd") == 0)
-			mini_cd(args);
-		if (strcmp(args[0], "pwd") == 0)
-			mini_pwd();
-		if (strcmp (args[0], "exit") == 0)
-			mini_exit();
-		// else
-       	// 	printf("Unknown command: %s\n", args[0]);
-	}
-		
 }

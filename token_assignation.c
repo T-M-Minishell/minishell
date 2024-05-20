@@ -78,12 +78,9 @@ void	assign_token_to_quote(char *line, t_list_token **data,
 
 	(*data)->index++;
 	start_index = (*data)->index; 
-	printf("from here :%d\n", start_index);
 	while (line[(*data)->index] != '"' && line[(*data)->index] != '\0')
 		(*data)->index++;
-	printf("to here :%d\n\n", (*data)->index);
 	str_token = ft_strdnup(line + start_index, (*data)->index - start_index);
-	printf("str_tok is :%s\n\n\n", str_token);
 	new_node = ft_lstnew(str_token, token);
 	// print_node(new_node);
 	if (new_node == NULL)

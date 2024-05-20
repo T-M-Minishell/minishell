@@ -1,7 +1,7 @@
 #ifndef PARCING_H
 # define PARCING_H
 
-# include "minishell.h"
+// # include "minishell.h"
 
 typedef enum s_token_type
 {
