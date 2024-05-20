@@ -1,7 +1,6 @@
-
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
-SRC = main.c handle_ctrl_commands.c handle_line_input.c history_functions.c built_ins.c
+SRC = main.c handle_ctrl_commands.c handle_line_input.c history_functions.c built_ins.c token_assignation.c utils.c utils2.c
 LDFLAGS = -lreadline
 NAME = minishell
 OBJ = $(SRS:.c=.o)
@@ -23,4 +22,3 @@ re :fclean all
 
 # run: $(NAME)
 # 	./$(NAME)
-
