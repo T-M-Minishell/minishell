@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 14:48:46 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 15:31:53 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 	input.prompt = PROMPT;
 
 	// todor s main ---------------
-	t_token_type	token;
+	// t_token_type	token;
 	t_list_token	*data;
 	// t_list_token	*curr;
 	data = ft_lstnew_init();
@@ -36,11 +36,11 @@ int main(int argc, char **argv)
 		// Read user input using readline
 		input.line = readline(input.prompt);
 		
-		while ((token = check_token(input.line, &data)) != END)
-		{
-			assign_token_to_list(input.line, token, &data);
+		// while ((token = check_token(input.line, &data)) != END)
+		// {
+		// 	assign_token_to_list(input.line, token, &data);
 			
-		}
+		// }
 		handle_line(&input, data);
 		
 	
