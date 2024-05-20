@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 10:55:04 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:27:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ void	mini_echo(char **args)
 	 	printf("\n");
 }
 
+/// change directory
 int mini_cd(char **args)
 {
     if (args[1] == NULL)
@@ -59,7 +60,7 @@ int mini_cd(char **args)
     }
     return 0;
 }
-
+ // view in wich directory you are
 void mini_pwd(void)
 {
     char *cwd = getcwd(NULL, 0);  // Get current working directory
