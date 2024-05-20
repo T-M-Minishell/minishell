@@ -6,12 +6,13 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 14:17:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/16 13:24:47 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 10:56:46 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// unused for now ... 
 void create_history(t_history *history,char *line)
 {
     if (history->count < MAX_HISTORY)

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/19 17:15:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 10:57:13 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 {
 	t_input	input;
 	(void)argv;
-	input.prompt = "\033[31mminihell*$>\033[0;34m";
+	input.prompt = PROMPT;
 	if(argc != 1)
 	{
 		printf("args are not allowed\n");

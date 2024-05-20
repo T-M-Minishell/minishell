@@ -22,6 +22,7 @@ typedef struct s_input
 
 }	t_input;
 
+/// unused for now
 typedef struct s_history {
     char *lines[MAX_HISTORY];
     int count;

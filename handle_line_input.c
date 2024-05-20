@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/19 17:17:56 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 10:56:22 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void print_pid(void)
 
 void	handle_line(t_input *input)
 {
-	char *args[99];
+	char *args[99]; // need to delete
 	
 	int i;
 
@@ -34,6 +34,8 @@ void	handle_line(t_input *input)
 		printf("exit\n");
 		exit(1);
 	}
+	// change with linked lists 
+	// delete strtok
 	args[i] = strtok(input->line, " "); //tokenize with space as delimiter ..
 
 	while(args[i] != NULL)
@@ -53,19 +55,4 @@ void	handle_line(t_input *input)
 			mini_exit();
 	}
 		
-
-
-
-	
-	// i = -1;
-//	while (++input->line[i])
-//	{
-//		if(input->line[i] == '$' && input->line[i+1] == '$')
-//		{
-//			print_pid();
-//		}
-//		if()
-//	}
-
-
 }

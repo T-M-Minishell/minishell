@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/19 17:13:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 10:55:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	mini_echo(char **args)
 	}
 	
 	// print each arg with space
-	while(args[i] != NULL)  /// problem here whn i put quotes
+	while(args[i] != NULL)  /// problem here when i put quotes
 	{
    		if (*args[i] != '\'' && *args[i] != '\"')
         	printf("%s ", args[i]);
@@ -68,7 +68,7 @@ void mini_pwd(void)
     else
 	{
         printf("%s\n", cwd);
-        free(cwd);  // Free memory allocated by getcwd
+        free(cwd);  // Free memory
     }
 }
 
