@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 10:56:22 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 10:59:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	handle_line(t_input *input)
 			mini_pwd();
 		if (strcmp (args[0], "exit") == 0)
 			mini_exit();
+		else
+       		printf("Unknown command: %s\n", args[0]);
 	}
 		
 }

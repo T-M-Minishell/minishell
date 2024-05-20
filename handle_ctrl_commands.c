@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:05 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 10:55:27 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/20 11:00:01 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void ctrl_c_handler(int sig) {
 
 void	ctrl_commands()
 {
-	signal(SIGQUIT, SIG_IGN);//pdf asks to do nothing -CREL-\
+	signal(SIGQUIT, SIG_IGN);//pdf asks to do nothing -CREL-"\"
 	signal(SIGINT,ctrl_c_handler);
 
 }
