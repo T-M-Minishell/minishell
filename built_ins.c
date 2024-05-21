@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 15:15:11 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/21 18:52:05 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,9 +87,8 @@ void	mini_exit(void)
 
 void	min_env(t_list_token *data)
 {
-	t_list_token  *curr;
-	char *value;
-
+	t_list_token  *curr = NULL;
+	char *value = NULL;
 	curr = data->next;
 	value = getenv(curr->word);
 	if (value != NULL)

@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:59 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/21 15:51:17 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:57:00 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,6 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	new->prev = NULL;
 	return (new);
 }
-
 
 bool 	is_space(char *line)
 {

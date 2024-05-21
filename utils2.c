@@ -6,11 +6,20 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:53 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/21 15:54:48 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/21 18:09:36 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int 	ft_strlen(char *str)
+{
+	int i;
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	return(i);
+}
 
 t_list_token	*ft_lstnew_init(void)
 {
@@ -55,3 +64,5 @@ void	ft_lstreset(t_list_token *data, t_token_type token)
 	data->next = NULL;
 	data->prev = NULL;
 }
+
+//get_cwd
