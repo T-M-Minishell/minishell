@@ -21,29 +21,12 @@ void print_pid(void)
 	printf("%d: command not found\n", pid);
 }
 
-void handle_line(t_input *input, t_list_token *data)
-{
+void	handle_tokens_in_prompt(t_list_token *data) {
 	t_list_token *curr;
-	t_token_type token;
 
-	// Handle Ctrl-D (EOF)
-	if (input->line == NULL)
-	{
-		printf("exit\n");
-		exit(1);
-	}
-
-	while ((token = check_token(input->line, &data)) != END)
-		{
-			assign_token_to_list(input->line, token, &data);
-			
-		}
 	curr = data->next;
-	while (curr != NULL && curr->word != NULL)
-	{
-		// printf("words are: %s\n", curr->word);
-		if (curr->word != NULL)
-		{
+	while (curr != NULL && curr->word != NULL) {
+		if (curr->word != NULL) {
 			if (strcmp(curr->word, "echo") == 0)
 				mini_echo(curr);
 			if (strcmp(curr->word, "cd") == 0)
@@ -52,9 +35,31 @@ void handle_line(t_input *input, t_list_token *data)
 				mini_pwd();
 			if (strcmp(curr->word, "exit") == 0)
 				mini_exit();
-			// else
-			// 	printf("Unknown command: %s\n", args[0]);
+			if (strcmp(curr->word, "export") == 0)
+				printf("not done yet\n");
+			if (strcmp(curr->word, "unset") == 0)
+				printf("not done yet\n");
+			if (strcmp(curr->word, "env") == 0)
+				min_env(curr);
+//			if(strcmp(curr->word, "$") == 0)
+//				printf("not done yet\n");
 		}
 		curr = curr->next;
 	}
+}
+
+
+void handle_line(t_input *input, t_list_token *data)
+{
+
+	t_token_type token;
+	// Handle Ctrl-D (EOF)
+	if (input->line == NULL)
+	{
+		printf("exit\n");
+		exit(1);
+	}
+	while ((token = check_token(input->line, &data)) != END)
+			assign_token_to_list(input->line, token, &data);
+	handle_tokens_in_prompt(data);
 }

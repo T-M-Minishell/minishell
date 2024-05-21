@@ -67,7 +67,7 @@ int mini_cd(t_list_token *data)
     return 0;
 }
  // view in wich directory you are
-void mini_pwd(void)
+void	mini_pwd(void)
 {
     char *cwd = getcwd(NULL, 0);  // Get current working directory
     if (cwd == NULL)
@@ -79,8 +79,21 @@ void mini_pwd(void)
     }
 }
 
-void mini_exit(void)
+void	mini_exit(void)
 {
 	printf("exit\n");
     exit(0); 
+}
+
+void	min_env(t_list_token *data)
+{
+	t_list_token  *curr;
+	char *value;
+
+	curr = data->next;
+	value = getenv(curr->word);
+	if (value != NULL)
+		printf("%s\n",value);
+	else
+		printf("%s: No such file or directory.\n",curr->word);
 }

@@ -33,11 +33,12 @@ typedef struct s_history
 
 // utils
 
-t_list_token *ft_lstnew(char *content, t_token_type token);
-void ft_lstadd_back(t_list_token **lst, t_list_token *new);
-void free_token_list(t_list_token **stack);
-char *ft_strdnup(const char *s1, int n);
-bool is_space(char *line);
+t_list_token	*ft_lstnew(char *content, t_token_type token);
+void			ft_lstadd_back(t_list_token **lst, t_list_token *new);
+void			free_token_list(t_list_token **stack);
+char			*ft_strdnup(const char *s1, int n);
+bool			is_space(char *line);
+
 
 // utils2
 
@@ -54,9 +55,10 @@ void create_history(t_history *history, char *line);
 
 /// built_ins
 void	mini_echo(t_list_token *data);
-int mini_cd(t_list_token *data);
-void mini_pwd(void);
-void mini_exit(void);
+int		mini_cd(t_list_token *data);
+void	mini_pwd(void);
+void	mini_exit(void);
+void	min_env(t_list_token *data);
 
 // token assignation
 t_token_type check_token(char *str, t_list_token **data);
