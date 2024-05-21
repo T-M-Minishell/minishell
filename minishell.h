@@ -1,4 +1,3 @@
-
 #ifndef MINISHELL_H
 #define MINISHELL_H
 #include <stdio.h>
@@ -43,6 +42,7 @@ bool			is_space(char *line);
 // utils2
 
 t_list_token *ft_lstnew_init(void);
+void	ft_lstreset(t_list_token *data, t_token_type token);
 
 /// handle ctrl_commands
 void ctrl_commands();

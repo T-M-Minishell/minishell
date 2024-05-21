@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_line_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 15:31:43 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:48:08 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,5 @@ void handle_line(t_input *input, t_list_token *data)
 	while ((token = check_token(input->line, &data)) != END)
 			assign_token_to_list(input->line, token, &data);
 	handle_tokens_in_prompt(data);
+	ft_lstreset(data ,token);
 }
