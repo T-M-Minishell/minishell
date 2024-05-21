@@ -60,6 +60,9 @@ void	mini_pwd(void);
 void	mini_exit(void);
 void	min_env(t_list_token *data);
 
+// handle_dolar
+void	handle_dolar(t_list_token *data);
+
 // token assignation
 t_token_type check_token(char *str, t_list_token **data);
 void assign_token_to_list(char *line, t_token_type token, t_list_token **data);

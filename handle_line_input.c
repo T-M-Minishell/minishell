@@ -12,21 +12,13 @@
 
 #include "minishell.h"
 
-void print_pid(void)
-{
-	pid_t pid;
-
-	pid = getpid();
-
-	printf("%d: command not found\n", pid);
-}
-
 void	handle_tokens_in_prompt(t_list_token *data) {
 	t_list_token *curr;
 
 	curr = data->next;
-	while (curr != NULL && curr->word != NULL) {
-		if (curr->word != NULL) {
+//	while (curr != NULL && curr->word != NULL) {
+		if (curr->word != NULL)
+		{
 			if (strcmp(curr->word, "echo") == 0)
 				mini_echo(curr);
 			if (strcmp(curr->word, "cd") == 0)
@@ -41,10 +33,11 @@ void	handle_tokens_in_prompt(t_list_token *data) {
 				printf("not done yet\n");
 			if (strcmp(curr->word, "env") == 0)
 				min_env(curr);
-//			if(strcmp(curr->word, "$") == 0)
-//				printf("not done yet\n");
-		}
-		curr = curr->next;
+			if(strcmp(curr->word, "$") == 0)
+				handle_dolar(curr);
+
+//		}
+//		curr = curr->next;
 	}
 }
 
