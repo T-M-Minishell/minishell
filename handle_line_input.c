@@ -38,8 +38,6 @@ void	handle_tokens_in_prompt(t_list_token *data) {
 			if(strcmp(curr->word, "$") == 0)
 				handle_dolar(curr, last_exit_status);
 //			handle_redirections(curr);
-//		}
-//		curr = curr->next;
 	}
 }
 
