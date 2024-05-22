@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_assignation.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
+/*   Updated: 2024/05/21 20:27:12 by tlupu            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 //debug functions
@@ -140,6 +152,7 @@ void	assign_token_to_list(char *line, t_token_type token,
 	else if (token == REDIRECT)
 		assign_token_to_redirect(line, data, token);
 }
+
 // This function checks for the data type by assigning enum values and returns them back to main
 // These "<" || ">" || "|" IF NOT any of these => WORD
 t_token_type	check_token(char *str, t_list_token **data)
@@ -167,36 +180,3 @@ t_token_type	check_token(char *str, t_list_token **data)
 	}
 	return (END);
 }
-
-// int	main(void)
-// {
-// 	char			*prompt;
-// 	char			*line1;
-// 	t_token_type	token;
-// 	t_list_token	*data;
-// 	t_list_token	*curr;
-
-// 	prompt = "minishell$";
-// 	data = NULL;
-// 	line1 = NULL;
-// 	data = ft_lstnew_init();
-// 	while (1)
-// 	{
-// 		printf("%s ", prompt);
-// 		line1 = readline("");
-// 		token = END;
-// 		while ((token = check_token(line1, &data)) != END)
-// 			assign_token_to_list(line1, token, &data);
-// 		curr = data->next;
-// 		while (curr != NULL && curr->quotes != NULL)
-// 		{
-// 			printf("%s\n", curr->quotes);
-// 			curr = curr->next;
-// 		}
-// 		if (line1 == NULL)
-// 			break ;
-// 		add_history(line1);
-// 		free(line1);
-// 	}
-// 	return (0);
-// }

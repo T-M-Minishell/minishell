@@ -14,15 +14,16 @@ void print_pid(void)
 void	handle_dolar(t_list_token *data, int status)
 {
 	t_list_token *curr;
+	int index;
 
+	index = 1;
 	curr = data;
-	curr = curr->next;
-
-	if (strcmp(curr->word, "$") == 0)
+//	curr = curr->next;
+	if (curr->word[index] == '$')
 		print_pid();
-	if (strcmp(curr->word, "?") == 0)
+	else if (curr->word[index] == '?')
 	{
-		printf("%d\n", status);
+		printf("%d  not done yet\n", status);
 	}
 
 }

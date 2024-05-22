@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 15:15:11 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/05/21 18:52:05 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,25 +19,29 @@ void	mini_echo(t_list_token *data)
 	t_list_token *curr;
 
 	curr = data;
-	curr = curr->next;
-	int	print_new_line = 1; 
-	//check for -n function
-	if(curr->word != NULL && strcmp(curr->word, "-n") == 0)
+	if (curr->next == NULL)
+		printf("\n");
+	else
 	{
-	
-		print_new_line = 0; //supress new_line when -n 
 		curr = curr->next;
+		int	print_new_line = 1;
+		//check for -n function
+		if(curr->word != NULL && strcmp(curr->word, "-n") == 0)
+		{
+
+			print_new_line = 0; //supress new_line when -n
+			curr = curr->next;
+		}
+		// print each arg with space
+		while(curr != NULL)  /// problem here when i put quotes
+		{
+			printf("%s ", curr->word);
+			curr = curr->next;
+		}
+		// print new_line if -n is not specified
+		if(print_new_line)
+			printf("\n");
 	}
-	
-	// print each arg with space
-	while(curr != NULL)  /// problem here when i put quotes
-	{
-		printf("%s ", curr->word);
-    	curr = curr->next;
-	}
-	 // print new_line if -n is not specified
-	 if(print_new_line)
-	 	printf("\n");
 }
 
 /// change directory
@@ -46,24 +50,26 @@ int mini_cd(t_list_token *data)
 	t_list_token *curr;
 
 	curr = data;
-	curr = curr->next;
-	
-    if (curr->word == NULL)
-	{  // No argument, use HOME directory
-        if (chdir(getenv("HOME")) != 0)
-		{
-            perror("cd");
-            return 1;
-        }
-    }
-	else
-	{  // Change directory to the provided path
-        if (chdir(curr->word) != 0)
-		{
-            perror("cd");
-            return 1;
-        }
-    }
+	if (data->next != NULL)
+	{
+		curr = curr->next;
+		if (curr->word == NULL)
+		{  // No argument, use HOME directory
+			if (chdir(getenv("HOME")) != 0)
+			{
+				perror("cd");
+				return 1;
+			}
+		}
+		else
+		{  // Change directory to the provided path
+			if (chdir(curr->word) != 0)
+			{
+				perror("cd");
+				return 1;
+			}
+		}
+	}
     return 0;
 }
  // view in wich directory you are
@@ -85,17 +91,28 @@ void	mini_exit(void)
     exit(0); 
 }
 
-void	min_env(t_list_token *data)
+void	min_env(t_list_token *data, char **envp)
 {
 	t_list_token  *curr;
 	char *value;
 
-	curr = data->next;
-	value = getenv(curr->word);
-	if (value != NULL)
-		printf("%s\n",value);
+	if (data->next == NULL)
+	{
+		for (char **env = envp; *env != 0; env++)
+		{
+			char *thisEnv = *env;
+			printf("%s\n", thisEnv);
+		}
+	}
 	else
-		printf("%s: No such file or directory.\n",curr->word);
+	{
+		curr = data->next;
+		value = getenv(curr->word);
+		if (value != NULL)
+			printf("%s\n",value);
+		else
+			printf("%s: No such file or directory.\n",curr->word);
+	}
 }
 
 void mini_unset(t_list_token *data)
@@ -103,10 +120,13 @@ void mini_unset(t_list_token *data)
 	t_list_token *curr;
 
 	curr = data;
+	if (data->next == NULL)
+		return ;
 	curr = curr->next;
 	if (curr->word == NULL) {
 		printf("unset: requires an argument\n");
-	} else
+	}
+	else
 	{
 		if (unsetenv(curr->word) != 0) {
 			perror("unset");
