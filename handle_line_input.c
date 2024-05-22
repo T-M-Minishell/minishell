@@ -19,10 +19,10 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 {
 	t_list_token *curr;
 	int last_exit_status = 0;
-	if(data->next != NULL)
-		curr = data->next;
-	else
-		curr =data;
+//	if(data->next != NULL)
+//		curr = data->next;
+//	else
+		curr =data->next;
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)
