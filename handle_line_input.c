@@ -11,12 +11,14 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "fcntl.h"
+#include "string.h"
 
 void	handle_tokens_in_prompt(t_list_token *data) {
 	t_list_token *curr;
+	int last_exit_status = 0;
 
 	curr = data->next;
-//	while (curr != NULL && curr->word != NULL) {
 		if (curr->word != NULL)
 		{
 			if (strcmp(curr->word, "echo") == 0)
@@ -30,12 +32,12 @@ void	handle_tokens_in_prompt(t_list_token *data) {
 			if (strcmp(curr->word, "export") == 0)
 				printf("not done yet\n");
 			if (strcmp(curr->word, "unset") == 0)
-				printf("not done yet\n");
+				mini_unset(curr);
 			if (strcmp(curr->word, "env") == 0)
 				min_env(curr);
 			if(strcmp(curr->word, "$") == 0)
-				handle_dolar(curr);
-
+				handle_dolar(curr, last_exit_status);
+//			handle_redirections(curr);
 //		}
 //		curr = curr->next;
 	}

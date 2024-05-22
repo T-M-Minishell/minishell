@@ -97,3 +97,19 @@ void	min_env(t_list_token *data)
 	else
 		printf("%s: No such file or directory.\n",curr->word);
 }
+
+void mini_unset(t_list_token *data)
+{
+	t_list_token *curr;
+
+	curr = data;
+	curr = curr->next;
+	if (curr->word == NULL) {
+		printf("unset: requires an argument\n");
+	} else
+	{
+		if (unsetenv(curr->word) != 0) {
+			perror("unset");
+		}
+	}
+}

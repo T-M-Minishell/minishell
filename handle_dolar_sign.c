@@ -11,7 +11,7 @@ void print_pid(void)
 	printf("%d: command not found\n", pid);
 }
 
-void	handle_dolar(t_list_token *data)
+void	handle_dolar(t_list_token *data, int status)
 {
 	t_list_token *curr;
 
@@ -21,6 +21,8 @@ void	handle_dolar(t_list_token *data)
 	if (strcmp(curr->word, "$") == 0)
 		print_pid();
 	if (strcmp(curr->word, "?") == 0)
-		printf("test\n");
+	{
+		printf("%d\n", status);
+	}
 
 }
