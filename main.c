@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
 	t_input input;
 	t_list_token *data;
@@ -29,21 +29,11 @@ int	main(int argc, char **argv)
 	{
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
 		ctrl_commands();
-		// if (getcwd(cwd, sizeof(cwd)) != NULL)
-		// {
-		// 	printf("\033[34m%s ", cwd); // Print the current working directory
-			
-		// }
-		// else
-		// {
-		// 	perror("getcwd() error");
-		// 	return (1);
-		// } //////////asta e o incercare de a printa si corect folder dupa prompt, vb cu Marian sa vdm ce paerere are
 
 		// Read user input using readline
 		input.line = readline(input.prompt);
 
-		handle_line(&input, data);
+		handle_line(&input, data, envp);
 
 		// Add the line to history
 		add_history(input.line);

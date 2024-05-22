@@ -49,7 +49,7 @@ int 	ft_strlen(char *str);
 void ctrl_commands();
 
 // handle line_input
-void handle_line(t_input *input, t_list_token *data);
+void handle_line(t_input *input, t_list_token *data, char **envp);
 
 // history
 void create_history(t_history *history, char *line);
@@ -59,10 +59,11 @@ void	mini_echo(t_list_token *data);
 int		mini_cd(t_list_token *data);
 void	mini_pwd(void);
 void	mini_exit(void);
-void	min_env(t_list_token *data);
+void	min_env(t_list_token *data, char **envp);
+void	mini_unset(t_list_token *data);
 
 // handle_dolar
-void	handle_dolar(t_list_token *data);
+void	handle_dolar(t_list_token *data, int status);
 
 // token assignation
 t_token_type check_token(char *str, t_list_token **data);

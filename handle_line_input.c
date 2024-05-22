@@ -6,24 +6,23 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/22 17:24:47 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/22 17:37:26 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "fcntl.h"
 #include "minishell.h"
+#include "string.h"
 
-void	handle_tokens_in_prompt(t_list_token *data)
+void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 {
 	t_list_token	*curr;
-	if (data->next == NULL || data->next->word == NULL)
-		return;
-	curr = data->next ;///boolean val
-	if (curr == NULL)
-		return;
+	int				last_exit_status;
+
+	last_exit_status = 0;
+	curr = data->next;
 	if (curr->word != NULL)
 	{
-		if (strcmp(curr->word, "$") == 0)
-			handle_dolar(curr);
 		if (strcmp(curr->word, "echo") == 0)
 			mini_echo(curr);
 		if (strcmp(curr->word, "cd") == 0)
@@ -35,15 +34,18 @@ void	handle_tokens_in_prompt(t_list_token *data)
 		if (strcmp(curr->word, "export") == 0)
 			printf("not done yet\n");
 		if (strcmp(curr->word, "unset") == 0)
-			printf("not done yet\n");
+			mini_unset(curr);
 		if (strcmp(curr->word, "env") == 0)
-			min_env(curr);
+			min_env(curr, envp);
+		if (curr->word[0] == '$')
+			handle_dolar(curr, last_exit_status);
 	}
 }
 
-void	handle_line(t_input *input, t_list_token *data)
+void	handle_line(t_input *input, t_list_token *data, char **envp)
 {
 	t_token_type	token;
+
 	// Handle Ctrl-D (EOF)
 	if (input->line == NULL)
 	{
@@ -51,13 +53,10 @@ void	handle_line(t_input *input, t_list_token *data)
 		exit(1);
 	}
 	if (input->line[0] == '\0')
-		return;
+		return ;
 	while ((token = check_token(input->line, &data)) != END)
 		assign_token_to_list(input->line, token, &data);
-	if (data->next != NULL)
-	{
-		handle_tokens_in_prompt(data);
-	}
+	handle_tokens_in_prompt(data, envp);
 	handle_not_existent_builtins(data);
 	ft_lstreset(data, token);
 }
