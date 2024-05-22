@@ -75,4 +75,10 @@ void print_node(t_list_token *node);
 char **turn_word_into_arr(t_list_token *data);
 void   handle_not_existent_builtins(t_list_token *data);
 
+//un_built_ins2
+
+void    mini_cat(char **arr);
+void 	mini_touch(char **arr);
+void    mini_wc(char **arr);
+
 #endif

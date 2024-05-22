@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:53 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/21 18:09:36 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/22 20:36:23 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,29 @@ void	ft_lstreset(t_list_token *data, t_token_type token)
 	data->prev = NULL;
 }
 
-//get_cwd
+char	**turn_word_into_arr(t_list_token *data)
+{
+    int				i;
+    char			**arr;
+    t_list_token	*curr;
+
+    i = 0;
+    curr = data->next;
+    while (curr != NULL)
+    {
+        i++;
+        curr = curr->next;
+    }
+    arr = malloc((i + 1) * sizeof(char *));
+    if (arr == NULL)
+        return (0);
+    curr = data;
+    i = 0;
+    while (curr != NULL)
+    {
+        arr[i++] = strdup(curr->word);  
+        curr = curr->next;
+    }
+    arr[i] = NULL;
+    return (arr);
+}
