@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/21 22:43:02 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/22 13:57:13 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 void	handle_tokens_in_prompt(t_list_token *data)
 {
 	t_list_token	*curr;
-
 	curr = data->next; ///boolean val
-	
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)
@@ -37,7 +35,6 @@ void	handle_tokens_in_prompt(t_list_token *data)
 		if (strcmp(curr->word, "$") == 0)
 			handle_dolar(curr);
 	}
-	return(0);
 }
 
 void	handle_line(t_input *input, t_list_token *data)
@@ -52,8 +49,7 @@ void	handle_line(t_input *input, t_list_token *data)
 	}
 	while ((token = check_token(input->line, &data)) != END)
 		assign_token_to_list(input->line, token, &data);
-	i = handle_tokens_in_prompt(data);
-	if (i == 0)
-		handle_not_existent_builtins(data);
+	handle_tokens_in_prompt(data);
+	handle_not_existent_builtins(data);
 	ft_lstreset(data, token);
 }
