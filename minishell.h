@@ -71,7 +71,7 @@ void assign_token_to_list(char *line, t_token_type token, t_list_token **data);
 void print_node(t_list_token *node);
 
 //un_built_ins
-
+char **turn_word_into_arr(t_list_token *data);
 void   handle_not_existent_builtins(t_list_token *data);
 
 #endif
