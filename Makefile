@@ -2,6 +2,7 @@ CC = gcc
 FLAGS = -Wall -Wextra -Werror -g
 SRC = main.c handle_ctrl_commands.c handle_line_input.c history_functions.c built_ins.c \
 	token_assignation.c utils.c utils2.c handle_dolar_sign.c un_built_ins.c	un_built_ins2.c \
+	handle_quotes.c
 	
 
 LDFLAGS = -lreadline

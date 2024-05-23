@@ -6,13 +6,28 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/22 17:37:26 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/23 17:40:38 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fcntl.h"
 #include "minishell.h"
 #include "string.h"
+
+void	handle_tokens_in_prompt_for_quotes(t_list_token *data)
+{
+	t_list_token	*curr;
+
+	// int 			last_exit_status;
+	curr = data->next;
+	print_node(curr);
+	print_node(curr->next);
+	if (curr->quotes != NULL)
+	{
+		if (strcmp(curr->quotes, "echo") == 0)
+			mini_echo_quote(curr);
+	}
+}
 
 void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 {
@@ -56,7 +71,14 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 		return ;
 	while ((token = check_token(input->line, &data)) != END)
 		assign_token_to_list(input->line, token, &data);
-	handle_tokens_in_prompt(data, envp);
-	handle_not_existent_builtins(data);
+	if (data->next->quotes != NULL)
+	{
+		handle_tokens_in_prompt_for_quotes(data);
+	}
+	if (data->next->word != NULL)
+	{
+		handle_tokens_in_prompt(data, envp);
+		handle_not_existent_builtins(data);
+	}
 	ft_lstreset(data, token);
 }

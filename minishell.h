@@ -43,7 +43,12 @@ bool			is_space(char *line);
 
 t_list_token *ft_lstnew_init(void);
 void	ft_lstreset(t_list_token *data, t_token_type token);
-int 	ft_strlen(char *str);
+int 	ft_strlen(const char *str);
+char	*ft_strrchr(const char *s, int c);
+
+//utils3
+char	*ft_strchr(const char *s, int c);
+
 
 /// handle ctrl_commands
 void ctrl_commands();
@@ -80,5 +85,8 @@ void   handle_not_existent_builtins(t_list_token *data);
 void    mini_cat(char **arr);
 void 	mini_touch(char **arr);
 void    mini_wc(char **arr);
+
+//handle_quotes
+void	mini_echo_quote(t_list_token *data);
 
 #endif

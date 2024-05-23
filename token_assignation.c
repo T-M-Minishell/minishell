@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/21 20:27:12 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/23 17:44:50 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,9 @@ void	assign_token_to_quote(char *line, t_list_token **data,
 	}
 	new_node->index = (*data)->index;
 	ft_lstadd_back(data, new_node);
-	(*data)->index++;
+	print_node(*data);
+	if (line[(*data)->index] != '\0')  // Add this check
+        (*data)->index++;
 }
 
 //assign to word

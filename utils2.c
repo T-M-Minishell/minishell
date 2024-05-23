@@ -6,13 +6,13 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:53 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/22 20:36:23 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/23 14:27:57 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int 	ft_strlen(char *str)
+int 	ft_strlen(const char *str)
 {
 	int i;
 	i = 0;
@@ -90,4 +90,17 @@ char	**turn_word_into_arr(t_list_token *data)
     }
     arr[i] = NULL;
     return (arr);
+}
+char	*ft_strrchr(const char *s, int c)
+{
+	int	i;
+
+	i = ft_strlen(s);
+	while (i >= 0)
+	{
+		if (s[i] == (char)c)
+			return ((char *)&s[i]);
+		i--;
+	}
+	return (NULL);
 }

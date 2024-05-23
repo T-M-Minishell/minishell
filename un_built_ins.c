@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 20:22:13 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/22 20:57:11 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/23 12:54:09 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	mini_ls(char **arr)
 {
 	pid_t		pid;
 	char		*path;
-	extern char	**__environ;
+	char	**__environ;
 
 	path = "/bin/ls";
 	pid = fork();
@@ -35,7 +35,7 @@ void	mini_mkdir(char **arr)
 {
 	pid_t		pid;
 	char		*path;
-	extern char	**environ;
+	char	**environ;
 
 	path = "/bin/mkdir";
 	pid = fork();
@@ -54,7 +54,7 @@ void	mini_rm(char **arr)
 {
 	pid_t		pid;
 	char		*path;
-	extern char	**environ;
+	char	**environ;
 
 	path = "/bin/rm";
 	pid = fork();
@@ -73,7 +73,7 @@ void	mini_clean(char **arr)
 {
 	pid_t		pid;
 	char		*path;
-	extern char	**environ;
+	char	**environ;
 
 	path = "/bin/clear";
 	pid = fork();
