@@ -12,6 +12,18 @@
 
 #include "minishell.h"
 
+bool check_if_alphanumeric(char *str)
+{
+	for (int i = 0; str[i]; i++)
+	{
+		if (!isalnum((unsigned char)str[i]) && str[i] != '=')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void create_env_variable(t_dictionary *variable, char *str)
 {
 	int i;
@@ -32,7 +44,11 @@ void create_env_variable(t_dictionary *variable, char *str)
 void	create_var(t_list_token *data)
 {
 	t_dictionary *dictionary = malloc(sizeof(t_dictionary));
-	create_env_variable(dictionary, data->word);
+
+	if(check_if_alphanumeric(data->word))
+		create_env_variable(dictionary, data->word);
+	else
+		return ;
 }
 
 
