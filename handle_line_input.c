@@ -21,7 +21,8 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 //
 //	last_exit_status = 0;
 	curr = data->next;
-
+	if(strchr(curr->word, '='))
+		create_var(curr);
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)

@@ -20,6 +20,7 @@ typedef struct s_dictionary
 {
 	char key[256];
 	char value[256];
+	char **dict_arr;
 }	t_dictionary;
 
 
@@ -62,6 +63,8 @@ void create_history(t_history *history, char *line);
 
 // create env_variable
 void create_env_variable(t_dictionary *variable, char *str);
+void	create_var(t_list_token *data);
+
 /// built_ins
 void	mini_echo(t_list_token *data);
 int		mini_cd(t_list_token *data);

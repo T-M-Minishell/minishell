@@ -29,6 +29,13 @@ void create_env_variable(t_dictionary *variable, char *str)
 	setenv(variable->key, variable->value, 1);
 }
 
+void	create_var(t_list_token *data)
+{
+	t_dictionary *dictionary = malloc(sizeof(t_dictionary));
+	create_env_variable(dictionary, data->word);
+}
+
+
 //int main(void) {
 //	t_dictionary *dictionary = malloc(sizeof(t_dictionary));
 //	create_env_variable(dictionary, "Tpula=vasile");

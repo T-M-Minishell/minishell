@@ -28,14 +28,24 @@ void	mini_echo(t_list_token *data)
 		//check for -n function
 		if(curr->word != NULL && strcmp(curr->word, "-n") == 0)
 		{
-
-			print_new_line = 0; //supress new_line when -n
+			print_new_line = 0;
 			curr = curr->next;
 		}
 		// print each arg with space
-		while(curr != NULL)  /// problem here when i put quotes
+		while(curr != NULL)
 		{
-			printf("%s ", curr->word);
+			if (curr->word[0] == '$')
+			{
+				char *value = getenv(curr->word + 1);
+				if (value != NULL)
+					printf("%s ", value);
+				else
+					printf("%s ", "");
+			}
+			else
+			{
+				printf("%s ", curr->word);
+			}
 			curr = curr->next;
 		}
 		// print new_line if -n is not specified
