@@ -48,6 +48,7 @@ char	*ft_strrchr(const char *s, int c);
 
 //utils3
 char	*ft_strchr(const char *s, int c);
+char	*ft_strdnnup(const char *s1, int n);
 
 
 /// handle ctrl_commands
