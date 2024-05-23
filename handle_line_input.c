@@ -6,23 +6,22 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/22 13:57:13 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/22 17:37:26 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
 #include "fcntl.h"
+#include "minishell.h"
 #include "string.h"
-
 
 void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 {
-	t_list_token *curr;
-	int last_exit_status = 0;
-//	if(data->next != NULL)
-//		curr = data->next;
-//	else
-		curr =data->next;
+	t_list_token	*curr;
+//	int				last_exit_status;
+//
+//	last_exit_status = 0;
+	curr = data->next;
+
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)
@@ -34,20 +33,20 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 		if (strcmp(curr->word, "exit") == 0)
 			mini_exit();
 		if (strcmp(curr->word, "export") == 0)
-			printf("not done yet\n");
+			mini_export(curr);
 		if (strcmp(curr->word, "unset") == 0)
 			mini_unset(curr);
 		if (strcmp(curr->word, "env") == 0)
 			min_env(curr, envp);
-		if (curr->word[0] == '$')
-			handle_dolar(curr, last_exit_status);
+//		if (curr->word[0] == '$')
+//			handle_dolar(curr, last_exit_status);
 	}
 }
-
 
 void	handle_line(t_input *input, t_list_token *data, char **envp)
 {
 	t_token_type	token;
+
 	// Handle Ctrl-D (EOF)
 	if (input->line == NULL)
 	{

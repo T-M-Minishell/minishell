@@ -109,7 +109,7 @@ void	min_env(t_list_token *data, char **envp)
 		curr = data->next;
 		value = getenv(curr->word);
 		if (value != NULL)
-			printf("%s\n",value);
+			printf("%s\n", value);
 		else
 			printf("%s: No such file or directory.\n",curr->word);
 	}
@@ -133,3 +133,21 @@ void mini_unset(t_list_token *data)
 		}
 	}
 }
+
+void	mini_export(t_list_token *data)
+{
+	t_list_token *curr;
+
+	curr = data;
+	if (curr->next != NULL)
+	{
+		t_dictionary *dictionary = malloc(sizeof(t_dictionary));
+		create_env_variable(dictionary, curr->next->word);
+		free(dictionary);
+	}
+	else
+	{
+		printf("export: not enough arguments\n");
+	}
+}
+
