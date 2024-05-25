@@ -40,6 +40,24 @@ void create_env_variable(t_dictionary *variable, char *str)
 	variable->value[j] = '\0';
 	setenv(variable->key, variable->value, 1);
 }
+//t_dictionary *create_env_variable(char *str)
+//{
+//	int i;
+//	int j;
+//	t_dictionary *variable = malloc(sizeof(t_dictionary));
+//
+//	j = 0;
+//	i = -1;
+//	while (str[++i] != '=')
+//		variable->key[i] = str[i];
+//	variable->key[i] = '\0';
+//	i++;
+//	while (str[i] != '\0')
+//		variable->value[j++] = str[i++];
+//	variable->value[j] = '\0';
+//
+//	return variable;
+//}
 
 void	create_var(t_list_token *data)
 {
