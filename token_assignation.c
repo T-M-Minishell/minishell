@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/27 17:46:15 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/27 17:54:16 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,13 @@ void	assign_token_to_pipe(char *line, t_list_token **data,
 	// ask sazymon how to handle multiple pipes if anything else shohulkd be skipped here in the end
 }
 
-void	assign_token_to_quote(char *line, t_list_token **data,
+void	assign_token_to_quote(char *line, t_list_token *data,
 		t_token_type token)
 {
 	t_list_token	*new_node;
+
 	printf("%s\n", line);
 	new_node = ft_lstnew(line, token);
-	
 }
 
 // assign to word
@@ -123,12 +123,16 @@ void	assign_token_to_word(char *line, t_list_token **data,
 	}
 }
 
-void 	prepre_for_tokenization(char **arr, t_list_token *data)
+void	prepre_for_tokenization(char **arr, t_list_token *data)
 {
-	int i = 0;
-	int start = 0;
-	int end = 0;
-	static int quotes;
+	int			i;
+	int			start;
+	int			end;
+	static int	quotes;
+
+	i = 0;
+	start = 0;
+	end = 0;
 	while (arr[i] != NULL)
 	{
 		while (arr[i][data->index] != '\0')
@@ -159,7 +163,6 @@ void 	prepre_for_tokenization(char **arr, t_list_token *data)
 		printf("Invalid quote number, fix case\n");
 		exit(1);
 	}
-	
 }
 
 // O functie ajutatatuare pt redus de liniim, practic trimite individual,

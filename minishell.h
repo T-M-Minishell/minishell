@@ -74,7 +74,7 @@ void	mini_unset(t_list_token *data);
 void	handle_dolar(t_list_token *data, int status);
 
 // token assignation
-t_token_type check_token(char *str, t_list_token **data);
+t_token_type check_token(char *str, t_list_token *data);
 void assign_token_to_list(char *line, t_token_type token, t_list_token **data);
 
 void print_node(t_list_token *node);
