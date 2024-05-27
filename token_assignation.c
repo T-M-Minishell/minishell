@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/27 16:39:21 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/27 17:46:15 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,27 +86,10 @@ void	assign_token_to_pipe(char *line, t_list_token **data,
 void	assign_token_to_quote(char *line, t_list_token **data,
 		t_token_type token)
 {
-	int				start_index;
-	char			*str_token;
 	t_list_token	*new_node;
-
-	(*data)->index++;
-	start_index = (*data)->index;
-	while (line[(*data)->index] != '"')
-		(*data)->index++;
-	str_token = ft_strdnup(line + start_index, (*data)->index - start_index);
-	new_node = ft_lstnew(str_token, token);
-	// print_node(new_node);
-	if (new_node == NULL)
-	{
-		free(str_token);
-		free_token_list(data);
-		return ;
-	}
-	new_node->index = (*data)->index;
-	ft_lstadd_back(data, new_node);
-	if (line[(*data)->index] != '\0') // Add this check
-		(*data)->index++;
+	printf("%s\n", line);
+	new_node = ft_lstnew(line, token);
+	
 }
 
 // assign to word
@@ -143,18 +126,38 @@ void	assign_token_to_word(char *line, t_list_token **data,
 void 	prepre_for_tokenization(char **arr, t_list_token *data)
 {
 	int i = 0;
-	int j = 0;
+	int start = 0;
+	int end = 0;
+	static int quotes;
 	while (arr[i] != NULL)
 	{
-		while (arr[i][j] != '\0')
+		while (arr[i][data->index] != '\0')
 		{
-			if (ft_strchr(arr[i][j], '"'))
+			if (ft_strchr(arr[i][data->index], '"'))
 			{
-				/** code ***/
+				data->index++;
+				start = data->index;
+				quotes++;
+				while (!ft_strchr(arr[i][data->index], '"'))
+					data->index++;
+				end = data->index;
+				if (arr[i][data->index + 1] == '"')
+				{
+					assign_token_to_quote(arr[start][end], data);
+				}
+				else
+				{
+					exit(1);
+				}
 			}
-			
+			data->index++;
 		}
-		
+		i++;
+	}
+	if (quotes % 2 != 0)
+	{
+		printf("Invalid quote number, fix case\n");
+		exit(1);
 	}
 	
 }
