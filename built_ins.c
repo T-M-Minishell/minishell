@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+void	check_for_quotes(char *str)
+{
+	int i;
+
+	i = 0;
+	if(str[0] == '"')
+		i++;
+	while(str[i] != '\0')
+	{
+		if(str[strlen(str)] == '"')
+			break ;
+		printf("%c",str[i++]);
+	}
+}
+
+
+
 // 1. echo with option -n
 
 void	mini_echo(t_list_token *data)
@@ -21,13 +38,16 @@ void	mini_echo(t_list_token *data)
 	curr = data;
 	if (curr->next == NULL)
 		printf("\n");
+//	check_for_quotes(curr->word);
 	else
 	{
 		curr = curr->next;
 		int	print_new_line = 1;
 		//check for -n function
-		if(curr->word != NULL && strcmp(curr->word, "-n") == 0)
+		while(curr->word != NULL && curr->word[0] == '-' && curr->word[1] == 'n')
 		{
+			if(strcmp(curr->word, "-n-") == 0)
+				break;
 			print_new_line = 0;
 			curr = curr->next;
 		}
@@ -43,9 +63,7 @@ void	mini_echo(t_list_token *data)
 					printf("%s ", "");
 			}
 			else
-			{
-				printf("%s ", curr->word);
-			}
+				printf("%s ",curr->word);
 			curr = curr->next;
 		}
 		// print new_line if -n is not specified

@@ -87,4 +87,7 @@ void print_node(t_list_token *node);
 char **turn_word_into_arr(t_list_token *data);
 void   handle_not_existent_builtins(t_list_token *data);
 
+// helper_functions
+int ft_strcmp_mod(char *str1, char *str2);
+
 #endif

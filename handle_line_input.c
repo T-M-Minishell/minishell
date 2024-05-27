@@ -23,6 +23,7 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 	curr = data->next;
 	if(strchr(curr->word, '='))
 		create_var(curr);
+
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)
@@ -56,6 +57,9 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 	}
 	if (input->line[0] == '\0')
 		return ;
+	while (input->line[0] == ' ')
+		input->line++;
+
 	while ((token = check_token(input->line, &data)) != END)
 		assign_token_to_list(input->line, token, &data);
 	handle_tokens_in_prompt(data, envp);

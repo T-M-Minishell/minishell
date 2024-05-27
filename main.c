@@ -62,7 +62,7 @@ int	main(int argc, char **argv, char **envp)
 		// Execute the parsed commands
 
 		// Free the memory allocated by readline
-		free(input.line);
+//		free(input.line);
 	}
 	return (0);
 }
