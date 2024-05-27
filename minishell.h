@@ -49,7 +49,9 @@ char	*ft_strrchr(const char *s, int c);
 //utils3
 char	*ft_strchr(const char *s, int c);
 char	*ft_strdnnup(const char *s1, int n);
-
+void 	free_arr(char **arr);
+void	ft_lstrest(t_list_token *data, t_token_type token);
+char	**ft_split(const char *s, char c);
 
 /// handle ctrl_commands
 void ctrl_commands();
@@ -72,7 +74,7 @@ void	mini_unset(t_list_token *data);
 void	handle_dolar(t_list_token *data, int status);
 
 // token assignation
-t_token_type check_token(char *str, t_list_token **data);
+t_token_type check_token(char **arr, t_list_token **data);
 void assign_token_to_list(char *line, t_token_type token, t_list_token **data);
 
 void print_node(t_list_token *node);

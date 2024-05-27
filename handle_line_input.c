@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/23 17:40:38 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/27 16:27:09 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,18 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 void	handle_line(t_input *input, t_list_token *data, char **envp)
 {
 	t_token_type	token;
+	char **arr;
 
+	// printf("%s\n", input->line);
+	// exit(1);
+	// arr = ft_split(input->line,' ');
+	// int i = 0;
+	// while (arr[i] != NULL)
+	// {
+	// 	printf("%s\n",arr[i]);
+	// 	i++;
+	// }
+	
 	// Handle Ctrl-D (EOF)
 	if (input->line == NULL)
 	{
@@ -70,7 +81,13 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 	if (input->line[0] == '\0')
 		return ;
 	while ((token = check_token(input->line, &data)) != END)
+	{
+		arr = ft_split(input->line, ' ');
+		if (!arr == NULL)
+			exit(1);
+		prepare_for_tokenization(arr, &data);
 		assign_token_to_list(input->line, token, &data);
+	}
 	if (data->next->quotes != NULL)
 	{
 		handle_tokens_in_prompt_for_quotes(data);
