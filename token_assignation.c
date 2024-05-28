@@ -6,13 +6,38 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/27 17:54:16 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/28 18:48:46 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // debug functions
+
+char	*ft_strdup(const char *s1)
+{
+	int		i;
+	int		j;
+	char	*s2;
+
+	i = 0;
+	j = 0;
+	while (s1[i] != '\0')
+	{
+		i++;
+	}
+	s2 = (char *)malloc((i + 1) * sizeof(char));
+	if (s2 == NULL)
+	{
+		return (NULL);
+	}
+	while (j <= i)
+	{
+		s2[j] = s1[j];
+		j++;
+	}
+	return (s2);
+}
 
 void	print_node(t_list_token *node)
 {
@@ -82,18 +107,6 @@ void	assign_token_to_pipe(char *line, t_list_token **data,
 		(*data)->index++;
 	// ask sazymon how to handle multiple pipes if anything else shohulkd be skipped here in the end
 }
-
-void	assign_token_to_quote(char *line, t_list_token *data,
-		t_token_type token)
-{
-	t_list_token	*new_node;
-
-	printf("%s\n", line);
-	new_node = ft_lstnew(line, token);
-}
-
-// assign to word
-
 void	assign_token_to_word(char *line, t_list_token **data,
 		t_token_type token)
 {
@@ -123,47 +136,27 @@ void	assign_token_to_word(char *line, t_list_token **data,
 	}
 }
 
-void	prepre_for_tokenization(char **arr, t_list_token *data)
+void	assign_token_to_quote(char *line, t_list_token *data,
+		t_token_type token)
 {
-	int			i;
-	int			start;
-	int			end;
-	static int	quotes;
+	t_list_token	*new_node;
 
-	i = 0;
-	start = 0;
-	end = 0;
-	while (arr[i] != NULL)
+	if (line == NULL)
 	{
-		while (arr[i][data->index] != '\0')
-		{
-			if (ft_strchr(arr[i][data->index], '"'))
-			{
-				data->index++;
-				start = data->index;
-				quotes++;
-				while (!ft_strchr(arr[i][data->index], '"'))
-					data->index++;
-				end = data->index;
-				if (arr[i][data->index + 1] == '"')
-				{
-					assign_token_to_quote(arr[start][end], data);
-				}
-				else
-				{
-					exit(1);
-				}
-			}
-			data->index++;
-		}
-		i++;
+		free_token_list(&data);
+		return ;
 	}
-	if (quotes % 2 != 0)
+	new_node = ft_lstnew(line, token);
+	if (new_node == NULL)
 	{
-		printf("Invalid quote number, fix case\n");
-		exit(1);
+		free_token_list(&data);
+		return ;
 	}
+	ft_lstadd_back(&data, new_node);
+	print_node(data->next);
 }
+
+// assign to word
 
 // O functie ajutatatuare pt redus de liniim, practic trimite individual,
 // bazat pe ce tip de data avem,
@@ -172,42 +165,74 @@ void	prepre_for_tokenization(char **arr, t_list_token *data)
 void	assign_token_to_list(char *line,
 							t_token_type token,
 							/// rewrite the whole assignation
-							t_list_token **data)
+							t_list_token *data)
 {
 	if (token == QUOTE)
 		assign_token_to_quote(line, data, token);
-	else if (token == WORD)
-		assign_token_to_word(line, data, token);
-	else if (token == PIPE)
-		assign_token_to_pipe(line, data, token);
-	else if (token == REDIRECT)
-		assign_token_to_redirect(line, data, token);
+	// else if (token == WORD)
+	// 	assign_token_to_word(line, data, token);
+	// else if (token == PIPE)
+	// 	assign_token_to_pipe(line, data, token);
+	// else if (token == REDIRECT)
+	// 	assign_token_to_redirect(line, data, token);
 }
 
+void	prepre_for_tokenization(char **arr, t_list_token *data,
+		t_token_type token)
+{
+	int			i;
+	int			start;
+	int			end;
+	static int	quotes;
+	char		*str;
+
+	i = 0;
+	while (arr[i] != NULL)
+	{
+		data->index = 0; // Reset index for each new string
+		while (arr[i][data->index] != '\0')
+		{
+			if (arr[i][data->index] == '"')
+			{
+				start = data->index + 1;
+				quotes++;
+				data->index++;
+				while (arr[i][data->index] != '"' && arr[i][data->index] != '\0')
+					data->index++;
+				end = data->index;
+				if (quotes % 2 == 0)
+				{
+					str = ft_strdnup(arr[i] + start, end - start);
+					assign_token_to_list(str,token, data);
+					free(str);
+				}
+				data->index++; // Increment index after finding a quote
+			}
+			else
+			{
+				data->index++;
+			}
+		}
+		i++;
+	}
+}
 // This function checks for the data type by assigning enum values and returns them back to main
 // These "<" || ">" || "|" IF NOT any of these => WORD
 t_token_type	check_token(char *str, t_list_token *data)
 {
 	while ((is_space(&str[data->index])))
 		data->index++;
-	while (str[data->index] != '\0')
-	{
-		if (str[data->index] == '"')
-			return (QUOTE);
-		else if (str[data->index] != '|' && str[data->index] != '<'
-			&& str[data->index] != '>' && str[data->index] != '"')
-			return (WORD);
-		else if (str[data->index] == '|')
-			return (PIPE);
-		else if (str[data->index] == '>' || str[data->index] == '<')
-			return (REDIRECT);
-		while ((is_space(&str[data->index])))
-		{
-			if (str[data->index] == '\0')
-				return (END);
-			data->index++;
-		}
-		data->index++;
-	}
+	if (str[data->index] == '\0')
+		return (END);
+	if (str[data->index] == '"')
+		return (QUOTE);
+	else if (str[data->index] != '|' && str[data->index] != '<'
+		&& str[data->index] != '>' && str[data->index] != '"')
+		return (WORD);
+	else if (str[data->index] == '|')
+		return (PIPE);
+	else if (str[data->index] == '>' || str[data->index] == '<')
+		return (REDIRECT);
+	data->index++;
 	return (END);
 }
