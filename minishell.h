@@ -16,6 +16,13 @@
 #define PROMPT "\033[1m\033[31mminihell*$>\033[0;34m"
 #define MAX_PATH 1024
 
+
+typedef struct s_env_var{
+	char* key;
+	int 	count;
+	char* value;
+} env_var;
+
 typedef struct s_dictionary
 {
 	char key[256];
@@ -56,7 +63,7 @@ int 	ft_strlen(char *str);
 void ctrl_commands();
 
 // handle line_input
-void handle_line(t_input *input, t_list_token *data, char **envp);
+void handle_line(t_input *input, t_list_token *data, char **envp, env_var 	*env_vars);
 
 // history
 void create_history(t_history *history, char *line);
@@ -70,7 +77,7 @@ void	mini_echo(t_list_token *data);
 int		mini_cd(t_list_token *data);
 void	mini_pwd(void);
 void	mini_exit(void);
-void	min_env(t_list_token *data, char **envp);
+void	min_env(t_list_token *data,  env_var 	*env_vars);
 void	mini_unset(t_list_token *data);
 void	mini_export(t_list_token *data);
 
@@ -89,5 +96,10 @@ void   handle_not_existent_builtins(t_list_token *data);
 
 // helper_functions
 int ft_strcmp_mod(char *str1, char *str2);
+
+
+/// test
+env_var* get_env_vars(char** envp);
+env_var* add_env_var(env_var* env_vars, char *word);
 
 #endif

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   built_ins.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/21 18:52:05 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/30 14:42:22 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -98,49 +99,47 @@ int mini_cd(t_list_token *data)
 			}
 		}
 	}
-    return 0;
+	return 0;
 }
- // view in wich directory you are
+// view in wich directory you are
 void	mini_pwd(void)
 {
-    char *cwd = getcwd(NULL, 0);  // Get current working directory
-    if (cwd == NULL)
-        perror("pwd");
-    else
+	char *cwd = getcwd(NULL, 0);  // Get current working directory
+	if (cwd == NULL)
+		perror("pwd");
+	else
 	{
-        printf("%s\n", cwd);
-        free(cwd);  // Free memory
-    }
+		printf("%s\n", cwd);
+		free(cwd);  // Free memory
+	}
 }
 
 void	mini_exit(void)
 {
 	printf("exit\n");
-    exit(0); 
+	exit(0);
 }
 
-void	min_env(t_list_token *data, char **envp)
+void min_env(t_list_token *data, env_var *env_vars)
 {
-	t_list_token  *curr;
-	char *value;
+	(void)data;
+	int i = 0;
 
-	if (data->next == NULL)
+	while (env_vars[i].key)
 	{
-		for (char **env = envp; *env != 0; env++)
-		{
-			char *thisEnv = *env;
-			printf("%s\n", thisEnv);
-		}
+		printf("%s=%s\n", env_vars[i].key, env_vars[i].value);
+		i++;
 	}
-	else
-	{
-		curr = data->next;
-		value = getenv(curr->word);
-		if (value != NULL)
-			printf("%s\n", value);
-		else
-			printf("%s: No such file or directory.\n",curr->word);
-	}
+
+//	else
+//	{
+//		curr = data->next;
+//		value = getenv(curr->word);
+//		if (value != NULL)
+//			printf("%s\n", value);
+//		else
+//			printf("%s: No such file or directory.\n",curr->word);
+//	}
 }
 
 void mini_unset(t_list_token *data)
@@ -170,7 +169,7 @@ void	mini_export(t_list_token *data)
 	if (curr->next != NULL)
 	{
 		t_dictionary *dictionary = malloc(sizeof(t_dictionary));
-		create_env_variable(dictionary, curr->next->word);
+//		create_env_variable(dictionary, curr->next->word);
 		free(dictionary);
 	}
 	else
@@ -178,4 +177,3 @@ void	mini_export(t_list_token *data)
 		printf("export: not enough arguments\n");
 	}
 }
-

@@ -3,27 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   handle_line_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/22 17:37:26 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/30 14:41:20 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fcntl.h"
 #include "minishell.h"
-#include "string.h"
 
-void	handle_tokens_in_prompt(t_list_token *data, char **envp)
+void	handle_tokens_in_prompt(t_list_token *data, char **envp, env_var 	*env_vars)
 {
 	t_list_token	*curr;
+	(void)envp;
 //	int				last_exit_status;
 //
 //	last_exit_status = 0;
 	curr = data->next;
 	if(strchr(curr->word, '='))
-		create_var(curr);
-
+		env_vars =  add_env_var(env_vars,curr->word);
+//	 int i = 0;
+//	 while (env_vars[i].key != NULL)
+//	 {
+//	 	printf("%s=%s\n", env_vars[i].key, env_vars[i].value);
+//	 	i++;
+//	 }
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)
@@ -39,13 +43,13 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp)
 		if (strcmp(curr->word, "unset") == 0)
 			mini_unset(curr);
 		if (strcmp(curr->word, "env") == 0)
-			min_env(curr, envp);
+			min_env(curr, env_vars);
 //		if (curr->word[0] == '$')
 //			handle_dolar(curr, last_exit_status);
 	}
 }
 
-void	handle_line(t_input *input, t_list_token *data, char **envp)
+void	handle_line(t_input *input, t_list_token *data, char **envp, env_var 	*env_vars)
 {
 	t_token_type	token;
 
@@ -62,7 +66,7 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 
 	while ((token = check_token(input->line, &data)) != END)
 		assign_token_to_list(input->line, token, &data);
-	handle_tokens_in_prompt(data, envp);
+	handle_tokens_in_prompt(data, envp, env_vars);
 	handle_not_existent_builtins(data);
 	ft_lstreset(data, token);
 }
