@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/28 18:46:26 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/30 17:01:48 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 {
 	t_token_type	token;
 	char			**arr;
+	int				i;
 
 	// printf("%s\n", input->line);
 	// exit(1);
@@ -79,20 +80,27 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 	}
 	if (input->line[0] == '\0')
 		return ;
-	while ((token = check_token(input->line, data)) != END)
+	i = 0;
+	arr = ft_split(input->line, ' ');
+	if (arr == NULL)
+		exit(1);
+	token = check_token(&input->line[i]);
+	while (arr[i] != NULL)
 	{
-		arr = ft_split(input->line, ' ');
-		if (!arr)
-			exit(1);
-		prepre_for_tokenization(arr, data, token);
+		prepre_for_tokenization(arr[i], &data, token);
+		// free(arr[i]);
+		i++;
+		printf("%s\n", arr[i]);
 	}
 	ft_lstreset(data, token);
+	// free_arr(arr);
+	// free_arr(arr);
 	// if (data->next->quotes != NULL)
 	// {
 	// 	handle_tokens_in_prompt_for_quotes(data);
 	// }
 	// handle_not_existent_builtins(data);
-	if (arr == NULL)
+	if (token == 100)
 	{
 		handle_tokens_in_prompt(data, envp);
 	}

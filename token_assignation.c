@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/28 18:48:46 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/05/30 17:00:57 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,24 +136,24 @@ void	assign_token_to_word(char *line, t_list_token **data,
 	}
 }
 
-void	assign_token_to_quote(char *line, t_list_token *data,
+void	assign_token_to_quote(char *line, t_list_token **data,
 		t_token_type token)
 {
 	t_list_token	*new_node;
 
 	if (line == NULL)
 	{
-		free_token_list(&data);
+		free_token_list(data);
 		return ;
 	}
 	new_node = ft_lstnew(line, token);
 	if (new_node == NULL)
 	{
-		free_token_list(&data);
+		free_token_list(data);
 		return ;
 	}
-	ft_lstadd_back(&data, new_node);
-	print_node(data->next);
+	ft_lstadd_back(data, new_node);
+	print_node((*data)->next);
 }
 
 // assign to word
@@ -162,77 +162,75 @@ void	assign_token_to_quote(char *line, t_list_token *data,
 // bazat pe ce tip de data avem,
 // catre o functie care va assignui ce in now catre tipul corespunzator de data
 
-void	assign_token_to_list(char *line,
-							t_token_type token,
-							/// rewrite the whole assignation
-							t_list_token *data)
+void	assign_token_to_list(char *line, t_token_type token,
+		t_list_token **data)
 {
 	if (token == QUOTE)
 		assign_token_to_quote(line, data, token);
 	// else if (token == WORD)
 	// 	assign_token_to_word(line, data, token);
 	// else if (token == PIPE)
-	// 	assign_token_to_pipe(line, data, token);
+	// 	assign_toprepre_for_tokenization(arr, &data, token);ken_to_pipe(line,
+	// data, token);
 	// else if (token == REDIRECT)
 	// 	assign_token_to_redirect(line, data, token);
 }
 
-void	prepre_for_tokenization(char **arr, t_list_token *data,
+void	prepre_for_tokenization(char *str, t_list_token **data,
 		t_token_type token)
 {
-	int			i;
 	int			start;
 	int			end;
 	static int	quotes;
-	char		*str;
+	char		*strcpy;
 
-	i = 0;
-	while (arr[i] != NULL)
+	while (str[(*data)->index] != '\0')
 	{
-		data->index = 0; // Reset index for each new string
-		while (arr[i][data->index] != '\0')
+		if (str[(*data)->index] == '"')
 		{
-			if (arr[i][data->index] == '"')
+			start = (*data)->index + 1;
+			quotes++;
+			(*data)->index++;
+			while (str[(*data)->index] != '"'
+				&& str[(*data)->index] != '\0')
 			{
-				start = data->index + 1;
-				quotes++;
-				data->index++;
-				while (arr[i][data->index] != '"' && arr[i][data->index] != '\0')
-					data->index++;
-				end = data->index;
-				if (quotes % 2 == 0)
-				{
-					str = ft_strdnup(arr[i] + start, end - start);
-					assign_token_to_list(str,token, data);
-					free(str);
-				}
-				data->index++; // Increment index after finding a quote
+				(*data)->index++;
+				if (str[(*data)->index + 1] == '"')
+					quotes++;
 			}
-			else
+			end = (*data)->index;
+			(*data)->index++;
+			if (quotes % 2 == 0)
 			{
-				data->index++;
+				quotes = 0;
+				strcpy = ft_strdnup(&str[start], end - start);
+				assign_token_to_list(strcpy, token, &(*data));
+				free(strcpy);
 			}
 		}
-		i++;
+		else
+		{
+			(*data)->index ++;
+		}
+		
 	}
 }
 // This function checks for the data type by assigning enum values and returns them back to main
 // These "<" || ">" || "|" IF NOT any of these => WORD
-t_token_type	check_token(char *str, t_list_token *data)
+t_token_type	check_token(char *str)
 {
-	while ((is_space(&str[data->index])))
-		data->index++;
-	if (str[data->index] == '\0')
-		return (END);
-	if (str[data->index] == '"')
-		return (QUOTE);
-	else if (str[data->index] != '|' && str[data->index] != '<'
-		&& str[data->index] != '>' && str[data->index] != '"')
-		return (WORD);
-	else if (str[data->index] == '|')
-		return (PIPE);
-	else if (str[data->index] == '>' || str[data->index] == '<')
-		return (REDIRECT);
-	data->index++;
-	return (END);
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '"')
+			return (QUOTE);
+		else if (str[i] == '|')
+			return (PIPE);
+		else if (str[i] == '>' || str[i] == '<')
+			return (REDIRECT);
+		i++;
+	}
+	return (WORD);
 }
