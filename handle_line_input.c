@@ -6,13 +6,22 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/30 17:01:48 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/02 19:08:10 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fcntl.h"
 #include "minishell.h"
 #include "string.h"
+
+t_list_token	*ft_lstfirst(t_list_token *lst)
+{
+	if (lst == NULL)
+		return (NULL);
+	while (lst->prev != NULL)
+		lst = lst->prev;
+	return (lst);
+}
 
 void	handle_tokens_in_prompt_for_quotes(t_list_token *data)
 {
@@ -29,17 +38,19 @@ void	handle_tokens_in_prompt_for_quotes(t_list_token *data)
 	}
 }
 
-void	handle_tokens_in_prompt(t_list_token *data, char **envp)
+void	handle_tokens_in_prompt(t_list_token **data, char **envp, t_token_type token)
 {
 	t_list_token	*curr;
 	int				last_exit_status;
 
 	last_exit_status = 0;
-	curr = data->next;
+	curr = (*data)->next;
+	// printf("%s\n", curr->word);
+	// printf("%s\n", curr->next->quotes);
 	if (curr->word != NULL)
 	{
-		if (strcmp(curr->word, "echo") == 0)
-			mini_echo(curr);
+		if ((strcmp(curr->word, "echo") == 0) || (strcmp(curr->quotes, "echo") == 0))
+			mini_echo(curr, token);
 		if (strcmp(curr->word, "cd") == 0)
 			mini_cd(curr);
 		if (strcmp(curr->word, "pwd") == 0)
@@ -62,17 +73,8 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 	t_token_type	token;
 	char			**arr;
 	int				i;
+	t_list_token	*tail;
 
-	// printf("%s\n", input->line);
-	// exit(1);
-	// arr = ft_split(input->line,' ');
-	// int i = 0;
-	// while (arr[i] != NULL)
-	// {
-	// 	printf("%s\n",arr[i]);
-	// 	i++;
-	// }
-	// Handle Ctrl-D (EOF)
 	if (input->line == NULL)
 	{
 		printf("exit\n");
@@ -80,28 +82,31 @@ void	handle_line(t_input *input, t_list_token *data, char **envp)
 	}
 	if (input->line[0] == '\0')
 		return ;
-	i = 0;
 	arr = ft_split(input->line, ' ');
 	if (arr == NULL)
 		exit(1);
-	token = check_token(&input->line[i]);
+	i = 0;
+	tail = ft_lstlast(data);
 	while (arr[i] != NULL)
 	{
-		prepre_for_tokenization(arr[i], &data, token);
-		// free(arr[i]);
+		token = check_token(arr[i]);
+		if (token == QUOTE)
+		{
+			prepare_for_tokenization_quote(arr[i], &tail, token);
+			free(arr[i]);
+		}
+		else if (token == WORD)
+		{
+			prepare_for_tokenization_word(arr[i], &tail, token);
+			free(arr[i]);
+		}
 		i++;
-		printf("%s\n", arr[i]);
 	}
+	handle_tokens_in_prompt(&data, envp, token);
 	ft_lstreset(data, token);
-	// free_arr(arr);
-	// free_arr(arr);
 	// if (data->next->quotes != NULL)
 	// {
 	// 	handle_tokens_in_prompt_for_quotes(data);
 	// }
 	// handle_not_existent_builtins(data);
-	if (token == 100)
-	{
-		handle_tokens_in_prompt(data, envp);
-	}
 }

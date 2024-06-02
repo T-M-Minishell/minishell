@@ -52,6 +52,10 @@ void			free_arr(char **arr);
 void			ft_lstrest(t_list_token *data, t_token_type token);
 char			**ft_split(const char *s, char c);
 
+// utils4
+
+t_list_token	*ft_lstlast(t_list_token *lst);
+
 /// handle ctrl_commands
 void			ctrl_commands(void);
 
@@ -62,7 +66,7 @@ void			handle_line(t_input *input, t_list_token *data, char **envp);
 void			create_history(t_history *history, char *line);
 
 /// built_ins
-void			mini_echo(t_list_token *data);
+void			mini_echo(t_list_token *data, t_token_type token);
 int				mini_cd(t_list_token *data);
 void			mini_pwd(void);
 void			mini_exit(void);
@@ -76,7 +80,9 @@ void			handle_dolar(t_list_token *data, int status);
 t_token_type	check_token(char *str);
 void			assign_token_to_list(char *line, t_token_type token,
 					t_list_token **data);
-void			prepre_for_tokenization(char *str, t_list_token **data,
+void			prepare_for_tokenization_quote(char *str, t_list_token **data,
+					t_token_type token);
+void			prepare_for_tokenization_word(char *str, t_list_token **data,
 					t_token_type token);
 void			print_node(t_list_token *node);
 
