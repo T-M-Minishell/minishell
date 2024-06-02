@@ -32,7 +32,7 @@ void	check_for_quotes(char *str)
 
 // 1. echo with option -n
 
-void	mini_echo(t_list_token *data)
+void	mini_echo(t_list_token *data) // to do for env variables
 {
 	t_list_token *curr;
 
@@ -125,40 +125,28 @@ void min_env(t_list_token *data, env_var *env_vars)
 	(void)data;
 	int i = 0;
 
-	while (env_vars[i].key)
+	while (env_vars->arr[i])
 	{
-		printf("%s=%s\n", env_vars[i].key, env_vars[i].value);
+		printf("%s\n", env_vars->arr[i]);
 		i++;
 	}
 
-//	else
-//	{
-//		curr = data->next;
-//		value = getenv(curr->word);
-//		if (value != NULL)
-//			printf("%s\n", value);
-//		else
-//			printf("%s: No such file or directory.\n",curr->word);
-//	}
 }
 
-void mini_unset(t_list_token *data)
+env_var *mini_unset(t_list_token *data, env_var *env_vars)  // to do
 {
 	t_list_token *curr;
 
 	curr = data;
 	if (data->next == NULL)
-		return ;
+		return NULL;
 	curr = curr->next;
 	if (curr->word == NULL) {
 		printf("unset: requires an argument\n");
 	}
 	else
-	{
-		if (unsetenv(curr->word) != 0) {
-			perror("unset");
-		}
-	}
+		env_vars= delete_env_var(env_vars, curr->word);
+	return env_vars;
 }
 
 void	mini_export(t_list_token *data)
@@ -176,4 +164,5 @@ void	mini_export(t_list_token *data)
 	{
 		printf("export: not enough arguments\n");
 	}
+
 }

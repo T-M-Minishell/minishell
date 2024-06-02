@@ -30,44 +30,40 @@ void	print_logo(void)
 }
 
 
-int	main(int argc, char **argv, char **envp)
-{
+int main(int argc, char **argv, char **envp) {
 	t_input input;
 	t_list_token *data;
-	env_var 	*env_vars = NULL;
+	env_var *env_vars = NULL;
 	(void)argv;
 
 	input.prompt = PROMPT;
 	print_logo();
-	//------test
 
-	env_vars = get_env_vars(envp);
+//	int i = 0;
+	// Initialize environment variables
+	env_vars = get_env_vars(envp); // works
 
-	///test
+
+	// Initialize token list
 	data = ft_lstnew_init();
-	if (argc != 1)
-	{
+	if (argc != 1) {
 		printf("args are not allowed\n");
 		exit(1);
 	}
-	while (1)
-	{
+
+	while (1) {
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
 		ctrl_commands();
 
 		// Read user input using readline
 		input.line = readline(input.prompt);
 
-		handle_line(&input, data, envp, env_vars);
+		handle_line(&input, data, envp, &env_vars);
 		// Add the line to history
 		add_history(input.line);
 
-		// Parse the input: separate commands and arguments
-
-		// Execute the parsed commands
-
 		// Free the memory allocated by readline
-//		free(input.line);
+		free(input.line);
 	}
-	return (0);
+	return 0;
 }

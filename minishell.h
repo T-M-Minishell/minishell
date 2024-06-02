@@ -13,11 +13,19 @@
 #include <string.h>
 
 #define MAX_HISTORY 100
-#define PROMPT "\033[1m\033[31mminihell*$>\033[0;34m"
+#define PROMPT "\033[1m\033[31mminihell*$> \033[0;34m"
 #define MAX_PATH 1024
 
+//typedef struct env_var {
+//	char *key;
+//	char *value;
+//	struct env_var *next;
+//} env_var;
 
-typedef struct s_env_var{
+
+typedef struct s_env_var
+{
+	char **arr;
 	char* key;
 	int 	count;
 	char* value;
@@ -63,14 +71,19 @@ int 	ft_strlen(char *str);
 void ctrl_commands();
 
 // handle line_input
-void handle_line(t_input *input, t_list_token *data, char **envp, env_var 	*env_vars);
+void handle_line(t_input *input, t_list_token *data, char **envp, env_var 	**env_vars);
 
 // history
 void create_history(t_history *history, char *line);
 
-// create env_variable
-void create_env_variable(t_dictionary *variable, char *str);
-void	create_var(t_list_token *data);
+// handle env_variable
+env_var	*get_env_vars(char** envp);
+env_var	*add_env_var(env_var* old_env_vars, char *word);
+env_var	*delete_env_var(env_var *old_env_vars, char *key);
+//env_var	*delete_env_var(env_var *head, char *key);
+//env_var	*add_env_var(env_var *head, char *word);
+char	*get_key_from_word(char *word);
+
 
 /// built_ins
 void	mini_echo(t_list_token *data);
@@ -78,7 +91,7 @@ int		mini_cd(t_list_token *data);
 void	mini_pwd(void);
 void	mini_exit(void);
 void	min_env(t_list_token *data,  env_var 	*env_vars);
-void	mini_unset(t_list_token *data);
+env_var *mini_unset(t_list_token *data, env_var *env_vars);
 void	mini_export(t_list_token *data);
 
 // handle_dolar
@@ -99,7 +112,6 @@ int ft_strcmp_mod(char *str1, char *str2);
 
 
 /// test
-env_var* get_env_vars(char** envp);
-env_var* add_env_var(env_var* env_vars, char *word);
+
 
 #endif

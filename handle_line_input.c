@@ -12,22 +12,13 @@
 
 #include "minishell.h"
 
-void	handle_tokens_in_prompt(t_list_token *data, char **envp, env_var 	*env_vars)
-{
-	t_list_token	*curr;
+void handle_tokens_in_prompt(t_list_token *data, char **envp, env_var **env_vars) {
+	t_list_token *curr;
 	(void)envp;
-//	int				last_exit_status;
-//
-//	last_exit_status = 0;
+
 	curr = data->next;
-	if(strchr(curr->word, '='))
-		env_vars =  add_env_var(env_vars,curr->word);
-//	 int i = 0;
-//	 while (env_vars[i].key != NULL)
-//	 {
-//	 	printf("%s=%s\n", env_vars[i].key, env_vars[i].value);
-//	 	i++;
-//	 }
+	if (strchr(curr->word, '='))
+		*env_vars = add_env_var(*env_vars, curr->word);
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "echo") == 0)
@@ -41,26 +32,22 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp, env_var 	*env_vars
 		if (strcmp(curr->word, "export") == 0)
 			mini_export(curr);
 		if (strcmp(curr->word, "unset") == 0)
-			mini_unset(curr);
+			*env_vars = mini_unset(curr, *env_vars);
 		if (strcmp(curr->word, "env") == 0)
-			min_env(curr, env_vars);
-//		if (curr->word[0] == '$')
-//			handle_dolar(curr, last_exit_status);
+			min_env(curr, *env_vars);
 	}
 }
 
-void	handle_line(t_input *input, t_list_token *data, char **envp, env_var 	*env_vars)
-{
-	t_token_type	token;
+void handle_line(t_input *input, t_list_token *data, char **envp, env_var **env_vars) {
+	t_token_type token;
 
 	// Handle Ctrl-D (EOF)
-	if (input->line == NULL)
-	{
+	if (input->line == NULL) {
 		printf("exit\n");
 		exit(1);
 	}
 	if (input->line[0] == '\0')
-		return ;
+		return;
 	while (input->line[0] == ' ')
 		input->line++;
 
