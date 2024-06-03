@@ -12,6 +12,20 @@
 
 #include "minishell.h"
 
+void free_vars(env_var *vars)
+{
+	int i;
+
+	i = 0;
+	while(vars->arr[i])
+	{
+		free(vars->arr[i]);
+		i++;
+	}
+	free(vars->arr);
+	free(vars);
+}
+
 
 bool check_if_alphanumeric(char *str)
 {
@@ -30,8 +44,10 @@ char *get_key_from_word(char *word)
 	int i = 0;
 	while (word[i] != '=')
 		i++;
-	word[i] = '\0';
-	return(word);
+	char *key = malloc(i + 1);
+	strncpy(key, word, i);
+	key[i] = '\0';
+	return key;
 }
 
 
@@ -59,53 +75,59 @@ env_var *get_env_vars(char **envp)
 	return(vars);
 }
 
-env_var *add_env_var(env_var *old_env_vars, char *word)
-{
-	int	i;
-	int	j;
+
+env_var *add_env_var(env_var *old_env_vars, char *word) {
+	int i, j;
 	env_var *new_env;
 
-//	if (!check_if_alphanumeric(word))
-//		return(NULL);
 	new_env = malloc(sizeof(env_var));
-	if(!new_env)
-		return(NULL);
+	if (!new_env) {
+		return NULL;
+	}
+
 	i = 0;
 	while (old_env_vars->arr[i])
 		i++;
-	new_env->arr = malloc(sizeof (char *) *(i + 2));
-	if(!new_env->arr)
-	{
+	new_env->arr = malloc(sizeof(char *) * (i + 2));
+	if (!new_env->arr) {
 		free(new_env);
 		return NULL;
 	}
 	j = 0;
-	while(j < i)
+	while (j < i)
 	{
-		new_env->arr[j] = strdup(old_env_vars->arr[j]);
+		new_env->arr[j] = old_env_vars->arr[j];
 		j++;
 	}
+
+	// Allocate memory for the new environment variable
+	new_env->arr[j] = malloc(strlen(word) + 1);
+	if (!new_env->arr[j]) {
+		free(new_env->arr);
+		free(new_env);
+		return NULL;
+	}
+	strcpy(new_env->arr[j], word);
+	new_env->arr[j + 1] = NULL;
 	free(old_env_vars->arr);
 	free(old_env_vars);
-	new_env->arr[j] = strdup(word);
-	new_env->arr[j+1] = NULL;
-	return(new_env);
+
+	return new_env;
 }
 
-env_var *delete_env_var(env_var *old_env_vars, char *key)
-{
-	int	i;
-	int	j = 0;
+env_var *delete_env_var(env_var *old_env_vars, char *key) {
+	int i;
+	int j = 0;
 	env_var *new_env;
 
 	new_env = malloc(sizeof(env_var));
-	if(!new_env)
-		return(NULL);
+	if (!new_env)
+		return NULL;
 	i = 0;
 	while (old_env_vars->arr[i])
 		i++;
-	new_env->arr = malloc(sizeof (char *) * i);
-	if(!new_env->arr)
+	new_env->arr = malloc(sizeof(char *) * i);
+	if (!new_env->arr)
 	{
 		free(new_env);
 		return NULL;
@@ -113,22 +135,20 @@ env_var *delete_env_var(env_var *old_env_vars, char *key)
 	i = 0;
 	while (old_env_vars->arr[i] != NULL)
 	{
-		char *copy = strdup(old_env_vars->arr[i]);
-		if (strcmp(key, get_key_from_word(copy)) == 0)
+		char *old_key = get_key_from_word(old_env_vars->arr[i]);
+		if (strcmp(key, old_key) != 0)
 		{
-			free(copy);
-			free(old_env_vars->arr[i]);
-			i++;
-			continue;
+			new_env->arr[j] = old_env_vars->arr[i];
+			j++;
 		}
-		free(copy);
-		new_env->arr[j] = strdup(old_env_vars->arr[i]);
-		free(old_env_vars->arr[i]);
+		else
+			free(old_env_vars->arr[i]);
+		free(old_key);
 		i++;
-		j++;
 	}
 	new_env->arr[j] = NULL;
 	free(old_env_vars->arr);
 	free(old_env_vars);
-	return(new_env);
+
+	return new_env;
 }

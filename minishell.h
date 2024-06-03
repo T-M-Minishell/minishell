@@ -61,11 +61,10 @@ void handle_line(t_input *input, t_list_token *data, char **envp, env_var 	**env
 void create_history(t_history *history, char *line);
 
 // handle env_variable
+void	free_vars(env_var *vars);
 env_var	*get_env_vars(char** envp);
 env_var	*add_env_var(env_var* old_env_vars, char *word);
 env_var	*delete_env_var(env_var *old_env_vars, char *key);
-//env_var	*delete_env_var(env_var *head, char *key);
-//env_var	*add_env_var(env_var *head, char *word);
 char	*get_key_from_word(char *word);
 
 
@@ -93,6 +92,7 @@ void   handle_not_existent_builtins(t_list_token *data);
 
 // helper_functions
 int ft_strcmp_mod(char *str1, char *str2);
+char	*ft_strdup(char *s1);
 
 
 

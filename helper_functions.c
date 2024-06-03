@@ -31,3 +31,21 @@ int ft_strcmp_mod(char *str1, char *str2)
 	}
 	return(0);
 }
+
+char	*ft_strdup(char *s1)
+{
+	int		i;
+	char	*new_string;
+
+	i = 0;
+	new_string = (char *) malloc((strlen(s1)+1));
+	if (!new_string)
+		return (NULL);
+	while (s1[i] != '\0')
+	{
+		new_string[i] = s1[i];
+		i++;
+	}
+	new_string[i] = '\0';
+	return (new_string);
+}

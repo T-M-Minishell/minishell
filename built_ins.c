@@ -13,23 +13,6 @@
 
 #include "minishell.h"
 
-void	check_for_quotes(char *str)
-{
-	int i;
-
-	i = 0;
-	if(str[0] == '"')
-		i++;
-	while(str[i] != '\0')
-	{
-		if(str[strlen(str)] == '"')
-			break ;
-		printf("%c",str[i++]);
-	}
-}
-
-
-
 // 1. echo with option -n
 
 void	mini_echo(t_list_token *data) // to do for env variables
@@ -132,6 +115,8 @@ void min_env(t_list_token *data, env_var *env_vars)
 	}
 
 }
+
+
 
 env_var *mini_unset(t_list_token *data, env_var *env_vars)  // to do
 {
