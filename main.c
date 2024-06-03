@@ -60,8 +60,12 @@ int main(int argc, char **argv, char **envp) {
 
 		handle_line(&input, data, envp, &env_vars);
 		// Add the line to history
-		add_history(input.line);
+//		add_history(input.line);
 
+		if (input.line && *input.line)
+		{
+			add_history(input.line);
+		}
 		// Free the memory allocated by readline
 		free(input.line);
 	}

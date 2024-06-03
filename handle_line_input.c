@@ -41,6 +41,7 @@ void handle_tokens_in_prompt(t_list_token *data, char **envp, env_var **env_vars
 void handle_line(t_input *input, t_list_token *data, char **envp, env_var **env_vars) {
 	t_token_type token;
 
+
 	// Handle Ctrl-D (EOF)
 	if (input->line == NULL) {
 		printf("exit\n");
@@ -56,4 +57,5 @@ void handle_line(t_input *input, t_list_token *data, char **envp, env_var **env_
 	handle_tokens_in_prompt(data, envp, env_vars);
 	handle_not_existent_builtins(data);
 	ft_lstreset(data, token);
+
 }

@@ -149,14 +149,6 @@ env_var *mini_unset(t_list_token *data, env_var *env_vars)  // to do
 	return env_vars;
 }
 
-//void	mini_export(t_list_token *data)
-//{
-//	t_list_token *curr;
-//
-//	curr = data;
-//
-//
-//}
 void mini_export(t_list_token *data, env_var **env_vars)
 {
 	t_list_token *curr;

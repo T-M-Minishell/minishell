@@ -16,27 +16,11 @@
 #define PROMPT "\033[1m\033[31mminihell*$> \033[0;34m"
 #define MAX_PATH 1024
 
-//typedef struct env_var {
-//	char *key;
-//	char *value;
-//	struct env_var *next;
-//} env_var;
-
 
 typedef struct s_env_var
 {
 	char **arr;
-	char* key;
-	int 	count;
-	char* value;
 } env_var;
-
-typedef struct s_dictionary
-{
-	char key[256];
-	char value[256];
-	char **dict_arr;
-}	t_dictionary;
 
 
 typedef struct s_input
@@ -111,7 +95,6 @@ void   handle_not_existent_builtins(t_list_token *data);
 int ft_strcmp_mod(char *str1, char *str2);
 
 
-/// test
 
 
 #endif
