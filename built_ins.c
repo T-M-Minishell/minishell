@@ -149,20 +149,58 @@ env_var *mini_unset(t_list_token *data, env_var *env_vars)  // to do
 	return env_vars;
 }
 
-void	mini_export(t_list_token *data)
+//void	mini_export(t_list_token *data)
+//{
+//	t_list_token *curr;
+//
+//	curr = data;
+//
+//
+//}
+void mini_export(t_list_token *data, env_var **env_vars)
 {
 	t_list_token *curr;
 
 	curr = data;
-	if (curr->next != NULL)
-	{
-		t_dictionary *dictionary = malloc(sizeof(t_dictionary));
-//		create_env_variable(dictionary, curr->next->word);
-		free(dictionary);
-	}
-	else
+	if (curr->next == NULL)
 	{
 		printf("export: not enough arguments\n");
+		return;
 	}
-
+	curr = curr->next;
+	if (curr->word == NULL)
+	{
+		printf("export: not enough arguments\n");
+		return;
+	}
+	char *equal_pos = strchr(curr->word, '=');
+	if (equal_pos == NULL)
+	{
+		printf("export: argument should be in the format key=value\n");
+		return;
+	}
+	int key_len = equal_pos - curr->word;
+	char *key = malloc(key_len + 1);
+	strncpy(key, curr->word, key_len);
+	key[key_len] = '\0';
+	char *value = strdup(equal_pos + 1);
+	int i = 0;
+	while ((*env_vars)->arr[i] != NULL)
+	{
+		char *copy = strdup((*env_vars)->arr[i]);
+		if (strcmp(key, get_key_from_word(copy)) == 0)
+		{
+			free(copy);
+			free((*env_vars)->arr[i]);
+			(*env_vars)->arr[i] = strdup(curr->word);
+			free(key);
+			free(value);
+			return;
+		}
+		free(copy);
+		i++;
+	}
+	*env_vars = add_env_var(*env_vars, curr->word);
+	free(key);
+	free(value);
 }

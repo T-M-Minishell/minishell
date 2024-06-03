@@ -92,7 +92,7 @@ void	mini_pwd(void);
 void	mini_exit(void);
 void	min_env(t_list_token *data,  env_var 	*env_vars);
 env_var *mini_unset(t_list_token *data, env_var *env_vars);
-void	mini_export(t_list_token *data);
+void	mini_export(t_list_token *data, env_var **env_vars);
 
 // handle_dolar
 void	handle_dolar(t_list_token *data, int status);

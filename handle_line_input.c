@@ -30,7 +30,7 @@ void handle_tokens_in_prompt(t_list_token *data, char **envp, env_var **env_vars
 		if (strcmp(curr->word, "exit") == 0)
 			mini_exit();
 		if (strcmp(curr->word, "export") == 0)
-			mini_export(curr);
+			mini_export(curr, env_vars);
 		if (strcmp(curr->word, "unset") == 0)
 			*env_vars = mini_unset(curr, *env_vars);
 		if (strcmp(curr->word, "env") == 0)
