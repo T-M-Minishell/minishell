@@ -6,37 +6,13 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/02 19:08:10 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/03 16:01:38 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fcntl.h"
 #include "minishell.h"
 #include "string.h"
-
-t_list_token	*ft_lstfirst(t_list_token *lst)
-{
-	if (lst == NULL)
-		return (NULL);
-	while (lst->prev != NULL)
-		lst = lst->prev;
-	return (lst);
-}
-
-void	handle_tokens_in_prompt_for_quotes(t_list_token *data)
-{
-	t_list_token	*curr;
-
-	// int 			last_exit_status;
-	curr = data->next;
-	// print_node(curr);
-	// print_node(curr->next);
-	if (curr->quotes != NULL)
-	{
-		if (strcmp(curr->quotes, "echo") == 0)
-			mini_echo_quote(curr);
-	}
-}
 
 void	handle_tokens_in_prompt(t_list_token **data, char **envp, t_token_type token)
 {
@@ -45,8 +21,6 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp, t_token_type toke
 
 	last_exit_status = 0;
 	curr = (*data)->next;
-	// printf("%s\n", curr->word);
-	// printf("%s\n", curr->next->quotes);
 	if (curr->word != NULL)
 	{
 		if ((strcmp(curr->word, "echo") == 0) || (strcmp(curr->quotes, "echo") == 0))
@@ -63,8 +37,8 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp, t_token_type toke
 			mini_unset(curr);
 		if (strcmp(curr->word, "env") == 0)
 			min_env(curr, envp);
-		if (curr->word[0] == '$')
-			handle_dolar(curr, last_exit_status);
+		// if (curr->word[0] == '$')
+		// 	handle_dolar(curr, last_exit_status);
 	}
 }
 

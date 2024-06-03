@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:11 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/02 19:00:21 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/03 15:53:17 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,49 +14,7 @@
 
 // debug functions
 
-char	*ft_strdup(const char *s1)
-{
-	int		i;
-	int		j;
-	char	*s2;
 
-	i = 0;
-	j = 0;
-	while (s1[i] != '\0')
-	{
-		i++;
-	}
-	s2 = (char *)malloc((i + 1) * sizeof(char));
-	if (s2 == NULL)
-	{
-		return (NULL);
-	}
-	while (j <= i)
-	{
-		s2[j] = s1[j];
-		j++;
-	}
-	return (s2);
-}
-
-void	print_node(t_list_token *node)
-{
-	if (node == NULL)
-	{
-		printf("Node is NULL\n");
-		return ;
-	}
-	printf("Node content:\n");
-	printf("Index: %d\n", node->index);
-	printf("Type: %d\n", node->type);
-	printf("Quotes: %s\n", node->quotes ? node->quotes : "(null)");
-	printf("Word: %s\n", node->word ? node->word : "(null)");
-	printf("Pipe: %s\n", node->pipe ? node->pipe : "(null)");
-	printf("Redirect: %s\n", node->redirect ? node->redirect : "(null)");
-	printf("Input: %s\n", node->input ? node->input : "(null)");
-	printf("Output: %s\n", node->output ? node->output : "(null)");
-	// Print other fields as needed
-}
 void	assign_token_to_redirect(char *line, t_list_token **data,
 		t_token_type token)
 {
@@ -145,6 +103,7 @@ void	assign_token_to_quote(char *line, t_list_token **data,
 		return ;
 	}
 	ft_lstadd_back(data, new_node);
+	// free(new_node);
 }
 
 // assign to word
@@ -165,73 +124,4 @@ void	assign_token_to_list(char *line, t_token_type token,
 	// data, token);
 	// else if (token == REDIRECT)
 	// 	assign_token_to_redirect(line, data, token);
-}
-
-void	prepare_for_tokenization_quote(char *str, t_list_token **data,
-		t_token_type token)
-{
-	int			start;
-	int			end;
-	static int	quotes;
-	char		*cpy;
-
-	(*data)->index = 0;
-	while (str[(*data)->index] != '\0')
-	{
-		if (str[(*data)->index] == '"')
-		{
-			start = (*data)->index + 1;
-			quotes++;
-			(*data)->index++;
-			while (str[(*data)->index] != '"' && str[(*data)->index] != '\0')
-			{
-				if (str[(*data)->index + 1] == '"')
-					quotes++;
-				(*data)->index++;
-			}
-			end = (*data)->index;
-			if (quotes % 2 == 0)
-			{
-				quotes = 0;
-				cpy = ft_strdnup(&str[start], end - start);
-				assign_token_to_list(cpy, token, &(*data));
-				free(cpy);
-			}
-			(*data)->index++;
-		}
-		else
-			(*data)->index++;
-	}
-}
-
-void	prepare_for_tokenization_word(char *str, t_list_token **data,
-		t_token_type token)
-{
-
-	char	*cpy;
-
-	cpy = NULL;
-	cpy = ft_strdup(str);
-	assign_token_to_list(cpy, token, &(*data));
-	free(cpy);
-}
-
-// This function checks for the data type by assigning enum values and returns them back to main
-// These "<" || ">" || "|" IF NOT any of these => WORD
-t_token_type	check_token(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '"')
-			return (QUOTE);
-		else if (str[i] == '|')
-			return (PIPE);
-		else if (str[i] == '>' || str[i] == '<')
-			return (REDIRECT);
-		i++;
-	}
-	return (WORD);
 }

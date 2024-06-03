@@ -55,6 +55,8 @@ char			**ft_split(const char *s, char c);
 // utils4
 
 t_list_token	*ft_lstlast(t_list_token *lst);
+char			*ft_strdup(const char *s1);
+void			print_node(t_list_token *node);
 
 /// handle ctrl_commands
 void			ctrl_commands(void);
@@ -84,7 +86,6 @@ void			prepare_for_tokenization_quote(char *str, t_list_token **data,
 					t_token_type token);
 void			prepare_for_tokenization_word(char *str, t_list_token **data,
 					t_token_type token);
-void			print_node(t_list_token *node);
 
 // un_built_ins
 char			**turn_word_into_arr(t_list_token *data);
