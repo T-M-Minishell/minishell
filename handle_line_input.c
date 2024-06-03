@@ -51,7 +51,6 @@ void handle_line(t_input *input, t_list_token *data, char **envp, env_var **env_
 		return;
 	while (input->line[0] == ' ')
 		input->line++;
-
 	while ((token = check_token(input->line, &data)) != END)
 		assign_token_to_list(input->line, token, &data);
 	handle_tokens_in_prompt(data, envp, env_vars);

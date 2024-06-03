@@ -117,8 +117,6 @@ void min_env(t_list_token *data, env_var *env_vars)
 
 }
 
-
-
 env_var *mini_unset(t_list_token *data, env_var *env_vars)  // to do
 {
 	t_list_token *curr;
