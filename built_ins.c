@@ -13,6 +13,7 @@
 
 #include "minishell.h"
 
+
 // 1. echo with option -n
 
 void	mini_echo(t_list_token *data) // to do for env variables
@@ -164,8 +165,8 @@ void mini_export(t_list_token *data, env_var **env_vars)
 	int i = 0;
 	while ((*env_vars)->arr[i] != NULL)
 	{
-		char *copy = strdup((*env_vars)->arr[i]);
-		if (strcmp(key, get_key_from_word(copy)) == 0)
+		char *copy = get_key_from_word((*env_vars)->arr[i]);
+		if (strcmp(key, copy) == 0)
 		{
 			free(copy);
 			free((*env_vars)->arr[i]);
