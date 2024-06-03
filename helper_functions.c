@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 14:11:28 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/27 14:11:29 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/03 16:27:55 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,4 @@ int ft_strcmp_mod(char *str1, char *str2)
 		j++;
 	}
 	return(0);
-}
-
-char	*ft_strdup(char *s1)
-{
-	int		i;
-	char	*new_string;
-
-	i = 0;
-	new_string = (char *) malloc((strlen(s1)+1));
-	if (!new_string)
-		return (NULL);
-	while (s1[i] != '\0')
-	{
-		new_string[i] = s1[i];
-		i++;
-	}
-	new_string[i] = '\0';
-	return (new_string);
 }

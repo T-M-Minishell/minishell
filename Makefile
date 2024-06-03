@@ -3,7 +3,8 @@ FLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 #-fsanitize=address
 SRC = main.c handle_ctrl_commands.c handle_line_input.c  built_ins.c \
 	token_assignation.c utils.c utils2.c un_built_ins.c	 helper_functions.c \
-	handle_env_variables.c
+	handle_env_variables.c handle_quotes.c token_preparation.c un_built_ins2.c\
+	utils3.c utils4.c \
 
 LDFLAGS = -lreadline
 NAME = minishell
