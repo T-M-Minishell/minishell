@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 17:06:34 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/04 19:30:51 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 	last_exit_status = 0;
 	curr = (*data)->next;
 	(void)envp;
+	// printf("%s\n", curr->word);
 	if (curr->word != NULL)
 	{
 		if (strchr(curr->word, '='))
@@ -40,8 +41,6 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 		if (strcmp(curr->word, "env") == 0)
 			min_env(curr, *env_vars);
 	}
-	printf("pula\n");
-
 }
 
 void	handle_line(t_input *input, t_list_token *data, char **envp,
@@ -51,8 +50,9 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 	char			**arr;
 	int				i;
 	t_list_token	*tail;
-	int 			j;
+	char			*line_start;
 
+	line_start = input->line;
 	if (input->line == NULL)
 	{
 		printf("exit\n");
@@ -60,30 +60,19 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 	}
 	if (input->line[0] == '\0')
 		return ;
-	j = 0;
-	
-	// while (input->line[j])
-	// {
-	// 	if (input->line[j] == ' ')
-	// 	{
-	// 		j++;
-	// 	}
-	// 	if (input->line[j] == '\0')
-	// 	{
-	// 		return;
-	// 	}
-	// 	j++;
-	// }
-	
-	
-	
-	arr = ft_split(input->line, ' ');
+	while (*line_start == ' ')
+		line_start++;
+	if (*line_start == '\0')
+		return ;
+	arr = custom_split(input->line, ' ');
 	if (arr == NULL)
 		return ;
+	
 	i = 0;
 	tail = ft_lstlast(data);
 	while (arr[i] != NULL)
 	{
+		printf("%s\n", arr[i]);
 		token = check_token(arr[i]);
 		if (token == QUOTE)
 		{
@@ -99,9 +88,5 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 	}
 	handle_tokens_in_prompt(&data, envp, env_vars);
 	ft_lstreset(data, token);
-	// if (data->next->quotes != NULL)
-	// {
-	// 	handle_tokens_in_prompt_for_quotes(data);
-	// }
 	// handle_not_existent_builtins(data);
 }

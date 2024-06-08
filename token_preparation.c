@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 15:50:41 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/03 15:55:32 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/04 17:01:24 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,32 @@ void	prepare_for_tokenization_quote(char *str, t_list_token **data,
 	static int	quotes;
 	char		*cpy;
 
+    // printf("from handle input:%s\n", str);
+	cpy = NULL;
 	(*data)->index = 0;
 	while (str[(*data)->index] != '\0')
 	{
 		if (str[(*data)->index] == '"')
 		{
+            // printf("%c\n",str[(*data)->index] );
 			start = (*data)->index + 1;
 			quotes++;
 			(*data)->index++;
+            // printf("%d\n",(*data)->index );
 			while (str[(*data)->index] != '"' && str[(*data)->index] != '\0')
 			{
+                // printf("HERE\n");
 				if (str[(*data)->index + 1] == '"')
 					quotes++;
 				(*data)->index++;
 			}
-			end = (*data)->index;
+			end = (*data)->index - 1;
+            // printf("%c\n", str[end]);
 			if (quotes % 2 == 0)
 			{
 				quotes = 0;
 				cpy = ft_strdnup(&str[start], end - start);
+                // printf("here:%s\n", cpy);
 				assign_token_to_list(cpy, token, &(*data));
 				free(cpy);
 			}
@@ -55,7 +62,6 @@ void	prepare_for_tokenization_quote(char *str, t_list_token **data,
 void	prepare_for_tokenization_word(char *str, t_list_token **data,
 		t_token_type token)
 {
-
 	char	*cpy;
 
 	cpy = NULL;

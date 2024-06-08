@@ -6,39 +6,29 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:59 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/02 14:55:56 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/03 20:26:54 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
 char	*ft_strdnup(const char *s1, int n)
 {
-	int		i;
-	int		j;
-	char	*s2;
+	char	*str;
+	int	i;
 
+	str = (char *)malloc(sizeof(char) * (n + 2));
+	if (!str)
+		return (NULL);
 	i = 0;
-	j = 0;
-	while (s1[i] != '\0' && i < n)
+	while (i < n + 1 && s1[i] != '\0')
 	{
+		str[i] = s1[i];
 		i++;
 	}
-	s2 = (char *)malloc((i + 1) * sizeof(char));
-	if (s2 == NULL)
-	{
-		return (NULL);
-	}
-	while (j < i)
-	{
-		s2[j] = s1[j];
-		j++;
-	}
-	s2[j] = '\0';
-	return (s2);
+	str[i] = '\0';
+	return (str);
 }
-
 
 void	free_token_list(t_list_token **stack)
 {
@@ -52,17 +42,16 @@ void	free_token_list(t_list_token **stack)
 	{
 		tmp = current->next;
 		current->type = 0;
-        current->index = 0;
-        current->word = NULL;
-        current->arr = NULL;
-        current->input = NULL;
-        current->output = NULL;
+		current->index = 0;
+		current->word = NULL;
+		current->arr = NULL;
+		current->input = NULL;
+		current->output = NULL;
 		free(current);
 		current = tmp;
 	}
 	*stack = NULL;
 }
-
 
 void	ft_lstadd_back(t_list_token **lst, t_list_token *new)
 {
@@ -79,12 +68,12 @@ void	ft_lstadd_back(t_list_token **lst, t_list_token *new)
 		last = last->next;
 	}
 	last->next = new;
-	new->prev = last; 
+	new->prev = last;
 }
 
 t_list_token	*ft_lstnew(char *content, t_token_type token)
 {
-	t_list_token *new;
+	t_list_token	*new;
 
 	new = (t_list_token *)malloc(sizeof(t_list_token));
 	if (!new)
@@ -99,7 +88,6 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	new->output = NULL;
 	new->next = NULL;
 	new->prev = NULL;
-
 	if (token == QUOTE)
 	{
 		new->quotes = strdup(content);
@@ -119,11 +107,13 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	return (new);
 }
 
-bool 	is_space(char *line)
+bool	is_space(char *line)
 {
-	int i;
+	int	i;
+
 	i = 0;
-	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\r' || line[i] == '\v' || line[i] == '\f' || line[i] == '\n')
+	while (line[i] == ' ' || line[i] == '\t' || line[i] == '\r'
+		|| line[i] == '\v' || line[i] == '\f' || line[i] == '\n')
 	{
 		i++;
 		if (line[i] == '\0')

@@ -117,10 +117,12 @@ void			mini_wc(char **arr);
 void			mini_echo_quote(t_list_token *data);
 
 // helper_functions
+
 int ft_strcmp_mod(char *str1, char *str2);
 // char	*ft_strdup(char *s1);
 
-
+//custom_split.c
+char	**custom_split(const char *s, char c);
 
 
 #endif

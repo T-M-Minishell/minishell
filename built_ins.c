@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 16:34:27 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/03 18:38:29 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,16 +38,23 @@ void	mini_echo(t_list_token *data) // to do for env variables
 		// print each arg with space
 		while (curr != NULL)
 		{
-			if (curr->word[0] == '$')
+			if (curr->word != NULL)
 			{
-				char *value = getenv(curr->word + 1);
-				if (value != NULL)
-					printf("%s ", value);
+				if (curr->word[0] == '$')
+				{
+					char *value = getenv(curr->word + 1);
+					if (value != NULL)
+						printf("%s ", value);
+					else
+						printf("%s ", "");
+				}
 				else
-					printf("%s ", "");
+					printf("%s ", curr->word);
 			}
-			else
-				printf("%s ", curr->word);
+			else if (curr->quotes != NULL)
+			{
+				printf("%s ", curr->quotes);
+			}
 			curr = curr->next;
 		}
 		// print new_line if -n is not specified
@@ -55,8 +62,7 @@ void	mini_echo(t_list_token *data) // to do for env variables
 			printf("\n");
 	}
 }
-
-/// change directory
+//change directory
 int	mini_cd(t_list_token *data)
 {
 	t_list_token	*curr;
@@ -135,7 +141,13 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 
 void	mini_export(t_list_token *data, env_var **env_vars)
 {
-	t_list_token *curr;
+	t_list_token	*curr;
+	char			*equal_pos;
+	int				key_len;
+	char			*key;
+	char			*value;
+	int				i;
+	char			*copy;
 
 	curr = data;
 	if (curr->next == NULL)
@@ -149,21 +161,21 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		printf("export: not enough arguments\n");
 		return ;
 	}
-	char *equal_pos = strchr(curr->word, '=');
+	equal_pos = strchr(curr->word, '=');
 	if (equal_pos == NULL)
 	{
 		printf("export: argument should be in the format key=value\n");
 		return ;
 	}
-	int key_len = equal_pos - curr->word;
-	char *key = malloc(key_len + 1);
+	key_len = equal_pos - curr->word;
+	key = malloc(key_len + 1);
 	strncpy(key, curr->word, key_len);
 	key[key_len] = '\0';
-	char *value = strdup(equal_pos + 1);
-	int i = 0;
+	value = strdup(equal_pos + 1);
+	i = 0;
 	while ((*env_vars)->arr[i] != NULL)
 	{
-		char *copy = get_key_from_word((*env_vars)->arr[i]);
+		copy = get_key_from_word((*env_vars)->arr[i]);
 		if (strcmp(key, copy) == 0)
 		{
 			free(copy);

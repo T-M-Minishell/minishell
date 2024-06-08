@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:53 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/02 14:52:51 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/03 18:00:38 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ char	**turn_word_into_arr(t_list_token *data)
     arr[i] = NULL;
     return (arr);
 }
+
 char	*ft_strrchr(const char *s, int c)
 {
 	int	i;
