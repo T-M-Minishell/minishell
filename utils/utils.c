@@ -6,11 +6,11 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:59 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/21 18:57:00 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/02 14:55:56 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 
 char	*ft_strdnup(const char *s1, int n)
@@ -79,6 +79,7 @@ void	ft_lstadd_back(t_list_token **lst, t_list_token *new)
 		last = last->next;
 	}
 	last->next = new;
+	new->prev = last; 
 }
 
 t_list_token	*ft_lstnew(char *content, t_token_type token)
@@ -88,25 +89,29 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	new = (t_list_token *)malloc(sizeof(t_list_token));
 	if (!new)
 		return (NULL);
-	    new->index = 0;
-    new->type = 0;
-    new->quotes = NULL;
-    new->word = NULL;
-    new->pipe = NULL;
-    new->redirect = NULL;
-    new->input = NULL;
-    new->output = NULL;
-    new->next = NULL;
-    new->prev = NULL;
+	new->index = 0;
+	new->type = 0;
+	new->quotes = NULL;
+	new->word = NULL;
+	new->pipe = NULL;
+	new->redirect = NULL;
+	new->input = NULL;
+	new->output = NULL;
+	new->next = NULL;
+	new->prev = NULL;
 
 	if (token == QUOTE)
-		new->quotes = content;
+	{
+		new->quotes = strdup(content);
+	}
 	else if (token == WORD)
-		new->word = content;
+	{
+		new->word = strdup(content);
+	}
 	else if (token == PIPE)
-		new->pipe = content;
+		new->pipe = strdup(content);
 	else if (token == REDIRECT)
-		new->redirect = content;
+		new->redirect = strdup(content);
 	else
 		printf("UNEXPECTED TOKEN TYPE\n");
 	new->next = NULL;
@@ -126,4 +131,3 @@ bool 	is_space(char *line)
 	}
 	return (false);
 }
-

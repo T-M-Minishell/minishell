@@ -6,21 +6,23 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/30 14:41:20 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/03 17:08:42 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_tokens_in_prompt(t_list_token *data, char **envp, env_var **env_vars) {
-	t_list_token *curr;
-	(void)envp;
+void	handle_tokens_in_prompt(t_list_token **data, char **envp,
+		env_var **env_vars)
+{
+	t_list_token	*curr;
 
-	curr = data->next;
-	if (strchr(curr->word, '='))
-		*env_vars = add_env_var(*env_vars, curr->word);
+	curr = (*data)->next;
+	(void)envp;
 	if (curr->word != NULL)
 	{
+		if (strchr(curr->word, '='))
+			*env_vars = add_env_var(*env_vars, curr->word);
 		if (strcmp(curr->word, "echo") == 0)
 			mini_echo(curr);
 		if (strcmp(curr->word, "cd") == 0)
@@ -35,26 +37,53 @@ void handle_tokens_in_prompt(t_list_token *data, char **envp, env_var **env_vars
 			*env_vars = mini_unset(curr, *env_vars);
 		if (strcmp(curr->word, "env") == 0)
 			min_env(curr, *env_vars);
+		else
+		{
+//			printf("%s\n",curr->word);
+			handle_not_existent_builtins(curr, env_vars);
+		}
+
 	}
 }
 
-void handle_line(t_input *input, t_list_token *data, char **envp, env_var **env_vars) {
-	t_token_type token;
+void	handle_line(t_input *input, t_list_token *data, char **envp,
+		env_var **env_vars)
+{
+	t_token_type	token;
+	char			**arr;
+	int				i;
+	t_list_token	*tail;
+//	int 			j;
 
-
-	// Handle Ctrl-D (EOF)
-	if (input->line == NULL) {
+	if (input->line == NULL)
+	{
 		printf("exit\n");
 		exit(1);
 	}
 	if (input->line[0] == '\0')
-		return;
-	while (input->line[0] == ' ')
-		input->line++;
-	while ((token = check_token(input->line, &data)) != END)
-		assign_token_to_list(input->line, token, &data);
-	handle_tokens_in_prompt(data, envp, env_vars);
-	handle_not_existent_builtins(data);
+		return ;
+	arr = ft_split(input->line, ' ');
+	if (arr == NULL)
+		return ;
+	i = 0;
+	tail = ft_lstlast(data);
+	while (arr[i] != NULL)
+	{
+		token = check_token(arr[i]);
+		if (token == QUOTE)
+		{
+			prepare_for_tokenization_quote(arr[i], &tail, token);
+			free(arr[i]);
+		}
+		else if (token == WORD)
+		{
+			prepare_for_tokenization_word(arr[i], &tail, token);
+			free(arr[i]);
+		}
+		i++;
+	}
+	handle_tokens_in_prompt(&data, envp, env_vars);
 	ft_lstreset(data, token);
+
 
 }
