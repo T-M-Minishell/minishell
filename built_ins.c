@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 17:09:30 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:18:11 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,7 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 		return (NULL);
 	curr = curr->next;
 	if (curr->word == NULL)
-	{
 		printf("unset: requires an argument\n");
-	}
 	else
 		env_vars = delete_env_var(env_vars, curr->word);
 	return (env_vars);

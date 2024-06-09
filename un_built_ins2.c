@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   un_built_ins2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/22 20:59:43 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/09 14:27:09 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,18 +120,20 @@ void mini_wc(char *str, int lines, int words, int chars)
 	int byte_count = 0;
 	int in_word = 0;
 
-	if (str == NULL || strcmp(str, "-") == 0) {
+	if (str == NULL || strcmp(str, "-") == 0)
 		fd = STDIN_FILENO;
-	} else {
+	else 
+	{
 		fd = open(str, O_RDONLY);
 		if (fd == -1) {
 			perror("open");
 			return;
 		}
 	}
-
-	while ((bytes = read(fd, buf, BUF_SIZE)) > 0) {
-		for (ssize_t i = 0; i < bytes; i++) {
+	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
+	{
+		for (ssize_t i = 0; i < bytes; i++)
+		{
 			if (buf[i] == '\n')
 				newline_count++;
 			if (isspace(buf[i]))
@@ -144,23 +146,15 @@ void mini_wc(char *str, int lines, int words, int chars)
 		}
 		byte_count += bytes;
 	}
-
-	if (bytes == -1) {
+	if (bytes == -1)
 		perror("read");
-	}
-
-	if (fd != STDIN_FILENO) {
+	if (fd != STDIN_FILENO)
 		close(fd);
-	}
-
-	if (lines) {
+	if (lines)
 		printf("%d ", newline_count);
-	}
-	if (words) {
+	if (words)
 		printf("%d ", word_count);
-	}
-	if (chars) {
+	if (chars)
 		printf("%d ", byte_count);
-	}
 	printf("%s\n", str);
 }

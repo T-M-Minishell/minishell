@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_env_variables.c                             :+:      :+:    :+:   */
+/*   handle_env_variables.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/22 18:06:51 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:18:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ bool check_if_alphanumeric(char *str)
 	for (int i = 0; str[i]; i++)
 	{
 		if (!isalnum((unsigned char)str[i]) && str[i] != '=')
-		{
 			return false;
-		}
 	}
 	return true;
 }
