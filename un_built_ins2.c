@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/09 14:27:09 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/09 14:33:24 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void mini_touch(char *str, env_var *vars)
 		fprintf(stderr, "mini_touch: missing file operand\n");
 		return;
 	}
-
 	fd = open(str, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -67,7 +66,6 @@ void mini_touch(char *str, env_var *vars)
 	close(fd);
 }
 
-
 void min_mv(char *src, char *dest)
 {
 	int src_fd, dest_fd;
@@ -76,7 +74,7 @@ void min_mv(char *src, char *dest)
 
 	if (src == NULL || dest == NULL)
 	{
-		printf("min_mv: missing file operand\n");
+		printf("mv: missing file operand\n");
 		return;
 	}
 	src_fd = open(src, O_RDONLY);

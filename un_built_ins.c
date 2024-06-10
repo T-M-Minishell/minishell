@@ -11,19 +11,79 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
 
-void mini_ls(void)
-{
+void print_long_format(struct dirent *dir) {
+	struct stat file_stat;
+	struct passwd *pw;
+	struct group *gr;
+	char time_buf[80];
+	struct tm lt;
+
+	if (stat(dir->d_name, &file_stat) == -1)
+	{
+		perror("stat");
+		return;
+	}
+	// File type and permissions
+	printf((S_ISDIR(file_stat.st_mode)) ? "d" : "-");
+	printf((file_stat.st_mode & S_IRUSR) ? "r" : "-");
+	printf((file_stat.st_mode & S_IWUSR) ? "w" : "-");
+	printf((file_stat.st_mode & S_IXUSR) ? "x" : "-");
+	printf((file_stat.st_mode & S_IRGRP) ? "r" : "-");
+	printf((file_stat.st_mode & S_IWGRP) ? "w" : "-");
+	printf((file_stat.st_mode & S_IXGRP) ? "x" : "-");
+	printf((file_stat.st_mode & S_IROTH) ? "r" : "-");
+	printf((file_stat.st_mode & S_IWOTH) ? "w" : "-");
+	printf((file_stat.st_mode & S_IXOTH) ? "x" : "-");
+	// Number of hard links
+	printf(" %ld", (long) file_stat.st_nlink);
+	// Owner name
+	pw = getpwuid(file_stat.st_uid);
+	printf(" %s", pw ? pw->pw_name : "UNKNOWN");
+	// Group name
+	gr = getgrgid(file_stat.st_gid);
+	printf(" %s", gr ? gr->gr_name : "UNKNOWN");
+	// File size
+	printf(" %5ld", (long) file_stat.st_size);
+	// Last modification time
+	localtime_r(&file_stat.st_mtime, &lt);
+	strftime(time_buf, sizeof(time_buf), "%b %d %H:%M", &lt);
+	printf(" %s", time_buf);
+
+	// File name
+	printf(" %s\n", dir->d_name);
+}
+
+void mini_ls(int show_all, int long_format) {
 	DIR *d;
 	struct dirent *dir;
 
 	d = opendir(".");
-	if (d)
-	{
+	if (d) {
 		while ((dir = readdir(d)) != NULL)
-			printf("%s\n", dir->d_name);
+		{
+			// Skip hidden files if -a is not set
+			if (!show_all && dir->d_name[0] == '.')
+
+				continue;
+			if (long_format)
+				print_long_format(dir);
+			else
+				printf("%s\n", dir->d_name);
+		}
 		closedir(d);
 	}
+	else
+		perror("opendir");
 }
 
 void    mini_mkdir(char *str,env_var *vars)
@@ -93,10 +153,23 @@ void    handle_not_existent_builtins(t_list_token *data, env_var **vars)
 
 	if (curr->word != NULL)
 	{
-		if (strcmp(curr->word, "ls") == 0)
-			mini_ls();
+		if (strcmp(curr->word, "ls") == 0) {
+			int show_all = 0;
+			int long_format = 0;
+			t_list_token *arg = curr->next;
+			while (arg != NULL) {
+				if (strcmp(arg->word, "-a") == 0 || strcmp(arg->word, "-la") == 0) {
+					show_all = 1;
+				}
+				if (strcmp(arg->word, "-l") == 0 || strcmp(arg->word, "-la") == 0) {
+					long_format = 1;
+				}
+				arg = arg->next;
+			}
+			mini_ls(show_all, long_format);
+		}
 		if (strcmp(curr->word, "mkdir") == 0)
-			mini_mkdir(curr->next->word,*vars);
+			mini_mkdir(curr->next->word, *vars);
 		if (strcmp(curr->word, "rm") == 0)
 			mini_rm(curr->next->word, *vars);
 		if (strcmp(curr->word, "clear") == 0)
@@ -110,5 +183,5 @@ void    handle_not_existent_builtins(t_list_token *data, env_var **vars)
 //		 if (strcmp(curr->word, "wc") == 0)
 //		  mini_wc(arr);
 
-	}
+		}
 }
