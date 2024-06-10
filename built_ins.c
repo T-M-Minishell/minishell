@@ -14,7 +14,7 @@
 
 // 1. echo with option -n
 
-void	mini_echo(t_list_token *data) // to do for env variables
+void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 {
 	t_list_token *curr;
 
@@ -40,7 +40,8 @@ void	mini_echo(t_list_token *data) // to do for env variables
 		{
 			if (curr->word[0] == '$')
 			{
-				char *value = getenv(curr->word + 1);
+//				char *value = getenv(curr->word + 1);
+				char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
 				if (value != NULL)
 					printf("%s ", value);
 				else
@@ -131,7 +132,7 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 	return (env_vars);
 }
 
-void	mini_export(t_list_token *data, env_var **env_vars) // still need to make it to change a varibale value if it exist alreaady
+void	mini_export(t_list_token *data, env_var **env_vars)
 {
 	t_list_token *curr;
 

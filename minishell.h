@@ -84,10 +84,12 @@ env_var	*get_env_vars(char** envp);
 env_var	*add_env_var(env_var* old_env_vars, char *word);
 env_var	*delete_env_var(env_var *old_env_vars, char *key);
 char	*get_key_from_word(char *word);
+char	*get_value_from_var(char *word, env_var *vars);
+
 
 
 /// built_ins
-void	mini_echo(t_list_token *data);
+void	mini_echo(t_list_token *data, env_var *vars);
 int		mini_cd(t_list_token *data);
 void	mini_pwd(void);
 void	mini_exit(void);

@@ -24,7 +24,7 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 		if (strchr(curr->word, '='))
 			*env_vars = add_env_var(*env_vars, curr->word);
 		if (strcmp(curr->word, "echo") == 0)
-			mini_echo(curr);
+			mini_echo(curr, *env_vars);
 		if (strcmp(curr->word, "cd") == 0)
 			mini_cd(curr);
 		if (strcmp(curr->word, "pwd") == 0)

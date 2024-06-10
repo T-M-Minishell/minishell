@@ -37,6 +37,20 @@ bool check_if_alphanumeric(char *str)
 	return true;
 }
 
+char *get_value_from_var(char *word, env_var *vars)
+{
+	int i;
+
+	i = 0;
+	while (vars->arr[i])
+	{
+		if(strcmp(word, get_key_from_word(vars->arr[i])) == 0)
+			return(strchr(vars->arr[i],'=') + 1);  // to skip the equal sign;
+		i++;
+	}
+	return (NULL);
+}
+
 char *get_key_from_word(char *word)
 {
 	int i = 0;
@@ -47,7 +61,6 @@ char *get_key_from_word(char *word)
 	key[i] = '\0';
 	return key;
 }
-
 
 env_var *get_env_vars(char **envp)
 {
@@ -72,6 +85,25 @@ env_var *get_env_vars(char **envp)
 	vars->arr[i] = NULL;
 	return(vars);
 }
+
+//char  *get_var(env_var *vars, char *key)
+//{
+//	int	i;
+//
+//	i = 0;
+//	while (vars->arr[i])
+//	{
+//		char *old_key = get_key_from_word(vars->arr[i]);
+//		if (strcmp(key, old_key) == 0)
+//		{
+//			free(old_key);
+//			return (vars->arr[i]);
+//		}
+//		free(old_key);
+//		i++;
+//	}
+//	return(NULL);
+//}
 
 
 env_var *add_env_var(env_var *old_env_vars, char *word) {
