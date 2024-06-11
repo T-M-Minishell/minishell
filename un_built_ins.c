@@ -86,12 +86,19 @@ void mini_ls(int show_all, int long_format) {
 		perror("opendir");
 }
 
-void    mini_mkdir(char *str,env_var *vars)
+void    mini_mkdir(t_list_token *data,env_var *vars)
 {
 	pid_t       pid;
 	char        *path;
+	t_list_token *curr;
 
-	char *arr[] = {"/bin/mkdir", str, NULL};
+	curr = data->next;
+	if(!curr)
+	{
+		printf("Try 'mkdir --help' for more information.\n");
+		return;
+	}
+	char *arr[] = {"/bin/mkdir", curr->word, NULL};
 
 	path = "/bin/mkdir";
 	pid = fork();
@@ -106,11 +113,19 @@ void    mini_mkdir(char *str,env_var *vars)
 		wait(NULL);
 }
 
-void    mini_rm(char *str, env_var *vars) ///
+void    mini_rm(t_list_token *data, env_var *vars) ///
 {
 	pid_t       pid;
 	char        *path;
-	char *arr[] = {"/bin/mkdir","-rf", str, NULL};
+	t_list_token *curr;
+
+	curr = data->next;
+	if(!curr)
+	{
+		printf("Try 'rm --help' for more information.\n");
+		return;
+	}
+	char *arr[] = {"/bin/mkdir","-rf", curr->word, NULL};
 
 
 	path = "/bin/rm";
@@ -146,42 +161,46 @@ void    mini_clean(env_var *vars)
 		wait(NULL);
 }
 
+void init_ls(t_list_token *curr)
+{
+	int show_all = 0;
+	int long_format = 0;
+	t_list_token *arg = curr->next;
+	while (arg != NULL) {
+		if (strcmp(arg->word, "-a") == 0 || strcmp(arg->word, "-la") == 0) {
+			show_all = 1;
+		}
+		if (strcmp(arg->word, "-l") == 0 || strcmp(arg->word, "-la") == 0) {
+			long_format = 1;
+		}
+		arg = arg->next;
+	}
+	mini_ls(show_all, long_format);
+}
+
 void    handle_not_existent_builtins(t_list_token *data, env_var **vars)
 {
 	t_list_token    *curr;
+	(void)vars;
 	curr = data;
 
 	if (curr->word != NULL)
 	{
-		if (strcmp(curr->word, "ls") == 0) {
-			int show_all = 0;
-			int long_format = 0;
-			t_list_token *arg = curr->next;
-			while (arg != NULL) {
-				if (strcmp(arg->word, "-a") == 0 || strcmp(arg->word, "-la") == 0) {
-					show_all = 1;
-				}
-				if (strcmp(arg->word, "-l") == 0 || strcmp(arg->word, "-la") == 0) {
-					long_format = 1;
-				}
-				arg = arg->next;
-			}
-			mini_ls(show_all, long_format);
-		}
+		if (strcmp(curr->word, "ls") == 0)
+			init_ls(curr);
 		if (strcmp(curr->word, "mkdir") == 0)
-			mini_mkdir(curr->next->word, *vars);
+			mini_mkdir(curr, *vars);
 		if (strcmp(curr->word, "rm") == 0)
-			mini_rm(curr->next->word, *vars);
+			mini_rm(curr, *vars);
 		if (strcmp(curr->word, "clear") == 0)
 			mini_clean(*vars);
 		if (strcmp(curr->word, "cat") == 0)
-			mini_cat(curr->next->word);
+			mini_cat(curr);
 		if (strcmp(curr->word, "touch") == 0)
-			mini_touch(curr->next->word, *vars);
+			mini_touch(curr, *vars); ///
 		if (strcmp(curr->word, "mv") == 0)
-			min_mv(curr->next->word, curr->next->next->word);
-//		 if (strcmp(curr->word, "wc") == 0)
+			min_mv(curr);
+//		 if (strcmp(curr->word, "wc") == 0)  ///need to make
 //		  mini_wc(arr);
-
-		}
+	}
 }

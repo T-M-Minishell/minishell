@@ -88,13 +88,13 @@ char	*get_value_from_var(char *word, env_var *vars);
 
 
 
-/// built_ins
+			/// built_ins
 void	mini_echo(t_list_token *data, env_var *vars);
 int		mini_cd(t_list_token *data);
 void	mini_pwd(void);
-void	mini_exit(void);
+void	mini_exit(t_list_token *data);
 void	min_env(t_list_token *data,  env_var 	*env_vars);
-env_var *mini_unset(t_list_token *data, env_var *env_vars);
+env_var	*mini_unset(t_list_token *data, env_var *env_vars);
 void	mini_export(t_list_token *data, env_var **env_vars);
 
 // handle_dolar
@@ -116,10 +116,10 @@ void			handle_not_existent_builtins(t_list_token *data, env_var **var);
 
 // un_built_ins2
 
-void	mini_cat(char *str);
-void 	mini_touch(char *str, env_var *vars);
-void 	mini_wc(char *str, int lines, int words, int chars);
-void 	min_mv(char *src, char *dest);
+void	mini_cat(t_list_token *data);
+void 	mini_touch(t_list_token *data, env_var *vars);
+void 	mini_wc(t_list_token *data, int lines, int words, int chars);
+void 	min_mv(t_list_token *data);
 
 // handle_quotes
 void			mini_echo_quote(t_list_token *data);

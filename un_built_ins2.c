@@ -12,17 +12,21 @@
 
 #include "minishell.h"
 
-void mini_cat(char *str)
+void mini_cat(t_list_token *data)
 {
 	int fd;
 	ssize_t bytes;
 	char buf[BUF_SIZE];
+	t_list_token	*curr;
 
-	if (str == NULL || strcmp(str, "-") == 0)
+	curr = data->next;
+	if(!curr)
+		return ;
+	if (curr->word == NULL || strcmp(curr->word, "-") == 0)
 		fd = STDIN_FILENO;
 	else
 	{
-		fd = open(str, O_RDONLY);
+		fd = open(curr->word, O_RDONLY);
 		if (fd == -1)
 		{
 			perror("open");
@@ -47,17 +51,24 @@ void mini_cat(char *str)
 }
 
 
-void mini_touch(char *str, env_var *vars)
+void mini_touch(t_list_token *data, env_var *vars)
 {
 	int fd;
 	(void)vars;
+	t_list_token *curr;
 
-	if (str == NULL)
+	curr = data->next;
+	if(!curr)
+	{
+		printf("Try 'touch --help' for more information.\n");
+		return;
+	}
+	if (curr->word == NULL)
 	{
 		fprintf(stderr, "mini_touch: missing file operand\n");
 		return;
 	}
-	fd = open(str, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open(curr->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		perror("open");
@@ -66,12 +77,29 @@ void mini_touch(char *str, env_var *vars)
 	close(fd);
 }
 
-void min_mv(char *src, char *dest)
+void min_mv(t_list_token *data)
 {
 	int src_fd, dest_fd;
 	ssize_t bytes;
 	char buf[BUF_SIZE];
+	t_list_token *curr;
+	char *src;
+	char *dest;
 
+	curr = data->next;
+	if(!curr)
+	{
+		printf("Try 'mv --help' for more information.\n");
+		return;
+	}
+	src = curr->word;
+	if(curr->next)
+		dest = curr->next->word;
+	else
+	{
+		printf("Try 'mv --help' for more information.\n");
+		return ;
+	}
 	if (src == NULL || dest == NULL)
 	{
 		printf("mv: missing file operand\n");
@@ -108,51 +136,51 @@ void min_mv(char *src, char *dest)
 		perror("unlink");
 }
 
-void mini_wc(char *str, int lines, int words, int chars)
-{
-	int fd;
-	ssize_t bytes;
-	char buf[BUF_SIZE];
-	int newline_count = 0;
-	int word_count = 0;
-	int byte_count = 0;
-	int in_word = 0;
-
-	if (str == NULL || strcmp(str, "-") == 0)
-		fd = STDIN_FILENO;
-	else 
-	{
-		fd = open(str, O_RDONLY);
-		if (fd == -1) {
-			perror("open");
-			return;
-		}
-	}
-	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
-	{
-		for (ssize_t i = 0; i < bytes; i++)
-		{
-			if (buf[i] == '\n')
-				newline_count++;
-			if (isspace(buf[i]))
-				in_word = 0;
-			else if (!in_word)
-			{
-				word_count++;
-				in_word = 1;
-			}
-		}
-		byte_count += bytes;
-	}
-	if (bytes == -1)
-		perror("read");
-	if (fd != STDIN_FILENO)
-		close(fd);
-	if (lines)
-		printf("%d ", newline_count);
-	if (words)
-		printf("%d ", word_count);
-	if (chars)
-		printf("%d ", byte_count);
-	printf("%s\n", str);
-}
+//void mini_wc(t_list_token *data, int lines, int words, int chars)
+//{
+//	int fd;
+//	ssize_t bytes;
+//	char buf[BUF_SIZE];
+//	int newline_count = 0;
+//	int word_count = 0;
+//	int byte_count = 0;
+//	int in_word = 0;
+//
+//	if (str == NULL || strcmp(str, "-") == 0)
+//		fd = STDIN_FILENO;
+//	else
+//	{
+//		fd = open(str, O_RDONLY);
+//		if (fd == -1) {
+//			perror("open");
+//			return;
+//		}
+//	}
+//	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
+//	{
+//		for (ssize_t i = 0; i < bytes; i++)
+//		{
+//			if (buf[i] == '\n')
+//				newline_count++;
+//			if (isspace(buf[i]))
+//				in_word = 0;
+//			else if (!in_word)
+//			{
+//				word_count++;
+//				in_word = 1;
+//			}
+//		}
+//		byte_count += bytes;
+//	}
+//	if (bytes == -1)
+//		perror("read");
+//	if (fd != STDIN_FILENO)
+//		close(fd);
+//	if (lines)
+//		printf("%d ", newline_count);
+//	if (words)
+//		printf("%d ", word_count);
+//	if (chars)
+//		printf("%d ", byte_count);
+//	printf("%s\n", str);
+//}
