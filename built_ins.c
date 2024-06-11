@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+//CVb3d2023
+
+
 // 1. echo with option -n
 
 void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables

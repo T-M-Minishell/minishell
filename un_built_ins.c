@@ -118,6 +118,7 @@ void    mini_rm(t_list_token *data, env_var *vars) ///
 	pid_t       pid;
 	char        *path;
 	t_list_token *curr;
+//	char 	*arr[];
 
 	curr = data->next;
 	if(!curr)
@@ -125,9 +126,9 @@ void    mini_rm(t_list_token *data, env_var *vars) ///
 		printf("Try 'rm --help' for more information.\n");
 		return;
 	}
-	char *arr[] = {"/bin/mkdir","-rf", curr->word, NULL};
-
-
+//	printf("%s\n",curr->word);
+//	if (curr->next && strcmp(curr-next->word,"-rf") == 0)
+//		*arr = {"/bin/rm","-rf", curr->next->word, NULL};
 	path = "/bin/rm";
 	pid = fork();
 	if (pid < 0)
