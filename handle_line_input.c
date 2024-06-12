@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 13:26:45 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 13:41:06 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 		env_var **env_vars)
 {
 	t_list_token	*curr;
-	int				last_exit_status;
 
-	last_exit_status = 0;
 	curr = (*data)->next;
 	(void)envp;
 	// printf("%s\n", curr->word);
@@ -27,19 +25,25 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 		if (strchr(curr->word, '='))
 			*env_vars = add_env_var(*env_vars, curr->word);
 		if (strcmp(curr->word, "echo") == 0)
-			mini_echo(curr);
+			mini_echo(curr, *env_vars);
 		if (strcmp(curr->word, "cd") == 0)
 			mini_cd(curr);
 		if (strcmp(curr->word, "pwd") == 0)
 			mini_pwd();
 		if (strcmp(curr->word, "exit") == 0)
-			mini_exit();
+			mini_exit(curr);
 		if (strcmp(curr->word, "export") == 0)
 			mini_export(curr, env_vars);
 		if (strcmp(curr->word, "unset") == 0)
 			*env_vars = mini_unset(curr, *env_vars);
 		if (strcmp(curr->word, "env") == 0)
 			min_env(curr, *env_vars);
+		else
+		{
+//			printf("%s\n",curr->word);
+			handle_not_existent_builtins(curr, env_vars);
+		}
+
 	}
 }
 

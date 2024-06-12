@@ -6,21 +6,26 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 18:38:29 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 13:45:03 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//CVb3d2023
+
+
 // 1. echo with option -n
 
-void	mini_echo(t_list_token *data) // to do for env variables
+void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 {
 	t_list_token *curr;
 
+	(void)vars;
 	curr = data;
 	if (curr->next == NULL)
 		printf("\n");
+
 	//	check_for_quotes(curr->word);
 	else
 	{
@@ -38,23 +43,16 @@ void	mini_echo(t_list_token *data) // to do for env variables
 		// print each arg with space
 		while (curr != NULL)
 		{
-			if (curr->word != NULL)
+			if (curr->word[0] == '$')
 			{
-				if (curr->word[0] == '$')
-				{
-					char *value = getenv(curr->word + 1);
-					if (value != NULL)
-						printf("%s ", value);
-					else
-						printf("%s ", "");
-				}
+				char *value = getenv(curr->word + 1);
+				if (value != NULL)
+					printf("%s ", value);
 				else
-					printf("%s ", curr->word);
+					printf("%s ", "");
 			}
-			else if (curr->quotes != NULL)
-			{
-				printf("%s ", curr->quotes);
-			}
+			else
+				printf("%s ", curr->word);
 			curr = curr->next;
 		}
 		// print new_line if -n is not specified
@@ -103,10 +101,19 @@ void	mini_pwd(void)
 	}
 }
 
-void	mini_exit(void)
+
+void	mini_exit(t_list_token *data)
 {
+	int exit_status = 0;
+	t_list_token *curr;
+
+	curr = data;
+	if (curr->next != NULL && curr->next->word != NULL) {
+		exit_status = atoi(curr->next->word);
+	}
+
 	printf("exit\n");
-	exit(0);
+	exit(exit_status);
 }
 
 void	min_env(t_list_token *data, env_var *env_vars)
@@ -131,23 +138,24 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 		return (NULL);
 	curr = curr->next;
 	if (curr->word == NULL)
-	{
 		printf("unset: requires an argument\n");
-	}
-	else
+	while (curr != NULL)
+	{
 		env_vars = delete_env_var(env_vars, curr->word);
+		curr = curr->next;
+	}
 	return (env_vars);
 }
 
 void	mini_export(t_list_token *data, env_var **env_vars)
 {
 	t_list_token	*curr;
-	char			*equal_pos;
-	int				key_len;
-	char			*key;
-	char			*value;
+	// char			*equal_pos;
+	// int				key_len;
+	// char			*key;
+	// char			*value;
 	int				i;
-	char			*copy;
+	// char			*copy;
 
 	curr = data;
 	if (curr->next == NULL)
@@ -161,21 +169,21 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		printf("export: not enough arguments\n");
 		return ;
 	}
-	equal_pos = strchr(curr->word, '=');
+	char *equal_pos = strchr(curr->word, '=');
 	if (equal_pos == NULL)
 	{
 		printf("export: argument should be in the format key=value\n");
 		return ;
 	}
-	key_len = equal_pos - curr->word;
-	key = malloc(key_len + 1);
+	int key_len = equal_pos - curr->word;
+	char *key = malloc(key_len + 1);
 	strncpy(key, curr->word, key_len);
 	key[key_len] = '\0';
-	value = strdup(equal_pos + 1);
+	char *value = strdup(equal_pos + 1);
 	i = 0;
 	while ((*env_vars)->arr[i] != NULL)
 	{
-		copy = get_key_from_word((*env_vars)->arr[i]);
+		char *copy = get_key_from_word((*env_vars)->arr[i]);
 		if (strcmp(key, copy) == 0)
 		{
 			free(copy);

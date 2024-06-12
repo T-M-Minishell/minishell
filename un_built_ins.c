@@ -6,36 +6,99 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 20:22:13 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/23 12:54:09 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 13:43:24 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+#include <pwd.h>
+#include <grp.h>
 
-void	mini_ls(char **arr)
-{
-	pid_t		pid;
-	char		*path;
-	char	**__environ;
+void print_long_format(struct dirent *dir) {
+	struct stat file_stat;
+	struct passwd *pw;
+	struct group *gr;
+	char time_buf[80];
+	struct tm lt;
 
-	path = "/bin/ls";
-	pid = fork();
-	if (pid < 0)
+	if (stat(dir->d_name, &file_stat) == -1)
 	{
-		perror("ERROR WITH PID\n");
-		return ;
+		perror("stat");
+		return;
 	}
-	else if (pid == 0)
-		execve(path, arr, __environ);
-	else
-		wait(NULL);
+	// File type and permissions
+	printf((S_ISDIR(file_stat.st_mode)) ? "d" : "-");
+	printf((file_stat.st_mode & S_IRUSR) ? "r" : "-");
+	printf((file_stat.st_mode & S_IWUSR) ? "w" : "-");
+	printf((file_stat.st_mode & S_IXUSR) ? "x" : "-");
+	printf((file_stat.st_mode & S_IRGRP) ? "r" : "-");
+	printf((file_stat.st_mode & S_IWGRP) ? "w" : "-");
+	printf((file_stat.st_mode & S_IXGRP) ? "x" : "-");
+	printf((file_stat.st_mode & S_IROTH) ? "r" : "-");
+	printf((file_stat.st_mode & S_IWOTH) ? "w" : "-");
+	printf((file_stat.st_mode & S_IXOTH) ? "x" : "-");
+	// Number of hard links
+	printf(" %ld", (long) file_stat.st_nlink);
+	// Owner name
+	pw = getpwuid(file_stat.st_uid);
+	printf(" %s", pw ? pw->pw_name : "UNKNOWN");
+	// Group name
+	gr = getgrgid(file_stat.st_gid);
+	printf(" %s", gr ? gr->gr_name : "UNKNOWN");
+	// File size
+	printf(" %5ld", (long) file_stat.st_size);
+	// Last modification time
+	localtime_r(&file_stat.st_mtime, &lt);
+	strftime(time_buf, sizeof(time_buf), "%b %d %H:%M", &lt);
+	printf(" %s", time_buf);
+
+	// File name
+	printf(" %s\n", dir->d_name);
 }
 
-void	mini_mkdir(char **arr)
+void mini_ls(int show_all, int long_format) {
+	DIR *d;
+	struct dirent *dir;
+
+	d = opendir(".");
+	if (d) {
+		while ((dir = readdir(d)) != NULL)
+		{
+			// Skip hidden files if -a is not set
+			if (!show_all && dir->d_name[0] == '.')
+
+				continue;
+			if (long_format)
+				print_long_format(dir);
+			else
+				printf("%s\n", dir->d_name);
+		}
+		closedir(d);
+	}
+	else
+		perror("opendir");
+}
+
+void    mini_mkdir(t_list_token *data,env_var *vars)
 {
-	pid_t		pid;
-	char		*path;
-	char	**environ;
+	pid_t       pid;
+	char        *path;
+	t_list_token *curr;
+
+	curr = data->next;
+	if(!curr)
+	{
+		printf("Try 'mkdir --help' for more information.\n");
+		return;
+	}
+	char *arr[] = {"/bin/mkdir", curr->word, NULL};
 
 	path = "/bin/mkdir";
 	pid = fork();
@@ -45,17 +108,27 @@ void	mini_mkdir(char **arr)
 		return ;
 	}
 	else if (pid == 0)
-		execve(path, arr, environ);
+		execve(path, arr, vars->arr);
 	else
 		wait(NULL);
 }
 
-void	mini_rm(char **arr)
+void    mini_rm(t_list_token *data, env_var *vars) ///
 {
-	pid_t		pid;
-	char		*path;
-	char	**environ;
+	pid_t       pid;
+	char        *path;
+	t_list_token *curr;
+//	char 	*arr[];
 
+	curr = data->next;
+	if(!curr)
+	{
+		printf("Try 'rm --help' for more information.\n");
+		return;
+	}
+//	printf("%s\n",curr->word);
+//	if (curr->next && strcmp(curr-next->word,"-rf") == 0)
+	char *arr[] = {"/bin/rm","-rf", curr->next->word, NULL};
 	path = "/bin/rm";
 	pid = fork();
 	if (pid < 0)
@@ -64,16 +137,17 @@ void	mini_rm(char **arr)
 		return ;
 	}
 	else if (pid == 0)
-		execve(path, arr, environ);
+		execve(path, arr, vars->arr);
 	else
 		wait(NULL);
 }
 
-void	mini_clean(char **arr)
+void    mini_clean(env_var *vars)
 {
-	pid_t		pid;
-	char		*path;
-	char	**environ;
+	pid_t       pid;
+	char        *path;
+
+	char *arr[] = {"/bin/clear", NULL};
 
 	path = "/bin/clear";
 	pid = fork();
@@ -83,37 +157,51 @@ void	mini_clean(char **arr)
 		return ;
 	}
 	else if (pid == 0)
-		execve(path, arr, environ);
+		execve(path, arr, vars->arr);
 	else
 		wait(NULL);
 }
 
-void	handle_not_existent_builtins(t_list_token *data)
+void init_ls(t_list_token *curr)
 {
-	t_list_token	*curr;
-	char			**arr;
+	int show_all = 0;
+	int long_format = 0;
+	t_list_token *arg = curr->next;
+	while (arg != NULL) {
+		if (strcmp(arg->word, "-a") == 0 || strcmp(arg->word, "-la") == 0) {
+			show_all = 1;
+		}
+		if (strcmp(arg->word, "-l") == 0 || strcmp(arg->word, "-la") == 0) {
+			long_format = 1;
+		}
+		arg = arg->next;
+	}
+	mini_ls(show_all, long_format);
+}
 
-	curr = NULL;
-	curr = data->next;
-	arr = turn_word_into_arr(curr);
-	if (arr == NULL)
-		return ;
+void    handle_not_existent_builtins(t_list_token *data, env_var **vars)
+{
+	t_list_token    *curr;
+	(void)vars;
+	curr = data;
+
 	if (curr->word != NULL)
 	{
 		if (strcmp(curr->word, "ls") == 0)
-			mini_ls(arr);
+			init_ls(curr);
 		if (strcmp(curr->word, "mkdir") == 0)
-			mini_mkdir(arr);
+			mini_mkdir(curr, *vars);
 		if (strcmp(curr->word, "rm") == 0)
-			mini_rm(arr);
+			mini_rm(curr, *vars);
 		if (strcmp(curr->word, "clear") == 0)
-			mini_clean(arr);
+			mini_clean(*vars);
 		if (strcmp(curr->word, "cat") == 0)
-			mini_cat(arr);
+			mini_cat(curr);
 		if (strcmp(curr->word, "touch") == 0)
-			mini_touch(arr);
-		if (strcmp(curr->word, "wc") == 0)
-			mini_wc(arr);
-		
+			mini_touch(curr, *vars); ///
+		if (strcmp(curr->word, "mv") == 0)
+			min_mv(curr);
+//		 if (strcmp(curr->word, "wc") == 0)  ///need to make
+//		  mini_wc(arr);
 	}
 }
