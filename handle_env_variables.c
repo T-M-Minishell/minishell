@@ -86,40 +86,39 @@ env_var *get_env_vars(char **envp)
 	return(vars);
 }
 
-//char  *get_var(env_var *vars, char *key)
-//{
-//	int	i;
-//
-//	i = 0;
-//	while (vars->arr[i])
-//	{
-//		char *old_key = get_key_from_word(vars->arr[i]);
-//		if (strcmp(key, old_key) == 0)
-//		{
-//			free(old_key);
-//			return (vars->arr[i]);
-//		}
-//		free(old_key);
-//		i++;
-//	}
-//	return(NULL);
-//}
+bool check_word(char *str)
+{
+	int i;
 
+	i = 0;
+	printf("test\n");
+	while(str[i] != '=')
+	{
+		if((str[i] >= 'a' && str[i] <= 'z') || (str[i] >= 'A' && str[i] <= 'Z')
+			|| (str[i] >= '0' && str[i] <= '9'))
+			i++;
+		else
+			return (false);
+	}
+	return (true);
+}
 
-env_var *add_env_var(env_var *old_env_vars, char *word) {
+env_var *add_env_var(env_var *old_env_vars, char *word)
+{
 	int i, j;
 	env_var *new_env;
 
+//	if(!check_word(word))
+//		return NULL;
 	new_env = malloc(sizeof(env_var));
-	if (!new_env) {
+	if (!new_env)
 		return NULL;
-	}
-
 	i = 0;
 	while (old_env_vars->arr[i])
 		i++;
 	new_env->arr = malloc(sizeof(char *) * (i + 2));
-	if (!new_env->arr) {
+	if (!new_env->arr)
+	{
 		free(new_env);
 		return NULL;
 	}
@@ -129,7 +128,6 @@ env_var *add_env_var(env_var *old_env_vars, char *word) {
 		new_env->arr[j] = old_env_vars->arr[j];
 		j++;
 	}
-
 	// Allocate memory for the new environment variable
 	new_env->arr[j] = malloc(strlen(word) + 1);
 	if (!new_env->arr[j]) {

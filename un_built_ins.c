@@ -128,7 +128,7 @@ void    mini_rm(t_list_token *data, env_var *vars) ///
 	}
 //	printf("%s\n",curr->word);
 //	if (curr->next && strcmp(curr-next->word,"-rf") == 0)
-//		*arr = {"/bin/rm","-rf", curr->next->word, NULL};
+		char *arr[] = {"/bin/rm","-rf", curr->next->word, NULL};
 	path = "/bin/rm";
 	pid = fork();
 	if (pid < 0)
