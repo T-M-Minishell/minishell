@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   un_built_ins.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 20:22:13 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/23 12:54:09 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 14:02:15 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ void    mini_rm(t_list_token *data, env_var *vars) ///
 	}
 //	printf("%s\n",curr->word);
 //	if (curr->next && strcmp(curr-next->word,"-rf") == 0)
-		char *arr[] = {"/bin/rm","-rf", curr->next->word, NULL};
+	char *arr[] = {"/bin/rm","-rf", curr->next->word, NULL};
 	path = "/bin/rm";
 	pid = fork();
 	if (pid < 0)

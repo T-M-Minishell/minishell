@@ -20,20 +20,18 @@
 #define MAX_PATH 1024
 #define BUF_SIZE 1024
 
-
 typedef struct s_env_var
 {
-	char **arr;
-} env_var;
-
+	char		**arr;
+}				env_var;
 
 typedef struct s_input
 {
-	char *prompt;
-	char *line;
-	char *direct;
-	int quote_open;
-} t_input;
+	char		*prompt;
+	char		*line;
+	char		*direct;
+	int			quote_open;
+}				t_input;
 
 /// unused for now
 typedef struct s_history
@@ -54,6 +52,7 @@ bool			is_space(char *line);
 t_list_token	*ft_lstnew_init(void);
 void			ft_lstreset(t_list_token *data, t_token_type token);
 int				ft_strlen(const char *str);
+void 	free_nodes(t_list_token *head);
 char			*ft_strrchr(const char *s, int c);
 
 // utils3
@@ -68,12 +67,14 @@ char			**ft_split(const char *s, char c);
 t_list_token	*ft_lstlast(t_list_token *lst);
 char			*ft_strdup(const char *s1);
 void			print_node(t_list_token *node);
+// void 	free_node_list(t_list_token *data);
 
 /// handle ctrl_commands
 void			ctrl_commands(void);
 
 // handle line_input
-void handle_line(t_input *input, t_list_token *data, char **envp, env_var 	**env_vars);
+void			handle_line(t_input *input, t_list_token *data, char **envp,
+					env_var **env_vars);
 
 // history
 void			create_history(t_history *history, char *line);
@@ -125,10 +126,11 @@ void 	min_mv(t_list_token *data);
 void			mini_echo_quote(t_list_token *data);
 
 // helper_functions
-int ft_strcmp_mod(char *str1, char *str2);
+
+int				ft_strcmp_mod(char *str1, char *str2);
 // char	*ft_strdup(char *s1);
 
-
-
+// custom_split.c
+char			**custom_split(const char *s, char c);
 
 #endif

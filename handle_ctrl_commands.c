@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_ctrl_commands.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:05 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/05/20 11:00:01 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/10 14:37:14 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,3 @@ void	ctrl_commands()
 	signal(SIGINT,ctrl_c_handler);
 
 }
-
-
-

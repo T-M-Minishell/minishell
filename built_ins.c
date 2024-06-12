@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 14:00:17 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/12 14:01:29 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,11 @@ void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 {
 	t_list_token *curr;
 
+	(void)vars;
 	curr = data;
 	if (curr->next == NULL)
 		printf("\n");
+
 	//	check_for_quotes(curr->word);
 	else
 	{
@@ -43,6 +45,7 @@ void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 		{
 			if (curr->word[0] == '$')
 			{
+//				char *value = getenv(curr->word + 1);
 				char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
 				if (value != NULL)
 					printf("%s ", value);
@@ -58,8 +61,7 @@ void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 			printf("\n");
 	}
 }
-
-/// change directory
+//change directory
 int	mini_cd(t_list_token *data)
 {
 	t_list_token	*curr;
@@ -148,7 +150,13 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 
 void	mini_export(t_list_token *data, env_var **env_vars)
 {
-	t_list_token *curr;
+	t_list_token	*curr;
+	// char			*equal_pos;
+	// int				key_len;
+	// char			*key;
+	// char			*value;
+	int				i;
+	// char			*copy;
 
 	curr = data;
 	if (curr->next == NULL)
@@ -157,46 +165,39 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		return ;
 	}
 	curr = curr->next;
-
-	while (curr != NULL) {
-		if (curr->word == NULL)
-		{
-			printf("export: not enough arguments\n");
-			return ;
-		}
-		char *equal_pos = strchr(curr->word, '=');
-		if (equal_pos == NULL)
-		{
-			printf("export: argument should be in the format key=value\n");
-			return ;
-		}
-		int key_len = equal_pos - curr->word;
-		char *key = malloc(key_len + 1);
-		strncpy(key, curr->word, key_len);
-		key[key_len] = '\0';
-		char *value = strdup(equal_pos + 1);
-		int i = 0;
-		while ((*env_vars)->arr[i] != NULL)
-		{
-			char *copy = get_key_from_word((*env_vars)->arr[i]);
-			if (strcmp(key, copy) == 0)
-			{
-				free(copy);
-				free((*env_vars)->arr[i]);
-				(*env_vars)->arr[i] = strdup(curr->word);
-//				free(key);
-//				free(value);
-				break;
-			}
-			free(copy);
-			i++;
-		}
-		if ((*env_vars)->arr[i] == NULL) {
-			*env_vars = add_env_var(*env_vars, curr->word);
-		}
-		free(key);
-		free(value);
-		curr = curr->next;
+	if (curr->word == NULL)
+	{
+		printf("export: not enough arguments\n");
+		return ;
 	}
+	char *equal_pos = strchr(curr->word, '=');
+	if (equal_pos == NULL)
+	{
+		printf("export: argument should be in the format key=value\n");
+		return ;
+	}
+	int key_len = equal_pos - curr->word;
+	char *key = malloc(key_len + 1);
+	strncpy(key, curr->word, key_len);
+	key[key_len] = '\0';
+	char *value = strdup(equal_pos + 1);
+	i = 0;
+	while ((*env_vars)->arr[i] != NULL)
+	{
+		char *copy = get_key_from_word((*env_vars)->arr[i]);
+		if (strcmp(key, copy) == 0)
+		{
+			free(copy);
+			free((*env_vars)->arr[i]);
+			(*env_vars)->arr[i] = strdup(curr->word);
+			free(key);
+			free(value);
+			return ;
+		}
+		free(copy);
+		i++;
+	}
+	*env_vars = add_env_var(*env_vars, curr->word);
+	free(key);
+	free(value);
 }
-

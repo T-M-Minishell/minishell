@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_line_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 17:08:42 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/12 13:41:06 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 
 	curr = (*data)->next;
 	(void)envp;
+	// printf("%s\n", curr->word);
 	if (curr->word != NULL)
 	{
 		if (strchr(curr->word, '='))
@@ -53,8 +54,9 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 	char			**arr;
 	int				i;
 	t_list_token	*tail;
-//	int 			j;
+	char			*line_start;
 
+	line_start = input->line;
 	if (input->line == NULL)
 	{
 		printf("exit\n");
@@ -62,9 +64,14 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 	}
 	if (input->line[0] == '\0')
 		return ;
-	arr = ft_split(input->line, ' ');
+	while (*line_start == ' ')
+		line_start++;
+	if (*line_start == '\0')
+		return ;
+	arr = custom_split(input->line, ' ');
 	if (arr == NULL)
 		return ;
+	
 	i = 0;
 	tail = ft_lstlast(data);
 	while (arr[i] != NULL)
@@ -80,10 +87,16 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 			prepare_for_tokenization_word(arr[i], &tail, token);
 			free(arr[i]);
 		}
+		else if (token == PIPE)
+		{
+			prepare_for_tokenization_word(arr[i], &tail, token);
+			free(arr[i]);
+		}
+		
 		i++;
 	}
+	free(arr);
 	handle_tokens_in_prompt(&data, envp, env_vars);
-	ft_lstreset(data, token);
-
-
+	free_nodes(data);
+	// handle_not_existent_builtins(data);
 }

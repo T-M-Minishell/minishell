@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:28 by tlupu             #+#    #+#             */
-/*   Updated: 2024/05/25 19:05:17 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/11 14:11:39 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,8 @@ typedef struct s_list_token
 	int					type;
 	int					index;
 	char				*word;
-	char				*arr;
 	char 				*pipe;
 	char 				*redirect;
-    char                *input;
-    char                *output;
 	char				*quotes;
 	struct s_list_token	*next;
 	struct s_list_token	*prev;
