@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:03:22 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/03 15:53:19 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/11 15:32:42 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,24 @@ void	print_node(t_list_token *node)
 	printf("Word: %s\n", node->word ? node->word : "(null)");
 	printf("Pipe: %s\n", node->pipe ? node->pipe : "(null)");
 	printf("Redirect: %s\n", node->redirect ? node->redirect : "(null)");
-	printf("Input: %s\n", node->input ? node->input : "(null)");
-	printf("Output: %s\n", node->output ? node->output : "(null)");
 	// Print other fields as needed
+}
+
+void free_list(t_list_token *head)
+{
+	t_list_token *tmp;
+
+	while (head != NULL) {
+		tmp = head;
+		head = head->next;
+		if (tmp->quotes)
+			free(tmp->quotes);
+		if (tmp->word)
+			free(tmp->word);
+		if (tmp->pipe)
+			free(tmp->pipe);
+		if (tmp->redirect)
+			free(tmp->redirect);
+		free(tmp);
+	}
 }

@@ -6,17 +6,17 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/08 21:17:42 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/10 15:58:18 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int words_count(const char *str, char c)
+int	words_count(const char *str, char c)
 {
-	int i;
-	int word;
-	bool is_quote;
+	int		i;
+	int		word;
+	bool	is_quote;
 
 	i = 0;
 	word = 0;
@@ -29,7 +29,8 @@ int words_count(const char *str, char c)
 			if (is_quote)
 				word++;
 		}
-		else if (!is_quote && ((i == 0 || str[i - 1] == c) && str[i] != c))
+		else if (!is_quote && ((i == 0 || str[i - 1] == c || str[i] == '|')
+				&& str[i] != c))
 			word++;
 		i++;
 	}
@@ -40,11 +41,11 @@ int words_count(const char *str, char c)
 	}
 	return (word);
 }
-char 	*string_gen(const char *str, char c)
+char	*string_gen(const char *str, char c)
 {
-	int i;
-	char *word;
-	bool is_quote;
+	int		i;
+	char	*word;
+	bool	is_quote;
 
 	i = 0;
 	is_quote = false;
@@ -52,24 +53,27 @@ char 	*string_gen(const char *str, char c)
 	{
 		if (str[i] == '\"')
 			is_quote = !is_quote;
+		else if (str[i] == '|')
+		{
+			i++;
+			break ;
+		}
 		i++;
 	}
 	word = (char *)malloc(sizeof(char) * (i + 1));
 	if (!word)
-		return NULL;
+		return (NULL);
 	strncpy(word, str, i);
 	word[i] = '\0';
-	return word;
+	return (word);
 }
 
-
-char 	**custom_split(const char *str, char c)
+char	**custom_split(const char *str, char c)
 {
-	int i;
-	int index_array;
-	char **arr;
-	int	word_length;
-	
+	int		i;
+	int		index_array;
+	char	**arr;
+	int		word_length;
 
 	i = 0;
 	index_array = 0;
@@ -78,15 +82,15 @@ char 	**custom_split(const char *str, char c)
 	if (!arr)
 	{
 		printf("Allocation has failed\n");
-		return(NULL);
+		return (NULL);
 	}
-	while (index_array <= word_length)
+	while (index_array < word_length)
 	{
 		arr[index_array] = string_gen((char *)(str + i), c);
 		printf("arr contents are: %s\n", arr[index_array]);
 		i += ft_strlen(arr[index_array]) + 1;
-		index_array ++;
+		index_array++;
 	}
 	arr[word_length] = NULL;
-	return(arr);
+	return (arr);
 }

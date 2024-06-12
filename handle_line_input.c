@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/04 19:30:51 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 13:26:45 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 	tail = ft_lstlast(data);
 	while (arr[i] != NULL)
 	{
-		printf("%s\n", arr[i]);
 		token = check_token(arr[i]);
 		if (token == QUOTE)
 		{
@@ -84,9 +83,16 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 			prepare_for_tokenization_word(arr[i], &tail, token);
 			free(arr[i]);
 		}
+		else if (token == PIPE)
+		{
+			prepare_for_tokenization_word(arr[i], &tail, token);
+			free(arr[i]);
+		}
+		
 		i++;
 	}
+	free(arr);
 	handle_tokens_in_prompt(&data, envp, env_vars);
-	ft_lstreset(data, token);
+	free_nodes(data);
 	// handle_not_existent_builtins(data);
 }

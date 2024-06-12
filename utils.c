@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:59 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/03 20:26:54 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/11 15:45:16 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,6 @@ void	free_token_list(t_list_token **stack)
 		current->type = 0;
 		current->index = 0;
 		current->word = NULL;
-		current->arr = NULL;
-		current->input = NULL;
-		current->output = NULL;
 		free(current);
 		current = tmp;
 	}
@@ -74,7 +71,8 @@ void	ft_lstadd_back(t_list_token **lst, t_list_token *new)
 t_list_token	*ft_lstnew(char *content, t_token_type token)
 {
 	t_list_token	*new;
-
+	
+	new = NULL;
 	new = (t_list_token *)malloc(sizeof(t_list_token));
 	if (!new)
 		return (NULL);
@@ -84,18 +82,12 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	new->word = NULL;
 	new->pipe = NULL;
 	new->redirect = NULL;
-	new->input = NULL;
-	new->output = NULL;
 	new->next = NULL;
 	new->prev = NULL;
 	if (token == QUOTE)
-	{
 		new->quotes = strdup(content);
-	}
 	else if (token == WORD)
-	{
 		new->word = strdup(content);
-	}
 	else if (token == PIPE)
 		new->pipe = strdup(content);
 	else if (token == REDIRECT)
