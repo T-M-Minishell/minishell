@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:59 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/11 15:45:16 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 16:53:45 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*ft_strdnup(const char *s1, int n)
 {
 	char	*str;
-	int	i;
+	int		i;
 
 	str = (char *)malloc(sizeof(char) * (n + 2));
 	if (!str)
@@ -71,31 +71,38 @@ void	ft_lstadd_back(t_list_token **lst, t_list_token *new)
 t_list_token	*ft_lstnew(char *content, t_token_type token)
 {
 	t_list_token	*new;
-	
+
 	new = NULL;
 	new = (t_list_token *)malloc(sizeof(t_list_token));
 	if (!new)
 		return (NULL);
 	new->index = 0;
 	new->type = 0;
-	new->quotes = NULL;
 	new->word = NULL;
-	new->pipe = NULL;
-	new->redirect = NULL;
-	new->next = NULL;
 	new->prev = NULL;
 	if (token == QUOTE)
-		new->quotes = strdup(content);
-	else if (token == WORD)
+	{
 		new->word = strdup(content);
+		new->type = token;
+	}
+	else if (token == WORD)
+	{
+		new->word = strdup(content);
+		new->type = token;
+	}
 	else if (token == PIPE)
-		new->pipe = strdup(content);
+	{
+		new->word = strdup(content);
+		new->type = token;
+	}
 	else if (token == REDIRECT)
-		new->redirect = strdup(content);
+	{
+		new->word = strdup(content);
+		new->type = token;
+	}
 	else
 		printf("UNEXPECTED TOKEN TYPE\n");
 	new->next = NULL;
-	new->prev = NULL;
 	return (new);
 }
 

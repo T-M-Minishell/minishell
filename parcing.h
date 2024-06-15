@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:28 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/11 14:11:39 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 16:55:55 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,11 @@ typedef enum s_token_type
 
 typedef struct s_list_token
 {
-	int					type;
+	t_token_type		type;
 	int					index;
+	
 	char				*word;
-	char 				*pipe;
-	char 				*redirect;
-	char				*quotes;
+
 	struct s_list_token	*next;
 	struct s_list_token	*prev;
 }						t_list_token;

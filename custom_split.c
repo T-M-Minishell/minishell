@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/10 15:58:18 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 14:03:30 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ int	words_count(const char *str, char c)
 	}
 	return (word);
 }
+
+//looks for the desired string keeping in mind all the special operators such as "", >, < or | 
 char	*string_gen(const char *str, char c)
 {
 	int		i;

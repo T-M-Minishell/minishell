@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:53 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/12 13:24:56 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/15 18:16:58 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,19 @@ t_list_token	*ft_lstnew_init(void)
 {
 	t_list_token	*new;
 
+	new = NULL;
 	new = (t_list_token *)malloc(sizeof(t_list_token));
 	if (!new)
 		return (NULL);
-	new->index = 0;
-	new->type = 0;
-	new->quotes = NULL;
-	new->word = NULL;
-	new->pipe = NULL;
-	new->redirect = NULL;
-	new->prev = NULL;
-	new->next = NULL;
 	return (new);
 }
 
-
-void 	free_nodes(t_list_token *head)
+void	free_nodes(t_list_token *head)
 {
-	t_list_token *tmp;
-
-	tmp = NULL;
-	while (tmp != NULL)
+	t_list_token	*tmp;
+ 
+	while (head != NULL)
 	{
-		printf("freed + 1\n");
 		tmp = head;
 		head = head->next;
 		ft_lstreset(tmp, WORD);
@@ -64,31 +54,16 @@ void	ft_lstreset(t_list_token *data, t_token_type token)
 		printf("Data is NULL\n");
 		return ;
 	}
-	if (data->quotes)
-	{
-		free(data->quotes);
-		data->quotes = NULL;
-	}
-	if (data->word)
+	else if (data->word != NULL)
 	{
 		free(data->word);
 		data->word = NULL;
 	}
-	if (data->pipe)
-	{
-		free(data->pipe);
-		data->pipe = NULL;
-	}
 	data->index = 0;
 	data->type = 0;
-	data->redirect = NULL;
 	if (token == END)
-	{
-		data->quotes = NULL;
 		data->word = NULL;
-		data->pipe = NULL;
-		data->redirect = NULL;
-	}
+	// data->word = NULL;
 }
 
 char	**turn_word_into_arr(t_list_token *data)

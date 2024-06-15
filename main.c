@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 16:18:45 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/15 18:18:20 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int main(int argc, char **argv, char **envp) {
 
 
 	// Initialize token list
-	data = ft_lstnew_init();
+	data = NULL;
 	if (argc != 1) {
 		printf("args are not allowed\n");
 		exit(1);
