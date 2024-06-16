@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 15:16:04 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/16 16:31:20 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,48 +17,47 @@
 
 // 1. echo with option -n
 
-void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
+void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 {
-	t_list_token *curr;
-
-	(void)vars;
-	curr = data;
-	printf("echo--test\n");
-	if (curr->next == NULL)
-		printf("\n");
-	else
-	{
-		curr = curr->next;
-		int print_new_line = 1;
-		// check for -n function
-		while (curr->word != NULL && curr->word[0] == '-'
-			&& curr->word[1] == 'n')
-		{
-			if (strcmp(curr->word, "-n-") == 0)
-				break ;
-			print_new_line = 0;
-			curr = curr->next;
-		}
-		// print each arg with space
-		while (curr != NULL)
-		{
-			if (curr->word[0] == '$')
-			{
-//				char *value = getenv(curr->word + 1);
-				char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
-				if (value != NULL)
-					printf("%s ", value);
-				else
-					printf("%s ", "");
-			}
-			else
-				printf("%s ", curr->word);
-			curr = curr->next;
-		}
-		// print new_line if -n is not specified
-		if (print_new_line)
-			printf("\n");
-	}
+    t_list_token *curr;
+    (void)vars;
+    curr = data;
+    if (curr->next == NULL)
+        printf("\n");
+    //  check_for_quotes(curr->word);
+    else
+    {
+        curr = curr->next;
+        int print_new_line = 1;
+        // check for -n function
+        while (curr->word != NULL && curr->word[0] == '-'
+            && curr->word[1] == 'n')
+        {
+            if (strcmp(curr->word, "-n-") == 0)
+                break ;
+            print_new_line = 0;
+            curr = curr->next;
+        }
+        // print each arg with space
+        while (curr != NULL)
+        {
+            if (curr->word[0] == '$')
+            {
+//              char *value = getenv(curr->word + 1);
+                char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
+                if (value != NULL)
+                    printf("%s ", value);
+                else
+                    printf("%s ", "");
+            }
+            else
+                printf("%s ", curr->word);
+            curr = curr->next;
+        }
+        // print new_line if -n is not specified
+        if (print_new_line)
+            printf("\n");
+    }
 }
 //change directory
 int	mini_cd(t_list_token *data)

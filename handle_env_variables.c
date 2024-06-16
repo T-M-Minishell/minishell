@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   handle_env_variables.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 13:41:30 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/16 16:16:15 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void free_vars(env_var *vars)
-{
-	int i;
-
-	i = 0;
-	while(vars->arr[i])
-	{
-		free(vars->arr[i]);
-		i++;
-	}
-	free(vars->arr);
-	free(vars);
-}
 
 
 bool check_if_alphanumeric(char *str)

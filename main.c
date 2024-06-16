@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/03 16:18:45 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/16 16:15:19 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,12 @@ int main(int argc, char **argv, char **envp) {
 
 
 	// Initialize token list
-	data = ft_lstnew_init();
 	if (argc != 1) {
 		printf("args are not allowed\n");
 		exit(1);
 	}
+	data = NULL;
+
 
 	while (1) {
 		// Set up the signal handler for Ctrl+C and CTRL-"\"

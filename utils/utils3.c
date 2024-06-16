@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:23:21 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/11 14:11:57 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 17:00:16 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,4 @@ void 	free_arr(char **arr)
 		free(arr[i]);
 	}
 	free(arr);
-}
-
-void	ft_lstrest(t_list_token *data, t_token_type token)
-{
-	data->type = 0;
-	data->quotes = NULL;
-	data->word = NULL;
-	data->pipe = NULL;
-	data->redirect = NULL;
-	data->next = NULL;
-	data->prev = NULL;
-	if (token == END)
-	{
-		data->quotes = NULL;
-		data->word = NULL;
-		data->pipe = NULL;
-		data->redirect = NULL;
-	}
-	data->next = NULL;
-	data->prev = NULL;
 }
