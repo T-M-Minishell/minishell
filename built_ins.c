@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 17:22:13 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/16 16:08:29 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 		{
 			if (curr->word[0] == '$')
 			{
-				char *value = getenv(curr->word + 1);
+//				char *value = getenv(curr->word + 1);
+				char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
 				if (value != NULL)
 					printf("%s ", value);
 				else
