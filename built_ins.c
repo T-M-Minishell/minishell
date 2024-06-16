@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/16 16:31:20 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/16 16:46:24 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,8 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 	curr = curr->next;
 	if (curr->word == NULL)
 		printf("unset: requires an argument\n");
+	if(strchr(curr->word,'=')!= NULL)
+		return env_vars;
 	while (curr != NULL)
 	{
 		env_vars = delete_env_var(env_vars, curr->word);
@@ -156,6 +158,7 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 	int				i;
 	// char			*copy;
 
+	
 	curr = data;
 	if (curr->next == NULL)
 	{
@@ -186,7 +189,7 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		if (strcmp(key, copy) == 0)
 		{
 			free(copy);
-			free((*env_vars)->arr[i]);
+			// free((*env_vars)->arr[i]);
 			(*env_vars)->arr[i] = strdup(curr->word);
 			free(key);
 			free(value);

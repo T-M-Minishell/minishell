@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/16 16:16:15 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/16 16:42:23 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,9 @@ env_var *add_env_var(env_var *old_env_vars, char *word)
 	}
 	strcpy(new_env->arr[j], word);
 	new_env->arr[j + 1] = NULL;
-	free_vars(old_env_vars);
+	// free_vars(old_env_vars);
+	free(old_env_vars->arr);
+	free(old_env_vars);
 
 	return new_env;
 }
@@ -174,6 +176,8 @@ env_var *delete_env_var(env_var *old_env_vars, char *key) {
 		i++;
 	}
 	new_env->arr[j] = NULL;
-	free_vars(old_env_vars);
+	// free_vars(old_env_vars);
+	free(old_env_vars->arr);
+	free(old_env_vars);
 	return new_env;
 }
