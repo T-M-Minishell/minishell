@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 13:41:30 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/16 15:41:33 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void free_vars(env_var *vars)
 	free(vars->arr);
 	free(vars);
 }
-
 
 bool check_if_alphanumeric(char *str)
 {
@@ -104,7 +103,6 @@ env_var *get_env_vars(char **envp)
 //	}
 //	return(NULL);
 //}
-
 
 env_var *add_env_var(env_var *old_env_vars, char *word) {
 	int i, j;
