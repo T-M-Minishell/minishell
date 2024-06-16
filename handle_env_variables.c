@@ -103,6 +103,20 @@ bool check_word(char *str)
 	return (true);
 }
 
+void free_vars(env_var *vars)
+{
+	int	i;
+
+	i = 0;
+	while (vars->arr[i])
+	{
+		free(vars->arr[i]);
+		i++;
+	}
+	free(vars->arr);
+	free(vars);
+}
+
 env_var *add_env_var(env_var *old_env_vars, char *word)
 {
 	int i, j;
@@ -137,8 +151,7 @@ env_var *add_env_var(env_var *old_env_vars, char *word)
 	}
 	strcpy(new_env->arr[j], word);
 	new_env->arr[j + 1] = NULL;
-	free(old_env_vars->arr);
-	free(old_env_vars);
+	free_vars(old_env_vars);
 
 	return new_env;
 }
@@ -175,8 +188,6 @@ env_var *delete_env_var(env_var *old_env_vars, char *key) {
 		i++;
 	}
 	new_env->arr[j] = NULL;
-	free(old_env_vars->arr);
-	free(old_env_vars);
-
+	free_vars(old_env_vars);
 	return new_env;
 }

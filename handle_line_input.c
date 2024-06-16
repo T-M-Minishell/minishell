@@ -3,14 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   handle_line_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 13:41:06 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 14:31:14 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	chek_token_type(t_list_token *data)
+{
+	t_list_token *curr;
+
+	curr = data;
+	
+	// if(curr->word != NULL)
+		
+}
 
 void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 		env_var **env_vars)
@@ -20,7 +30,7 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 	curr = (*data)->next;
 	(void)envp;
 	// printf("%s\n", curr->word);
-	if (curr->word != NULL)
+	while (curr != NULL)
 	{
 		if (strchr(curr->word, '='))
 			*env_vars = add_env_var(*env_vars, curr->word);
@@ -43,7 +53,7 @@ void	handle_tokens_in_prompt(t_list_token **data, char **envp,
 //			printf("%s\n",curr->word);
 			handle_not_existent_builtins(curr, env_vars);
 		}
-
+		curr = curr->next;
 	}
 }
 

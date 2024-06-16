@@ -35,7 +35,7 @@ void	assign_token_to_redirect(char *line, t_list_token **data,
 	}
 	new_node->index = (*data)->index;
 	ft_lstadd_back(data, new_node);
-	// ask sazymon how to handle multiple pipes if anything else shohulkd be skipped here in the end
+	// ask sazymon how to handle multiple pipes_&_processes if anything else shohulkd be skipped here in the end
 }
 
 void	assign_token_to_pipe(char *line, t_list_token **data,

@@ -139,7 +139,7 @@ void min_mv(t_list_token *data)
 //void mini_wc(t_list_token *data, int lines, int words, int chars)
 //{
 //	int fd;
-//	ssize_t bytes;
+//	size_t bytes;
 //	char buf[BUF_SIZE];
 //	int newline_count = 0;
 //	int word_count = 0;
@@ -158,7 +158,7 @@ void min_mv(t_list_token *data)
 //	}
 //	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
 //	{
-//		for (ssize_t i = 0; i < bytes; i++)
+//		for (size_t i = 0; i < bytes; i++)
 //		{
 //			if (buf[i] == '\n')
 //				newline_count++;

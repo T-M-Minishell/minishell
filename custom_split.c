@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   custom_split.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/10 15:58:18 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/12 14:29:00 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	**custom_split(const char *str, char c)
 	while (index_array < word_length)
 	{
 		arr[index_array] = string_gen((char *)(str + i), c);
-		printf("arr contents are: %s\n", arr[index_array]);
+		// printf("arr contents are: %s\n", arr[index_array]);
 		i += ft_strlen(arr[index_array]) + 1;
 		index_array++;
 	}

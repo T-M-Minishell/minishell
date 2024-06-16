@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/12 14:01:29 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/12 15:16:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ void	mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 
 	(void)vars;
 	curr = data;
+	printf("echo--test\n");
 	if (curr->next == NULL)
 		printf("\n");
-
-	//	check_for_quotes(curr->word);
 	else
 	{
 		curr = curr->next;
