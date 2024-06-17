@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/16 17:32:49 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/17 14:06:22 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,75 +30,43 @@ void	print_logo(void)
 }
 
 
-// int main(int argc, char **argv, char **envp) {
-// 	t_input input;
-// 	t_list_token *data;
-// 	env_var *env_vars = NULL;
-// 	(void)argv;
-
-// 	input.prompt = PROMPT;
-// 	print_logo();
-
-// //	int i = 0;
-// 	// Initialize environment variables
-// 	env_vars = get_env_vars(envp); // works
-
-
-// 	// Initialize token list
-// 	if (argc != 1) {
-// 		printf("args are not allowed\n");
-// 		exit(1);
-// 	}
-// 	data = NULL;
-
-
-// 	while (1) {
-// 		// Set up the signal handler for Ctrl+C and CTRL-"\"
-// 		ctrl_commands();
-
-// 		// Read user input using readline
-// 		input.line = readline(input.prompt);
-
-// 		handle_line(&input, data, envp, &env_vars);
-// 		// Add the line to history
-// 		if (input.line && *input.line)
-// 			add_history(input.line);
-// 		// Free the memory allocated by readline
-// 		free(input.line);
-// //		free(env_vars);
-// 	}
-// 	return 0;
-// }
-
-
 int main(int argc, char **argv, char **envp) {
-    t_input input;
-    t_list_token *data;
-    env_var *env_vars = NULL;
-    (void)argv;
+	t_input input;
+	t_list_token *data;
+	env_var *env_vars = NULL;
+	(void)argv;
 
-    input.prompt = PROMPT;
-    print_logo();
+	input.prompt = PROMPT;
+	print_logo();
 
-    if (argc != 1) {
-        printf("args are not allowed\n");
-        exit(1);
-    }
-    data = NULL;
+//	int i = 0;
+	// Initialize environment variables
+	env_vars = get_env_vars(envp); // works
 
-    env_vars = get_env_vars(envp); // works
 
-    while (1) {
-        ctrl_commands();
-        input.line = readline(input.prompt);
+	// Initialize token list
+	if (argc != 1) {
+		printf("args are not allowed\n");
+		exit(1);
+	}
+	data = NULL;
 
-        handle_line(&input, data, envp, &env_vars);
 
-        if (input.line && *input.line)
-            add_history(input.line);
+	while (1) {
+		// Set up the signal handler for Ctrl+C and CTRL-"\"
+		ctrl_commands();
 
-        free(input.line);
-    }
+		// Read user input using readline
+		input.line = readline(input.prompt);
 
-    return 0;
+		handle_line(&input, data, &env_vars);
+		// Add the line to history
+		if (input.line && *input.line)
+			add_history(input.line);
+		// Free the memory allocated by readline
+		free(input.line);
+//		free(env_vars);
+	}
+	return 0;
 }
+

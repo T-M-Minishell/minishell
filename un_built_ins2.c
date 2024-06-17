@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/09 14:33:24 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/16 17:55:35 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,51 +136,55 @@ void min_mv(t_list_token *data)
 		perror("unlink");
 }
 
-//void mini_wc(t_list_token *data, int lines, int words, int chars)
-//{
-//	int fd;
-//	size_t bytes;
-//	char buf[BUF_SIZE];
-//	int newline_count = 0;
-//	int word_count = 0;
-//	int byte_count = 0;
-//	int in_word = 0;
-//
-//	if (str == NULL || strcmp(str, "-") == 0)
-//		fd = STDIN_FILENO;
-//	else
-//	{
-//		fd = open(str, O_RDONLY);
-//		if (fd == -1) {
-//			perror("open");
-//			return;
-//		}
-//	}
-//	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
-//	{
-//		for (size_t i = 0; i < bytes; i++)
-//		{
-//			if (buf[i] == '\n')
-//				newline_count++;
-//			if (isspace(buf[i]))
-//				in_word = 0;
-//			else if (!in_word)
-//			{
-//				word_count++;
-//				in_word = 1;
-//			}
-//		}
-//		byte_count += bytes;
-//	}
-//	if (bytes == -1)
-//		perror("read");
-//	if (fd != STDIN_FILENO)
-//		close(fd);
-//	if (lines)
-//		printf("%d ", newline_count);
-//	if (words)
-//		printf("%d ", word_count);
-//	if (chars)
-//		printf("%d ", byte_count);
-//	printf("%s\n", str);
-//}
+
+void mini_wc(t_list_token *data, int lines, int words, int chars)
+{
+	int fd;
+	int bytes;
+	char buf[BUF_SIZE];
+	int newline_count = 0;
+	int word_count = 0;
+	int byte_count = 0;
+	int in_word = 0;
+	printf("---gdffg\n");
+	char *str = data->word;
+	
+
+	if (str == NULL || strcmp(str, "-") == 0)
+		fd = STDIN_FILENO;
+	else
+	{
+		fd = open(str, O_RDONLY);
+		if (fd == -1) {
+			perror("open");
+			return;
+		}
+	}
+	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
+	{
+		for (int i = 0; i < bytes; i++)
+		{
+			if (buf[i] == '\n')
+				newline_count++;
+			if (isspace(buf[i]))
+				in_word = 0;
+			else if (!in_word)
+			{
+				word_count++;
+				in_word = 1;
+			}
+		}
+		byte_count += bytes;
+	}
+	if (bytes == -1)
+		perror("read");
+	if (fd != STDIN_FILENO)
+		close(fd);
+	if (lines)
+		printf("%d ", newline_count);
+	if (words)
+		printf("%d ", word_count);
+	if (chars)
+		printf("%d ", byte_count);
+	printf("%s\n", str);
+}

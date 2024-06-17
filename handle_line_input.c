@@ -6,29 +6,24 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/16 17:40:10 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/17 19:14:56 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void handle_pipe(char *line, env_var **env_vars)
-{
-    
-}
 
-void	handle_tokens_in_prompt(t_list_token *data, char **envp,
-		env_var **env_vars)
+void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 {
 	t_list_token	*curr;
 
 	curr = NULL;
 	curr = data;
-	(void)envp;
-	printf("%s\n", curr->word);
+
 	if (curr->word != NULL)
 	{
+
 		if (strchr(curr->word, '='))
 			*env_vars = add_env_var(*env_vars, curr->word);
 		if (strcmp(curr->word, "echo") == 0)
@@ -50,8 +45,7 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp,
 	}
 }
 
-void	handle_line(t_input *input, t_list_token *data, char **envp,
-		env_var **env_vars)
+void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 {
 	t_token_type	token;
 	char			**arr;
@@ -70,7 +64,7 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 		line_start++;
 	if (*line_start == '\0')
 		return ;
-	arr = custom_split(input->line, ' ');
+	arr = custom_split((char *)(input->line + (line_start - input->line)), ' ');
 	if (arr == NULL)
 		return ;
 	i = 0;
@@ -79,15 +73,14 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 		token = check_token(arr[i]);
 		if (token == PIPE)
 		{
-			handle_pipe(input->line, envp);
-			free_arr(arr);
-			return;
+			prepare_for_tokenization_word(arr[i], &data, token);
+
 		}
 		if (token == QUOTE)
 		{
 			prepare_for_tokenization_quote(arr[i], &data, token);
 		}
-		else if (token == WORD || token == PIPE)
+		else if (token == WORD)
 		{
 			prepare_for_tokenization_word(arr[i], &data, token);
 		}
@@ -95,7 +88,9 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 		i++;
     }
 	free(arr);
-	handle_tokens_in_prompt(data, envp, env_vars);
+	if(check_for_pipe_in_line(data))
+		handle_pipe(input->line,data, env_vars);
+	handle_tokens_in_prompt(data,env_vars);
 	free_nodes(data);
 	// print_node(data);
 	// handle_not_existent_builtins(data);

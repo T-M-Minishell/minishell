@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:28 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/12 16:55:55 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/17 19:02:13 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,9 @@ typedef struct s_list_token
 	struct s_list_token	*prev;
 }						t_list_token;
 
+typedef struct s_word_info
+{
+    char    *word;
+    int     char_counted;
+}           t_word_info;
 #endif
