@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/18 17:07:27 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/18 17:14:24 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	print_logo(void)
 }
 
 
+
+
 int main(int argc, char **argv, char **envp) {
 	t_input input;
 	t_list_token *data;
@@ -45,12 +47,11 @@ int main(int argc, char **argv, char **envp) {
 
 
 	// Initialize token list
+	data = NULL;
 	if (argc != 1) {
 		printf("args are not allowed\n");
 		exit(1);
 	}
-	data = NULL;
-
 
 	while (1) {
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
@@ -59,7 +60,7 @@ int main(int argc, char **argv, char **envp) {
 		// Read user input using readline
 		input.line = readline(input.prompt);
 
-		handle_line(&input, data, &env_vars);
+		handle_line(&input, data, envp, &env_vars);
 		// Add the line to history
 		if (input.line && *input.line)
 			add_history(input.line);
