@@ -3,27 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   handle_line_input.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/17 19:14:56 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:12:02 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// bool check_redirects(t_list_token *data)
+// {
+// 	t_list_token	*curr;
 
+// 	curr = data;
+// 	while (curr != NULL)
+// 	{
+// 		if ()
+// 		{
 
-void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
+// 		}
+
+// 		curr=curr->next;
+// 	}
+
+// }
+
+void	handle_tokens_in_prompt(t_list_token *data, char **envp,
+		env_var **env_vars)
 {
 	t_list_token	*curr;
 
-	curr = NULL;
 	curr = data;
-
+	(void)envp;
+	// printf("%s\n", curr->word);
 	if (curr->word != NULL)
 	{
-
 		if (strchr(curr->word, '='))
 			*env_vars = add_env_var(*env_vars, curr->word);
 		if (strcmp(curr->word, "echo") == 0)
@@ -41,11 +56,15 @@ void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 		if (strcmp(curr->word, "env") == 0)
 			min_env(curr, *env_vars);
 		else
+		{
+			//			printf("%s\n",curr->word);
 			handle_not_existent_builtins(curr, env_vars);
+		}
 	}
 }
 
-void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
+void	handle_line(t_input *input, t_list_token *data, char **envp,
+		env_var **env_vars)
 {
 	t_token_type	token;
 	char			**arr;
@@ -71,26 +90,28 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 	while (arr[i] != NULL)
 	{
 		token = check_token(arr[i]);
-		if (token == PIPE)
-		{
-			prepare_for_tokenization_word(arr[i], &data, token);
-
-		}
 		if (token == QUOTE)
 		{
 			prepare_for_tokenization_quote(arr[i], &data, token);
+			free(arr[i]);
 		}
 		else if (token == WORD)
 		{
 			prepare_for_tokenization_word(arr[i], &data, token);
+			free(arr[i]);
 		}
-		free(arr[i]);
+		else if (token == PIPE)
+		{
+			prepare_for_tokenization_word(arr[i], &data, token);
+			free(arr[i]);
+		}
 		i++;
-    }
+	}
 	free(arr);
-	if(check_for_pipe_in_line(data))
-		handle_pipe(input->line,data, env_vars);
-	handle_tokens_in_prompt(data,env_vars);
+	if (check_redirects(data))
+	{
+	}
+	handle_tokens_in_prompt(data, envp, env_vars);
 	free_nodes(data);
 	// print_node(data);
 	// handle_not_existent_builtins(data);

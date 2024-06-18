@@ -73,7 +73,8 @@ void			print_node(t_list_token *node);
 void			ctrl_commands(void);
 
 // handle line_input
-void			handle_line(t_input *input, t_list_token *data, env_var **env_vars);
+void			handle_line(t_input *input, t_list_token *data, char **envp,
+					env_var **env_vars);
 
 // history
 void			create_history(t_history *history, char *line);
@@ -128,8 +129,8 @@ int				ft_strcmp_mod(char *str1, char *str2);
 // custom_split.c
 char			**custom_split(const char *s, char c);
 
-//execution
-bool	check_for_pipe_in_line(t_list_token *data);
-void	handle_pipe(char *line,t_list_token *data, env_var **vars);
+// execution
+bool			check_for_pipe_in_line(t_list_token *data);
+void			handle_pipe(char *line, t_list_token *data, env_var **vars);
 
 #endif
