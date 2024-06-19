@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/18 17:06:13 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/19 12:11:43 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,12 @@ int	allocate_for_strings(const char *str, char c)
 			i++;
 			break ;
 		}
+		else if (str[i] == '>' || str[i] == '<')
+		{
+			i++;
+			break;
+		}
+		
 		i++;
 	}
 	if (keep_quotes % 2 == 0)
