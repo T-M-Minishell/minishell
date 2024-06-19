@@ -6,74 +6,196 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/17 19:52:54 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/19 18:26:19 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-typedef struct s_command {
-    char **args; // Array of strings representing the command and its arguments
-	char *word;
-    int arg_count; // Number of arguments in the command
-} t_command;
-
-
-bool check_for_pipe_in_line(t_list_token *data)
+char *find_path(t_list_commands *cmd)
 {
-    int nb_of_pipes = 0;
+    t_list_commands *command = cmd;   
+    // (void)command;
+    char *path;
+
+
+    
+    printf("arr[0]--%s\n",command->arr[0]);
+    if(strcmp(command->arr[0], "echo") == 0)
+        path ="/bin/echo";
+    else if(strcmp(command->arr[0], "pwd") == 0)
+        path ="/bin/pwd";
+    else if(strcmp(command->arr[0], "clear") == 0)
+        path ="/bin/clear";
+    else if(strcmp(command->arr[0], "rm") == 0)
+        path = "/bin/rm";
+    else if(strcmp(command->arr[0], "mv") == 0)
+        path = "/bin/mv";
+    else if(strcmp(command->arr[0], "mkdir") == 0)
+        path = "/bin/mkdir";
+    else if(strcmp(command->arr[0], "ls") == 0)
+        path = "/bin/ls";
+    else if(strcmp(command->arr[0], "wc") == 0)
+        path = "/usr/bin/wc";
+    
+    else
+        path = NULL;
+    return (path);
+}
+
+
+
+
+// void execute_command(char **argv, char *envp[])
+// {   
+    
+//     char *path = find_path(
+  
+//     if (execve("/bin/echo", argv, envp) == -1) {
+//         perror("execve");
+//         exit(EXIT_FAILURE); // If execve fails, exit child process with an error code
+//     }
+// }
+
+int count_nb_of_pipes(t_list_token *data)
+{
+    int nb;
+
+    nb = 0;
     t_list_token *curr = data;
-    bool is_first = true;
-    bool last_was_pipe = false;
-            
-    while (curr != NULL){
-        if (strcmp(curr->word, "|") == 0)
-		{
-            nb_of_pipes++;
-            // Check for pipe at the beginning or double pipes
-            if (is_first || last_was_pipe)
-                return false;
-            last_was_pipe = true;
-        }
-		else
-            last_was_pipe = false;
-        is_first = false;
+
+    while(curr != NULL)
+    {
+        if(strcmp(curr->word, "|") == 0)
+            nb++;
         curr = curr->next;
     }
-    // Check for pipe at the end
-    if (last_was_pipe || nb_of_pipes == 0)
-        return false;
+    return nb;
+}
+
+char    **convert_tokens_to_argv(t_list_token *data)
+{
+    int count = 0;
+    t_list_token* current = data;
+
+    // Step 1: Count the tokens
+    while (current != NULL && strcmp(current->word,"|" )!= 0)
+    {
+        count++;
+        current = current->next;
+    }
+    // Step 2: Allocate memory for argv
+    char  **argv = malloc((count + 1) * sizeof(char*)); // +1 for NULL terminator
+    if (argv == NULL)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    // Step 3: Fill argv
+    current = data;
+    for (int i = 0; i < count; i++)
+    {
+        if(strcmp(current->word,"|" )== 0)
+            break;
+        argv[i] = strdup(current->word); // Duplicate the string to avoid potential issues
+        if (argv[i] == NULL) {
+        perror("strdup");
+        exit(EXIT_FAILURE);
+        }
+        current = current->next;
+    }
+    // Step 4: Terminate argv with NULL
+    argv[count] = NULL;
+    return argv;
+}
+
+void    implementing_pipe(t_list_commands *cmd, env_var *env_vars)
+{
+    t_list_commands *cmommand;
+    int fd[2];
+
+    cmommand = cmd;
+    if (pipe(fd) == -1)
+    {
+        printf("pipe err\n");
+        exit(1);
+    }
     
-    return true;
-}
-
-
-void arr_of_commands(t_list_token *data)
-{
-	t_list_token *curr;
-
-	curr = data;
-	while (curr != NULL)
-	{
-		if(strcmp(curr->word, "|") == 0)
-			break;
-		printf("--%s\n",curr->word);
-		curr = curr->next;
+    int pid1 = fork();
+    if(pid1 < 0)
+    {
+        printf("pid err\n");
+        exit(1);
+    }
+    if(pid1 == 0)
+    {
+        // char *path = find_path(cmommand);
+        dup2(fd[1],STDOUT_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+        // char *envp[] = {NULL};
+        // char path = ""
+        execve(cmommand->arr[0], cmommand->arr, env_vars->arr);
+    }
+    cmommand = cmommand->next;
+    int pid2 = fork();
+    if (pid2 == 0) { // child process 2
+        // char *path = find_path(cmommand);
+		dup2(fd[0], STDIN_FILENO);
+		close(fd[0]);
+		close(fd[1]);
+		execve(cmommand->arr[0], cmommand->arr, env_vars->arr);
 	}
-	curr = curr->next;
-	printf("curr: %s\n",curr->word);
+    close(fd[0]);
+	close(fd[1]);
+	waitpid(pid1, NULL,0);
+	waitpid(pid2, NULL,0);
+    
+    
 }
 
-void	handle_pipe(char *line,t_list_token *data, env_var **vars)
+void handle_pipe(t_list_token *data, env_var **env_vars)
 {
-	t_command 		*cmd;
-	t_list_token	*curr;
+    // (void)env_vars;
+    
+    t_list_commands *cmd_head = NULL, *cmd_tail = NULL;
+    t_list_token *current = data;
 
-	(void)cmd;
-	(void)vars;
-	(void)line;
-	curr = data;
-	arr_of_commands(curr);
+    while (current != NULL)
+    {
+        // Allocate memory for a new command node
+        t_list_commands *new_cmd = malloc(sizeof(t_list_commands));
+        if (new_cmd == NULL) {
+            perror("malloc");
+            exit(EXIT_FAILURE);
+        }
 
-	
+        // Use convert_tokens_to_argv to fill new_cmd->arr
+        new_cmd->arr = convert_tokens_to_argv(current);
+        new_cmd->next = NULL;
+
+        // Append the new command node to the list
+        if (cmd_head == NULL)
+        {
+        cmd_head = new_cmd;
+        cmd_tail = new_cmd;
+        }
+        else
+        {
+        cmd_tail->next = new_cmd;
+        cmd_tail = new_cmd;
+        }
+        // Move current to the next token after the pipe
+        while (current != NULL && strcmp(current->word, "|") != 0)
+            current = current->next;
+        // Skip the pipe token
+        if (current != NULL && strcmp(current->word, "|") == 0)
+            current = current->next;
+    }
+
+    // Debug print to verify the commands in each node
+   implementing_pipe(cmd_head, *env_vars);
 }
+
+
+

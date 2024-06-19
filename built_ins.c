@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/16 16:46:24 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/19 17:26:41 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
     t_list_token *curr;
     (void)vars;
     curr = data;
+	// printf("test-----\n");
     if (curr->next == NULL)
-        printf("\n");
+        ft_putstr("\n");
     //  check_for_quotes(curr->word);
     else
     {
@@ -41,22 +42,23 @@ void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
         // print each arg with space
         while (curr != NULL)
         {
+			if (strcmp(curr->word, "|") == 0)
+					break;
             if (curr->word[0] == '$')
             {
-//              char *value = getenv(curr->word + 1);
                 char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
                 if (value != NULL)
-                    printf("%s ", value);
+                    ft_putstr(value);
                 else
-                    printf("%s ", "");
+                    ft_putstr(" ");
             }
             else
-                printf("%s ", curr->word);
+                ft_putstr(curr->word);
             curr = curr->next;
         }
         // print new_line if -n is not specified
         if (print_new_line)
-            printf("\n");
+        	ft_putstr("\n");
     }
 }
 //change directory
@@ -95,7 +97,8 @@ void	mini_pwd(void)
 		perror("pwd");
 	else
 	{
-		printf("%s\n", cwd);
+		ft_putstr(cwd);
+		ft_putstr("\n");
 		free(cwd); // Free memory
 	}
 }

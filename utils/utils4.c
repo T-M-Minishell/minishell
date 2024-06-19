@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:03:22 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/12 16:57:30 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/18 13:46:18 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,10 @@ void free_list(t_list_token *head)
 			free(tmp->word);
 		free(tmp);
 	}
+}
+
+
+void	ft_putstr(char *str)
+{	
+	write(1, str, strlen(str));	
 }

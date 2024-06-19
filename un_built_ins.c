@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 20:22:13 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/16 17:49:23 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/18 13:59:48 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ void    handle_not_existent_builtins(t_list_token *data, env_var **vars)
 			mini_touch(curr, *vars); ///
 		if (strcmp(curr->word, "mv") == 0)
 			min_mv(curr);
-		 if (strcmp(curr->word, "wc") == 0)  ///need to make
-		  mini_wc(curr,1,1,1);
+		 if (strcmp(curr->word, "wc") == 0)
+		  	mini_wc(curr,1,1,1);
 	}
 }

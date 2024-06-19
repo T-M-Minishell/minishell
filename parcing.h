@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:28 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/17 19:02:13 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:35:54 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_list_token
 	int					index;
 	
 	char				*word;
-
+	char	*token;
 	struct s_list_token	*next;
 	struct s_list_token	*prev;
 }						t_list_token;

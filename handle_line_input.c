@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/17 19:14:56 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/19 13:11:52 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 	curr = NULL;
 	curr = data;
 
-	if (curr->word != NULL)
+	if (curr->word != NULL && strcmp(curr->word, "|") != 0)
 	{
 
 		if (strchr(curr->word, '='))
@@ -89,8 +89,9 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
     }
 	free(arr);
 	if(check_for_pipe_in_line(data))
-		handle_pipe(input->line,data, env_vars);
-	handle_tokens_in_prompt(data,env_vars);
+		handle_pipe(data, env_vars);
+	else	
+		handle_tokens_in_prompt(data,env_vars);
 	free_nodes(data);
 	// print_node(data);
 	// handle_not_existent_builtins(data);

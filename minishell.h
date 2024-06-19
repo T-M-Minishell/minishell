@@ -39,6 +39,12 @@ typedef struct s_history
 	int			count;
 }				t_history;
 
+typedef struct s_list_commands
+{
+    char **arr;
+    struct s_list_commands *next;
+} t_list_commands;
+
 // utils
 t_list_token	*ft_lstnew(char *content, t_token_type token);
 void			ft_lstadd_back(t_list_token **lst, t_list_token *new);
@@ -67,6 +73,7 @@ char			**ft_split(const char *s, char c);
 t_list_token	*ft_lstlast(t_list_token *lst);
 char			*ft_strdup(const char *s1);
 void			print_node(t_list_token *node);
+void		ft_putstr(char *str);
 // void 	free_node_list(t_list_token *data);
 
 /// handle ctrl_commands
@@ -74,6 +81,8 @@ void			ctrl_commands(void);
 
 // handle line_input
 void			handle_line(t_input *input, t_list_token *data, env_var **env_vars);
+void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars);
+
 
 // history
 void			create_history(t_history *history, char *line);
@@ -130,6 +139,9 @@ char			**custom_split(const char *s, char c);
 
 //execution
 bool	check_for_pipe_in_line(t_list_token *data);
-void	handle_pipe(char *line,t_list_token *data, env_var **vars);
+void	handle_pipe(t_list_token *data, env_var **env_vars);
+
+// exec_utils
+bool check_if_builtin(char *word);
 
 #endif
