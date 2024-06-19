@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 20:22:13 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/18 13:59:48 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/19 19:15:10 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void    mini_mkdir(t_list_token *data,env_var *vars)
 		wait(NULL);
 }
 
-void    mini_rm(t_list_token *data, env_var *vars) ///
+void    mini_rm(t_list_token *data, env_var *vars) ///  problem here
 {
 	pid_t       pid;
 	char        *path;

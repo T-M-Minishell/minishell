@@ -6,11 +6,15 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/19 18:26:19 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/19 19:08:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 char *find_path(t_list_commands *cmd)
 {
@@ -20,7 +24,7 @@ char *find_path(t_list_commands *cmd)
 
 
     
-    printf("arr[0]--%s\n",command->arr[0]);
+    // printf("arr[0]--%s\n",command->arr[0]);
     if(strcmp(command->arr[0], "echo") == 0)
         path ="/bin/echo";
     else if(strcmp(command->arr[0], "pwd") == 0)
@@ -109,6 +113,65 @@ char    **convert_tokens_to_argv(t_list_token *data)
     return argv;
 }
 
+
+// // / ----------copilot-------
+
+// void implementing_pipe(t_list_commands *cmd, env_var *env_vars) {
+//     int num_cmds = 0;
+//     for (t_list_commands *current = cmd; current != NULL; current = current->next) {
+//         num_cmds++;
+//     }
+
+//     // Allocate pipes
+//     int (*pipes)[2] = malloc(sizeof(int[2]) * (num_cmds - 1));
+//     for (int i = 0; i < num_cmds - 1; i++) {
+//         if (pipe(pipes[i]) == -1) {
+//             perror("pipe");
+//             exit(EXIT_FAILURE);
+//         }
+//     }
+
+//     int i = 0;
+//     for (t_list_commands *current = cmd; current != NULL; current = current->next, i++) {
+//         int pid = fork();
+//         if (pid < 0) {
+//             perror("fork");
+//             exit(EXIT_FAILURE);
+//         } else if (pid == 0) { // Child process
+//             if (i > 0) { // Not the first command
+//                 dup2(pipes[i - 1][0], STDIN_FILENO);
+//             }
+//             if (i < num_cmds - 1) { // Not the last command
+//                 dup2(pipes[i][1], STDOUT_FILENO);
+//             }
+//             // Close all pipes in the child process
+//             for (int j = 0; j < num_cmds - 1; j++) {
+//                 close(pipes[j][0]);
+//                 close(pipes[j][1]);
+//             }
+//             char *path = find_path(current);
+//             execve(path, current->arr, env_vars->arr);
+//             perror("execve");
+//             exit(EXIT_FAILURE);
+//         }
+//     }
+
+//     // Close all pipes in the parent process
+//     for (int j = 0; j < num_cmds - 1; j++) {
+//         close(pipes[j][0]);
+//         close(pipes[j][1]);
+//     }
+
+//     // Wait for all child processes to finish
+//     for (int j = 0; j < num_cmds; j++) {
+//         wait(NULL);
+//     }
+
+//     free(pipes); // Free the dynamically allocated memory for pipes
+// }
+
+// ---------- mine---------
+
 void    implementing_pipe(t_list_commands *cmd, env_var *env_vars)
 {
     t_list_commands *cmommand;
@@ -129,22 +192,20 @@ void    implementing_pipe(t_list_commands *cmd, env_var *env_vars)
     }
     if(pid1 == 0)
     {
-        // char *path = find_path(cmommand);
+        char *path = find_path(cmommand);
         dup2(fd[1],STDOUT_FILENO);
 		close(fd[0]);
 		close(fd[1]);
-        // char *envp[] = {NULL};
-        // char path = ""
-        execve(cmommand->arr[0], cmommand->arr, env_vars->arr);
+        execve(path, cmommand->arr, env_vars->arr);
     }
     cmommand = cmommand->next;
     int pid2 = fork();
     if (pid2 == 0) { // child process 2
-        // char *path = find_path(cmommand);
+        char *path = find_path(cmommand);
 		dup2(fd[0], STDIN_FILENO);
 		close(fd[0]);
 		close(fd[1]);
-		execve(cmommand->arr[0], cmommand->arr, env_vars->arr);
+		execve(path, cmommand->arr, env_vars->arr);
 	}
     close(fd[0]);
 	close(fd[1]);
@@ -153,6 +214,7 @@ void    implementing_pipe(t_list_commands *cmd, env_var *env_vars)
     
     
 }
+
 
 void handle_pipe(t_list_token *data, env_var **env_vars)
 {
