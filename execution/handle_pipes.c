@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/20 11:02:10 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/20 11:20:03 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ char *find_path(t_list_commands *cmd)
     // (void)command;
     char *path;
 
-
-    
     // printf("arr[0]--%s\n",command->arr[0]);
     if(strcmp(command->arr[0], "echo") == 0)
         path ="/bin/echo";
@@ -114,7 +112,6 @@ char    **convert_tokens_to_argv(t_list_token *data)
 }
 
 
-// // / ----------copilot-------
 
 void implementing_pipe(t_list_commands *cmd, env_var *env_vars) {
     int num_cmds = 0;
@@ -167,10 +164,10 @@ void implementing_pipe(t_list_commands *cmd, env_var *env_vars) {
         wait(NULL);
     }
 
-    free(pipes); // Free the dynamically allocated memory for pipes
+    free(pipes);
 }
 
-// ---------- mine---------
+// ---------- test---------
 
 // void    implementing_pipe(t_list_commands *cmd, env_var *env_vars)
 // {
@@ -215,6 +212,19 @@ void implementing_pipe(t_list_commands *cmd, env_var *env_vars) {
     
 // }
 
+void free_command_list(t_list_commands *cmd_head) {
+    while (cmd_head != NULL) {
+        t_list_commands *temp = cmd_head;
+        cmd_head = cmd_head->next;
+
+        // Assuming convert_tokens_to_argv allocates memory for arr and its contents
+        for (int i = 0; temp->arr[i] != NULL; i++) {
+            free(temp->arr[i]); // Free each string in arr
+        }
+        free(temp->arr); // Free the array of strings
+        free(temp); // Free the command node
+    }
+}
 
 void handle_pipe(t_list_token *data, env_var **env_vars)
 {
@@ -254,8 +264,9 @@ void handle_pipe(t_list_token *data, env_var **env_vars)
         if (current != NULL && strcmp(current->word, "|") == 0)
             current = current->next;
     }
+    implementing_pipe(cmd_head, *env_vars);
+    free_command_list(cmd_head);
 
-   implementing_pipe(cmd_head, *env_vars);
 }
 
 
