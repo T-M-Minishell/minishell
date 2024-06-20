@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/19 13:11:52 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/20 10:53:51 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 	curr = NULL;
 	curr = data;
 
-	if (curr->word != NULL && strcmp(curr->word, "|") != 0)
+	if (curr->word != NULL)
 	{
 
 		if (strchr(curr->word, '='))

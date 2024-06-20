@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/19 17:26:41 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/20 10:59:44 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	mini_exit(t_list_token *data)
 		exit_status = atoi(curr->next->word);
 	}
 
-	printf("exit\n");
+	ft_putstr("exit");
 	exit(exit_status);
 }
 
@@ -126,7 +126,8 @@ void	min_env(t_list_token *data, env_var *env_vars)
 	i = 0;
 	while (env_vars->arr[i])
 	{
-		printf("%s\n", env_vars->arr[i]);
+		ft_putstr(env_vars->arr[i]);
+		ft_putstr("\n");
 		i++;
 	}
 }
