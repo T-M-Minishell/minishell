@@ -32,12 +32,6 @@ typedef struct s_input
 	int			quote_open;
 }				t_input;
 
-/// unused for now
-typedef struct s_history
-{
-	char		*lines[MAX_HISTORY];
-	int			count;
-}				t_history;
 
 typedef struct s_list_commands
 {
@@ -84,8 +78,8 @@ void			handle_line(t_input *input, t_list_token *data, env_var **env_vars);
 void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars);
 
 
-// history
-void			create_history(t_history *history, char *line);
+// // history
+// void			create_history(t_history *history, char *line);
 
 // handle env_variable
 void			free_vars(env_var *vars);
@@ -100,7 +94,7 @@ void			mini_echo(t_list_token *data, env_var *vars);
 int				mini_cd(t_list_token *data);
 void			mini_pwd(void);
 void			mini_exit(t_list_token *data);
-void			min_env(t_list_token *data, env_var *env_vars);
+void			mini_env(env_var *env_vars);
 env_var			*mini_unset(t_list_token *data, env_var *env_vars);
 void			mini_export(t_list_token *data, env_var **env_vars);
 
@@ -143,5 +137,19 @@ void	handle_pipe(t_list_token *data, env_var **env_vars);
 
 // exec_utils
 bool check_if_builtin(char *word);
+
+// handle_builtins_type
+int execute_builtins_with_no_output(char **commands);
+int	execute_builtins_with_output(char **commands, env_var *vars);
+env_var *exec_env_var_fct(char **commands, env_var *vars);
+
+
+
+// builtins_for_pipes
+int		mini_cd_pipe(char **command);
+void	mini_exit_pipe(char **command);
+env_var	*mini_unset_pipe(char **commands, env_var *env_vars);
+
+
 
 #endif

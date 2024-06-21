@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/20 11:20:03 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:38:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,12 @@ char *find_path(t_list_commands *cmd)
         path = "/bin/mkdir";
     else if(strcmp(command->arr[0], "ls") == 0)
         path = "/bin/ls";
+	else if(strcmp(command->arr[0], "touch") == 0)
+        path = "/bin/touch";
+	else if(strcmp(command->arr[0], "cat") == 0)
+        path = "/bin/cat";
     else if(strcmp(command->arr[0], "wc") == 0)
         path = "/usr/bin/wc";
-    
     else
         path = NULL;
     return (path);
@@ -111,126 +114,124 @@ char    **convert_tokens_to_argv(t_list_token *data)
     return argv;
 }
 
-
-
-void implementing_pipe(t_list_commands *cmd, env_var *env_vars) {
+void implementing_pipe(t_list_commands *cmd, env_var *env_vars, t_list_token *data) {
     int num_cmds = 0;
-    for (t_list_commands *current = cmd; current != NULL; current = current->next) {
+    int j;
+    t_list_commands *current = cmd;
+
+    // Count the number of commands
+    while (current != NULL) {
         num_cmds++;
+        current = current->next;
     }
+    (void)data; // Suppress unused variable warning
 
     // Allocate pipes
     int (*pipes)[2] = malloc(sizeof(int[2]) * (num_cmds - 1));
+    if (pipes == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
     for (int i = 0; i < num_cmds - 1; i++) {
         if (pipe(pipes[i]) == -1) {
             perror("pipe");
+            free(pipes);
             exit(EXIT_FAILURE);
         }
     }
 
-    int i = 0;
-    for (t_list_commands *current = cmd; current != NULL; current = current->next, i++) {
+    current = cmd;
+    for (int i = 0; i < num_cmds; i++) {
+        // Check and execute builtins with no output
+        if (check_if_builtin(current->arr[0])) {
+            if (execute_builtins_with_no_output(current->arr) == 1) {
+                current = current->next;
+                num_cmds--;
+                i--;
+                continue;
+            }
+        }
+		
+
         int pid = fork();
         if (pid < 0) {
             perror("fork");
+            free(pipes);
             exit(EXIT_FAILURE);
-        } else if (pid == 0) { // Child process
+        }
+		else if (pid == 0) { // Child process
             if (i > 0) { // Not the first command
                 dup2(pipes[i - 1][0], STDIN_FILENO);
             }
-            if (i < num_cmds - 1) { // Not the last command
+            if (i < num_cmds - 1) // Not the last command
                 dup2(pipes[i][1], STDOUT_FILENO);
-            }
+         
             // Close all pipes in the child process
-            for (int j = 0; j < num_cmds - 1; j++) {
+            for (j = 0; j < num_cmds - 1; j++) {
                 close(pipes[j][0]);
                 close(pipes[j][1]);
             }
-            char *path = find_path(current);
-            execve(path, current->arr, env_vars->arr);
-            perror("execve");
-            exit(EXIT_FAILURE);
+
+            if (check_if_builtin(current->arr[0])) {
+                if (execute_builtins_with_output(current->arr, env_vars) == 1)
+                    _exit(EXIT_SUCCESS); // Use _exit to avoid flushing stdio buffers
+            } else {
+                char *path = find_path(current);
+                execve(path, current->arr, env_vars->arr);
+                perror("execve");
+                _exit(EXIT_FAILURE); // Use _exit to avoid flushing stdio buffers
+            }
         }
+
+        // Close parent's copy of the pipe ends that are no longer needed
+        if (i > 0) {
+            close(pipes[i - 1][0]);
+        }
+        if (i < num_cmds - 1) {
+            close(pipes[i][1]);
+        }
+
+        current = current->next;
     }
 
-    // Close all pipes in the parent process
-    for (int j = 0; j < num_cmds - 1; j++) {
+    // Close remaining pipes in the parent process
+    for (j = 0; j < num_cmds - 1; j++) {
         close(pipes[j][0]);
         close(pipes[j][1]);
     }
 
     // Wait for all child processes to finish
-    for (int j = 0; j < num_cmds; j++) {
+    for (j = 0; j < num_cmds; j++) {
         wait(NULL);
     }
 
     free(pipes);
 }
 
-// ---------- test---------
 
-// void    implementing_pipe(t_list_commands *cmd, env_var *env_vars)
-// {
-//     t_list_commands *cmommand;
-//     int fd[2];
 
-//     cmommand = cmd;
-//     if (pipe(fd) == -1)
-//     {
-//         printf("pipe err\n");
-//         exit(1);
-//     }
-    
-//     int pid1 = fork();
-//     if(pid1 < 0)
-//     {
-//         printf("pid err\n");
-//         exit(1);
-//     }
-//     if(pid1 == 0)
-//     {
-//         char *path = find_path(cmommand);
-//         dup2(fd[1],STDOUT_FILENO);
-// 		close(fd[0]);
-// 		close(fd[1]);
-//         execve(path, cmommand->arr, env_vars->arr);
-//     }
-//     cmommand = cmommand->next;
-//     int pid2 = fork();
-//     if (pid2 == 0) { // child process 2
-//         char *path = find_path(cmommand);
-// 		dup2(fd[0], STDIN_FILENO);
-// 		close(fd[0]);
-// 		close(fd[1]);
-// 		execve(path, cmommand->arr, env_vars->arr);
-// 	}
-//     close(fd[0]);
-// 	close(fd[1]);
-// 	waitpid(pid1, NULL,0);
-// 	waitpid(pid2, NULL,0);
-    
-    
-// }
 
-void free_command_list(t_list_commands *cmd_head) {
-    while (cmd_head != NULL) {
+void free_command_list(t_list_commands *cmd_head)
+{
+    while (cmd_head != NULL)
+    {
         t_list_commands *temp = cmd_head;
         cmd_head = cmd_head->next;
 
-        // Assuming convert_tokens_to_argv allocates memory for arr and its contents
-        for (int i = 0; temp->arr[i] != NULL; i++) {
+        for (int i = 0; temp->arr[i] != NULL; i++)
+        {
             free(temp->arr[i]); // Free each string in arr
         }
-        free(temp->arr); // Free the array of strings
-        free(temp); // Free the command node
+        free(temp->arr);
+        free(temp);
     }
 }
 
 void handle_pipe(t_list_token *data, env_var **env_vars)
 {
-    // (void)env_vars;
-    
-    t_list_commands *cmd_head = NULL, *cmd_tail = NULL;
+    t_list_commands *cmd_head = NULL;
+    t_list_commands *cmd_tail = NULL;
     t_list_token *current = data;
 
     while (current != NULL)
@@ -241,11 +242,9 @@ void handle_pipe(t_list_token *data, env_var **env_vars)
             perror("malloc");
             exit(EXIT_FAILURE);
         }
-
         // Use convert_tokens_to_argv to fill new_cmd->arr
         new_cmd->arr = convert_tokens_to_argv(current);
         new_cmd->next = NULL;
-
         // Append the new command node to the list
         if (cmd_head == NULL)
         {
@@ -264,7 +263,7 @@ void handle_pipe(t_list_token *data, env_var **env_vars)
         if (current != NULL && strcmp(current->word, "|") == 0)
             current = current->next;
     }
-    implementing_pipe(cmd_head, *env_vars);
+    implementing_pipe(cmd_head, *env_vars, data);
     free_command_list(cmd_head);
 
 }

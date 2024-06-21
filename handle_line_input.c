@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/20 10:53:51 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:33:19 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 		if (strcmp(curr->word, "unset") == 0)
 			*env_vars = mini_unset(curr, *env_vars);
 		if (strcmp(curr->word, "env") == 0)
-			min_env(curr, *env_vars);
+			mini_env(*env_vars);
 		else
 			handle_not_existent_builtins(curr, env_vars);
 	}

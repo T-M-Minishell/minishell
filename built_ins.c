@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/20 10:59:44 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/21 12:33:23 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,11 +118,10 @@ void	mini_exit(t_list_token *data)
 	exit(exit_status);
 }
 
-void	min_env(t_list_token *data, env_var *env_vars)
+void	mini_env(env_var *env_vars)
 {
 	int	i;
 
-	(void)data;
 	i = 0;
 	while (env_vars->arr[i])
 	{

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/19 13:08:54 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:02:14 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 bool check_if_builtin(char *word)
 {
     char *arr_of_builtins[] =
-		{"echo", "cd", "pwd", "export", "unset", "env", "exit"};
+		{"cd","export", "unset", "env", "exit"};
     int num_of_builtins = sizeof(arr_of_builtins) / sizeof(arr_of_builtins[0]);
-
+    
     for (int i = 0; i < num_of_builtins; i++)
 	{
         if (strcmp(word, arr_of_builtins[i]) == 0)
@@ -25,6 +25,7 @@ bool check_if_builtin(char *word)
             return true;
         }
     }
+    // printf("test in check\n");
     return false;
 }
 
