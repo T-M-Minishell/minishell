@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/21 15:15:00 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/22 14:03:35 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,14 @@ int	execute_builtins_with_output(char **commands, env_var *vars)
 	if(strcmp(commands[0], "env") == 0)
 	{
 		mini_env(vars);
+		flag = 1;
+	}
+	if(strcmp(commands[0], "echo") == 0)
+	{
+		int i = 0;
+		while(vars->arr[i])
+			printf("%s\n", vars->arr[i++]);
+		mini_echo_pipe(commands, vars);
 		flag = 1;
 	}
 	return(flag);

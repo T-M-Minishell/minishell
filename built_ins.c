@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/21 12:33:23 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/22 14:00:53 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 {
     t_list_token *curr;
-    (void)vars;
+
     curr = data;
 	// printf("test-----\n");
     if (curr->next == NULL)

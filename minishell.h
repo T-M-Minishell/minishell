@@ -149,6 +149,7 @@ env_var *exec_env_var_fct(char **commands, env_var *vars);
 int		mini_cd_pipe(char **command);
 void	mini_exit_pipe(char **command);
 env_var	*mini_unset_pipe(char **commands, env_var *env_vars);
+void	mini_echo_pipe(char **commands, env_var *vars);
 
 
 
