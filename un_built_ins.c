@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 20:22:13 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/19 19:15:10 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/22 14:25:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,35 +112,39 @@ void    mini_mkdir(t_list_token *data,env_var *vars)
 	else
 		wait(NULL);
 }
-
-void    mini_rm(t_list_token *data, env_var *vars) ///  problem here
+void mini_rm(t_list_token *data, env_var *vars)
 {
-	pid_t       pid;
-	char        *path;
-	t_list_token *curr;
-//	char 	*arr[];
+    pid_t pid;
+    char *path = "/bin/rm";
+    t_list_token *curr = data->next; // Skip the command itself to get to the arguments
 
-	curr = data->next;
-	if(!curr)
+    // Skip any empty arguments (spaces)
+    while (curr != NULL && strcmp(curr->word, "") == 0) {
+        curr = curr->next;
+    }
+
+    // Check if there's actually something to remove
+    if (!curr)
 	{
-		printf("Try 'rm --help' for more information.\n");
-		return;
-	}
-//	printf("%s\n",curr->word);
-//	if (curr->next && strcmp(curr-next->word,"-rf") == 0)
-	char *arr[] = {"/bin/rm","-rf", curr->next->word, NULL};
-	path = "/bin/rm";
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("ERROR WITH PID\n");
-		return ;
-	}
-	else if (pid == 0)
-		execve(path, arr, vars->arr);
-	else
-		wait(NULL);
+        printf("Try 'rm --help' for more information.\n");
+        return;
+    }
+
+    // Prepare the arguments for execve
+    char *arr[] = {path, "-rf", curr->word, NULL}; // Assuming you want to always use -rf
+
+    pid = fork();
+    if (pid < 0) {
+        perror("ERROR WITH PID\n");
+        return;
+    } else if (pid == 0) {
+        execve(path, arr, vars->arr);
+        exit(EXIT_FAILURE); // If execve returns, it failed
+    } else {
+        wait(NULL); // Wait for the child process to finish
+    }
 }
+
 
 void    mini_clean(env_var *vars)
 {

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/22 13:56:55 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/23 14:50:08 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@ char *find_path(t_list_commands *cmd)
     char *path;
     
     command = cmd;   
-    if(strcmp(command->arr[0], "echo") == 0)
-        path ="/bin/echo";
-    else if(strcmp(command->arr[0], "pwd") == 0)
+
+    if(strcmp(command->arr[0], "pwd") == 0) // mayb not need here
         path ="/bin/pwd";
     else if(strcmp(command->arr[0], "clear") == 0)
         path ="/bin/clear";
@@ -101,7 +100,7 @@ char    **convert_tokens_to_argv(t_list_token *data)
     argv[count] = NULL;
     return argv;
 }
-/////----------------TEST----------------------
+/////----------------EXECUTION----------------------
 
 int count_commands(t_list_commands *cmd)
 {
@@ -136,12 +135,12 @@ void create_pipes(int (*pipes)[2], int num_cmds) {
         i++;
     }
 }
-
-void execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_var *env_vars) {
+env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_var *env_vars) {
     t_list_commands *current = cmd;
     int i = 0;
     int pid;
-    int  j;
+    int j;
+    env_var *vars = env_vars;
 
     while (i < num_cmds) {
         if (check_if_builtin(current->arr[0])) {
@@ -150,43 +149,41 @@ void execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_v
                 num_cmds--;
                 continue;
             }
+            if (check_for_env_commands(current->arr)) {
+                vars = exec_env_var_fct(current->arr, vars);
+                current = current->next;
+                num_cmds--;
+                continue;
+            }
         }
 
         pid = fork();
-        if (pid < 0)
-        {
+        if (pid < 0) {
             perror("fork");
             free(pipes);
             exit(EXIT_FAILURE);
-        }
-        else if (pid == 0)
-        {
+        } else if (pid == 0) {
             if (i > 0)
                 dup2(pipes[i - 1][0], STDIN_FILENO);
             if (i < num_cmds - 1)
                 dup2(pipes[i][1], STDOUT_FILENO);
 
-            j = 0;
-            while (j < num_cmds - 1) {
+            for (j = 0; j < num_cmds - 1; j++) {
                 close(pipes[j][0]);
                 close(pipes[j][1]);
-                j++;
             }
 
-            if (check_if_builtin(current->arr[0]))
-            {
-                 if (execute_builtins_with_output(current->arr, env_vars) == 1)
+            if (check_if_builtin(current->arr[0])) {
+                if (execute_builtins_with_output(current->arr, vars) == 1)
                     _exit(EXIT_SUCCESS);
-            }
-               
-            else
-            {
+            } else {
                 char *path = find_path(current);
-                execve(path, current->arr, env_vars->arr);
+                execve(path, current->arr, vars->arr);
                 perror("execve");
                 _exit(EXIT_FAILURE);
             }
         }
+
         if (i > 0)
             close(pipes[i - 1][0]);
         if (i < num_cmds - 1)
@@ -195,7 +192,9 @@ void execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_v
         current = current->next;
         i++;
     }
+    return vars;
 }
+
 
 
 void cleanup_pipes_and_wait(int (*pipes)[2], int num_cmds) {
@@ -215,18 +214,21 @@ void cleanup_pipes_and_wait(int (*pipes)[2], int num_cmds) {
     free(pipes);
 }
 
-void implementing_pipe(t_list_commands *cmd, env_var *env_vars, t_list_token *data) {
+env_var *implementing_pipe(t_list_commands *cmd, env_var *env_vars, t_list_token *data) {
     int num_cmds = count_commands(cmd);
     (void)data; // Suppress unused variable warning
 
-    if (num_cmds < 1) return;
+    if (num_cmds < 1) return env_vars;
 
     int (*pipes)[2] = allocate_pipes(num_cmds);
     if (pipes != NULL) create_pipes(pipes, num_cmds);
 
-    execute_commands(cmd, num_cmds, pipes, env_vars);
+    env_vars = execute_commands(cmd, num_cmds, pipes, env_vars);
     if (pipes != NULL) cleanup_pipes_and_wait(pipes, num_cmds);
+
+    return env_vars;
 }
+
 
 void free_command_list(t_list_commands *cmd_head)
 {
@@ -244,14 +246,12 @@ void free_command_list(t_list_commands *cmd_head)
     }
 }
 
-void handle_pipe(t_list_token *data, env_var **env_vars)
-{
+env_var *handle_pipe(t_list_token *data, env_var *env_vars) {
     t_list_commands *cmd_head = NULL;
     t_list_commands *cmd_tail = NULL;
     t_list_token *current = data;
 
-    while (current != NULL)
-    {
+    while (current != NULL) {
         // Allocate memory for a new command node
         t_list_commands *new_cmd = malloc(sizeof(t_list_commands));
         if (new_cmd == NULL) {
@@ -262,15 +262,12 @@ void handle_pipe(t_list_token *data, env_var **env_vars)
         new_cmd->arr = convert_tokens_to_argv(current);
         new_cmd->next = NULL;
         // Append the new command node to the list
-        if (cmd_head == NULL)
-        {
-        cmd_head = new_cmd;
-        cmd_tail = new_cmd;
-        }
-        else
-        {
-        cmd_tail->next = new_cmd;
-        cmd_tail = new_cmd;
+        if (cmd_head == NULL) {
+            cmd_head = new_cmd;
+            cmd_tail = new_cmd;
+        } else {
+            cmd_tail->next = new_cmd;
+            cmd_tail = new_cmd;
         }
         // Move current to the next token after the pipe
         while (current != NULL && strcmp(current->word, "|") != 0)
@@ -279,9 +276,9 @@ void handle_pipe(t_list_token *data, env_var **env_vars)
         if (current != NULL && strcmp(current->word, "|") == 0)
             current = current->next;
     }
-    implementing_pipe(cmd_head, *env_vars, data);
+    env_vars = implementing_pipe(cmd_head, env_vars, data);
     free_command_list(cmd_head);
-
+    return env_vars;
 }
 
 

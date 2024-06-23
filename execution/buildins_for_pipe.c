@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 11:48:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/22 14:09:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/23 14:54:05 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,28 +51,43 @@ void	mini_exit_pipe(char **command)
 	exit(exit_status);
 }
 
-env_var	*mini_unset_pipe(char **commands, env_var *env_vars)
-{
-	int i;
+env_var *mini_unset_pipe(char **commands, env_var *env_vars) {
+    int i = 0;
+	int j = 0;
+	char *key;
+	int flag;
 
-	i = 0;
-	if (commands[i] == NULL)
-		return (NULL);
-	i++;
-	if (commands[i] == NULL)
+	flag = 0;
+    if (commands[i] == NULL)
+        return env_vars;
+
+    i++;
+    if (commands[i] == NULL) {
+        ft_putstr("unset: requires an argument\n");
+        return env_vars;
+    }
+
+    if (strchr(commands[i], '=') != NULL)
 	{
-		ft_putstr("unset: requires an argument");
-		ft_putstr("\n");
+		 return env_vars;
 	}
-		
-	if(strchr(commands[i],'=')!= NULL)
-		return env_vars;
-	while (commands[i] != NULL)
+	while(env_vars->arr[j])
 	{
-		env_vars = delete_env_var(env_vars, commands[i]);
-		i++;
+		key = get_key_from_word(env_vars->arr[j]);
+		if (strcmp(commands[i],key) == 0)
+			flag = 1;
+		free(key);
+		j++;
 	}
-	return (env_vars);
+	if (flag == 1)
+	{
+		while (commands[i] != NULL)
+		{
+       		env_vars = delete_env_var(env_vars, commands[i]);
+        	i++;
+   		}
+	}
+    return env_vars;
 }
 
 void mini_echo_pipe(char **commands, env_var *vars)
@@ -80,7 +95,8 @@ void mini_echo_pipe(char **commands, env_var *vars)
     int i = 1;
     int print_new_line = 1;
 
-    if (commands[i] == NULL) {
+    if (commands[i] == NULL)
+	{
         ft_putstr("\n");
         return;
     }
@@ -91,9 +107,8 @@ void mini_echo_pipe(char **commands, env_var *vars)
         i++;
     }
     // Print each argument with a space
-    while (commands[i] != NULL) {
-        // if (strcmp(commands[i], "|") == 0)
-		// 	break;
+    while (commands[i] != NULL)
+	{
         if (commands[i][0] == '$')
 		{
             char *value = get_value_from_var(commands[i] + 1, vars); // +1 to skip the $
@@ -109,7 +124,77 @@ void mini_echo_pipe(char **commands, env_var *vars)
         i++;
     }
     // Print new line if -n is not specified
-    if (print_new_line)
-        ft_putstr("\n");
+    // if (print_new_line)
+    //     ft_putstr("\n");
 }
 
+env_var *mini_export_pipe(char **commands, env_var *env_vars)
+{
+    int i = 0;
+    int j;
+
+    if (commands[i] == NULL) {
+        printf("export: not enough arguments\n");
+        return env_vars;
+    }
+
+    while (commands[i] != NULL) {
+        char *equal_pos = strchr(commands[i], '=');
+        if (equal_pos == NULL) {
+            i++;
+            continue;
+        }
+
+        int key_len = equal_pos - commands[i];
+        char *key = malloc(key_len + 1);
+        if (!key) {
+            printf("Memory allocation error\n");
+            return env_vars;
+        }
+        strncpy(key, commands[i], key_len);
+        key[key_len] = '\0';
+        char *value = strdup(equal_pos + 1);
+        if (!value) {
+            printf("Memory allocation error\n");
+            free(key);
+            return env_vars;
+        }
+
+        j = 0;
+        while (env_vars->arr[j] != NULL) {
+            char *copy = get_key_from_word(env_vars->arr[j]);
+            if (!copy) {
+                printf("Memory allocation error\n");
+                free(key);
+                free(value);
+                return env_vars;
+            }
+            if (strcmp(key, copy) == 0) {
+                free(copy);
+                free(env_vars->arr[j]);
+                env_vars->arr[j] = strdup(commands[i]);
+                if (!env_vars->arr[j]) {
+                    printf("Memory allocation error\n");
+                    free(key);
+                    free(value);
+                    return env_vars;
+                }
+                free(key);
+                free(value);
+                break;
+            }
+            free(copy);
+            j++;
+        }
+
+        if (env_vars->arr[j] == NULL) {
+            env_vars = add_env_var(env_vars, commands[i]);
+        }
+
+        free(key);
+        free(value);
+        i++;
+    }
+
+    return env_vars;
+}

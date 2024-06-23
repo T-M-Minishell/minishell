@@ -6,35 +6,22 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/22 14:03:35 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/23 14:29:34 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-// bool	builtins_with_no_uotput(char *word)
-// {
-// 	if(strcmp(word, "cd") == 0)
-// 		return (true);
-// 	else if(strcmp(word, "unset") == 0)
-// 		return (true);
-// 	else if(strcmp(word, "export") == 0)
-// 		return (true);
-// 	else if(strcmp(word, "exit") == 0)
-// 		return (true);
-// 	return (false);
-// }
 
-// bool	builtins_with_output(char *word)
-// {
-// 	if(strcmp(word, "pwd") == 0)
-// 		return (true);
-// 	if(strcmp(word, "env") == 0)
-// 		return (true);
-// 	if(strcmp(word, "echo") == 0)
-// 		return (true);
-// 	return(false);
-// }
+bool check_for_env_commands(char **commands)
+{
+	if(strcmp(commands[0], "unset") == 0)
+		return(true);
+	if(strcmp(commands[0], "export") == 0)
+		return(true);
+	else
+		return (false);
+}
 
 int	execute_builtins_with_no_output(char **commands)
 {
@@ -64,11 +51,8 @@ int	execute_builtins_with_output(char **commands, env_var *vars)
 		mini_env(vars);
 		flag = 1;
 	}
-	if(strcmp(commands[0], "echo") == 0)
+	else if(strcmp(commands[0], "echo") == 0)
 	{
-		int i = 0;
-		while(vars->arr[i])
-			printf("%s\n", vars->arr[i++]);
 		mini_echo_pipe(commands, vars);
 		flag = 1;
 	}
@@ -77,12 +61,16 @@ int	execute_builtins_with_output(char **commands, env_var *vars)
 
 env_var *exec_env_var_fct(char **commands, env_var *vars)
 {
-	env_var *env_vars;
+    env_var *env_vars = vars;
 
-	env_vars = NULL;
-	
-	if(strcmp(commands[0],"unset") == 0)
-		env_vars = mini_unset_pipe(commands, vars); 
-	
-	return(env_vars);
+    if (strcmp(commands[0], "unset") == 0)
+	{
+		env_vars = mini_unset_pipe(commands, vars);
+	}
+	if (strcmp(commands[0], "export") == 0)
+	{
+		  env_vars = mini_export_pipe(commands, vars); 
+	}
+      
+    return env_vars;
 }

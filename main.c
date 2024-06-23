@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/17 14:06:22 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/23 14:48:17 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ int main(int argc, char **argv, char **envp) {
 	t_list_token *data;
 	env_var *env_vars = NULL;
 	(void)argv;
-
+	int	last_exit_status;
+	
+	last_exit_status = 0;
 	input.prompt = PROMPT;
 	print_logo();
 

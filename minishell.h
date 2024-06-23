@@ -133,7 +133,8 @@ char			**custom_split(const char *s, char c);
 
 //execution
 bool	check_for_pipe_in_line(t_list_token *data);
-void	handle_pipe(t_list_token *data, env_var **env_vars);
+env_var	*handle_pipe(t_list_token *data, env_var *env_vars);
+
 
 // exec_utils
 bool check_if_builtin(char *word);
@@ -142,6 +143,8 @@ bool check_if_builtin(char *word);
 int execute_builtins_with_no_output(char **commands);
 int	execute_builtins_with_output(char **commands, env_var *vars);
 env_var *exec_env_var_fct(char **commands, env_var *vars);
+bool check_for_env_commands(char **commands);
+
 
 
 
@@ -150,7 +153,12 @@ int		mini_cd_pipe(char **command);
 void	mini_exit_pipe(char **command);
 env_var	*mini_unset_pipe(char **commands, env_var *env_vars);
 void	mini_echo_pipe(char **commands, env_var *vars);
+env_var *mini_export_pipe(char **commands, env_var *env_vars);
+
 
 
 
 #endif
+
+
+

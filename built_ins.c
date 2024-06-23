@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/22 14:00:53 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/23 12:14:52 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,16 @@ void	mini_env(env_var *env_vars)
 	}
 }
 
+
 env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 {
 	t_list_token *curr;
-
+	int i;
+	int flag;
+	char *key;
+	
+	i = 0;
+	flag =0;
 	curr = data;
 	if (data->next == NULL)
 		return (NULL);
@@ -143,23 +149,31 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 		printf("unset: requires an argument\n");
 	if(strchr(curr->word,'=')!= NULL)
 		return env_vars;
-	while (curr != NULL)
+	while (env_vars->arr[i])
 	{
+		key = get_key_from_word(env_vars->arr[i]);
+		if(strcmp(curr->word, key) == 0)
+			flag = 1;
+		free(key); // Free the memory allocated for key 
+		i++;
+	}
+	if(flag == 1)
+	{
+		while (curr != NULL)
+		{
+		// if(curr->word)
 		env_vars = delete_env_var(env_vars, curr->word);
 		curr = curr->next;
+		}
 	}
+
 	return (env_vars);
 }
 
 void	mini_export(t_list_token *data, env_var **env_vars)
 {
 	t_list_token	*curr;
-	// char			*equal_pos;
-	// int				key_len;
-	// char			*key;
-	// char			*value;
 	int				i;
-	// char			*copy;
 
 	
 	curr = data;
@@ -192,7 +206,7 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		if (strcmp(key, copy) == 0)
 		{
 			free(copy);
-			// free((*env_vars)->arr[i]);
+			free((*env_vars)->arr[i]);
 			(*env_vars)->arr[i] = strdup(curr->word);
 			free(key);
 			free(value);
