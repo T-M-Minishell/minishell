@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/23 14:50:08 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/24 16:04:26 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char *find_path(t_list_commands *cmd)
         path = "/usr/bin/wc";
     else if(strcmp(command->arr[0], "grep") == 0)
         path = "/bin/grep";
+     else if(strcmp(command->arr[0], "expr") == 0)
+        path = "/usr/bin/expr";
     else
         path = NULL;
     return (path);
@@ -135,12 +137,17 @@ void create_pipes(int (*pipes)[2], int num_cmds) {
         i++;
     }
 }
+
+
+
 env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_var *env_vars) {
     t_list_commands *current = cmd;
     int i = 0;
     int pid;
     int j;
     env_var *vars = env_vars;
+    int status = 0;
+    int exit_status = 0;
 
     while (i < num_cmds) {
         if (check_if_builtin(current->arr[0])) {
@@ -180,18 +187,32 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
                 char *path = find_path(current);
                 execve(path, current->arr, vars->arr);
                 perror("execve");
-                _exit(EXIT_FAILURE);
+                _exit(127);
             }
+        } else
+        { // parent process
+            if (i > 0)
+                close(pipes[i - 1][0]);
+            if (i < num_cmds - 1)
+                close(pipes[i][1]);
+            if(WIFEXITED(status))
+            {
+                exit_status = WEXITSTATUS(status);
+            }
+               
+            else if (WIFSIGNALED(status))
+            {
+                vars->exit_status = WTERMSIG(status);
+            }
+               
+                
         }
-
-        if (i > 0)
-            close(pipes[i - 1][0]);
-        if (i < num_cmds - 1)
-            close(pipes[i][1]);
-
         current = current->next;
         i++;
     }
+        waitpid(pid, &status, 0);
+    
+    vars->exit_status = exit_status;
     return vars;
 }
 

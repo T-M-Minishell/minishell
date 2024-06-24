@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/16 17:55:35 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/24 18:21:39 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,27 @@ void min_mv(t_list_token *data)
 		perror("unlink");
 }
 
+// extern char **environ;
+
+// void mini_wc(t_list_token *data, int lines, int words, int chars) {
+
+//     char *path = "/usr/bin/wc";
+//     char *args[6] = {"wc", NULL, NULL, NULL, NULL, NULL}; // Maximum 5 arguments + NULL
+
+//     // Prepare argument list for execve
+//     int arg_index = 1;
+//     if (lines) args[arg_index++] = "-l";
+//     if (words) args[arg_index++] = "-w";
+//     if (chars) args[arg_index++] = "-c";
+//     args[arg_index++] = data->word;
+//     args[arg_index] = NULL; // Null-terminate the array
+
+//     // Execute wc command
+//     if (execve(path, args, environ) == -1) {
+//         perror("execve failed");
+//         exit(EXIT_FAILURE);
+//     }
+// }
 
 void mini_wc(t_list_token *data, int lines, int words, int chars)
 {
@@ -146,10 +167,8 @@ void mini_wc(t_list_token *data, int lines, int words, int chars)
 	int word_count = 0;
 	int byte_count = 0;
 	int in_word = 0;
-	printf("---gdffg\n");
 	char *str = data->word;
 	
-
 	if (str == NULL || strcmp(str, "-") == 0)
 		fd = STDIN_FILENO;
 	else
@@ -187,4 +206,6 @@ void mini_wc(t_list_token *data, int lines, int words, int chars)
 	if (chars)
 		printf("%d ", byte_count);
 	printf("%s\n", str);
+
+	// char *path = "/usr/bin/wc";
 }

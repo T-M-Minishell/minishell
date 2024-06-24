@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/23 12:14:52 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/24 13:25:50 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,11 @@ void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 					break;
             if (curr->word[0] == '$')
             {
+				if(strcmp(curr->word, "$?") == 0)
+				{
+					printf("%d\n", vars->exit_status);
+					break ;
+				}	
                 char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
                 if (value != NULL)
                     ft_putstr(value);
@@ -57,8 +62,8 @@ void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
             curr = curr->next;
         }
         // print new_line if -n is not specified
-        if (print_new_line)
-        	ft_putstr("\n");
+        // if (print_new_line)
+        // 	ft_putstr("\n");
     }
 }
 //change directory

@@ -22,6 +22,7 @@
 typedef struct s_env_var
 {
 	char		**arr;
+	int			exit_status;
 }				env_var;
 
 typedef struct s_input
@@ -119,6 +120,7 @@ void			mini_cat(t_list_token *data);
 void			mini_touch(t_list_token *data, env_var *vars);
 void			mini_wc(t_list_token *data, int lines, int words, int chars);
 void			min_mv(t_list_token *data);
+void			mini_expr(t_list_token *data, env_var *vars);
 
 // handle_quotes
 void			mini_echo_quote(t_list_token *data);
