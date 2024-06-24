@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/02 15:03:22 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/21 13:03:58 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/24 15:13:23 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,19 @@ void	print_node(t_list_token *node)
 		printf("Node is NULL\n");
 		return ;
 	}
-	printf("Node content:\n");
+	printf("Node content\n");
 	printf("Index: %d\n", node->index);
 	printf("Type: %d\n", node->type);
 	printf("List node elements are: %s\n", node->word ? node->word : "(null)");
 	// Print other fields as needed
 }
 
-void free_list(t_list_token *head)
+void	free_list(t_list_token *head)
 {
-	t_list_token *tmp;
+	t_list_token	*tmp;
 
-	while (head != NULL) {
+	while (head != NULL)
+	{
 		tmp = head;
 		head = head->next;
 		if (tmp->word)
@@ -77,3 +78,28 @@ void free_list(t_list_token *head)
 		free(tmp);
 	}
 }
+
+// void	print_list(t_list_token *node)
+// {
+// 	if (node == NULL)
+// 	{
+// 		printf("Node is NULL\n");
+// 		return ;
+// 	}
+// 	t_list_token *curr;
+	
+// 	curr = node;
+// 	while (curr->prev != NULL)
+// 	{
+// 		curr = curr->prev;
+// 	}
+// 	while (curr != NULL)
+// 	{
+// 		printf("Node content\n");
+// 		printf("Index: %d\n", node->index);
+// 		printf("Type: %d\n", node->type);
+// 		printf("List node elements are: %s\n",
+// 			node->word ? node->word : "(null)");
+// 		curr = curr->next;
+// 	}
+// }

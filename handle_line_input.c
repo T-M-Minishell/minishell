@@ -6,73 +6,54 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/21 18:55:29 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/24 18:16:38 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char     **alloc_for_history_arr(t_list_token *data)
+t_list_token	*node_creator(t_list_token *data)
 {
-	int i = 0;
-	char **arr;
 	t_list_token	*curr;
+	t_list_token 	*cmd_node;
+	t_redir_cmds 	commands;
+	int				length;
+
+	curr = data;
+	length = 0;
+	commands.arr = NULL;
+	commands.next = NULL;
+	cmd_node = NULL;
 	while (curr != NULL)
 	{
-		if (curr->type != REDIRECT)
+		if (curr->type == REDIRECT)
 		{
-			i++;
+			break;
 		}
+		length++;
+		curr = curr->next;
+	}
+	curr = data;
+	commands.arr = (char **)malloc(siz)
+	while (curr != NULL)
+	{
+		
 		curr = curr->next;
 	}
 	
+	return (0);
 }
 
 void	handle_redirects(t_list_token *data)
 {
 	t_list_token	*curr;
-	bool			is_redirect;
-	int fd;
-	char **history_holder;
+	t_list_token	*cmd_node;
 
+	// int fd;
+	// int output;
 	curr = data;
-	is_redirect = false;
-	history_holder = alloc_for_history_arr(data);
-	while (curr != NULL)
-	{
-		if (curr->type == REDIRECT)
-		{
-			is_redirect = true;
-		}
-		else if (is_redirect)
-		{
-			if (curr->prev != NULL && (strcmp (curr->prev->word, ">") == 0 ) && curr->type != PIPE)
-			{
-				fd = open(curr->word, O_WRONLY | O_CREAT | O_TRUNC, 0664);
-				if (fd == -1)
-				{
-					printf("Error with contents (fd)\n");
-				}
-				fd = dup2(fd, STDOUT_FILENO);
-				if (fd == -1)
-				{
-					printf("Error with contents (dup2)\n");
-				}
-				close(fd);
-				is_redirect = false;
-				printf("ehreeee\n");
-			}
-			else
-			{
-				printf("No redirect found\n");
-			}
-		}
-		curr = curr->next;
-	}
-	if (is_redirect)
-	{
-		return;
-	}
+	cmd_node = node_creator(data);
+	// print_node(cmd_node);
 	return ;
 }
 
