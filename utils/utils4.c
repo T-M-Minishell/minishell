@@ -83,3 +83,48 @@ void	ft_putstr(char *str)
 {	
 	write(1, str, strlen(str));	
 }
+
+
+int	count_digits(int n)
+{
+	int	count;
+
+	count = 0;
+	if (n <= 0)
+		count += 1;
+	while (n)
+	{
+		n = n / 10;
+		count++;
+	}
+	return (count);
+}
+
+char	*ft_itoa(int n)
+{
+	char		*number_str;
+	int			d_count;
+	int			i;
+	long long	temp;
+
+	d_count = count_digits(n);
+	temp = n;
+	i = d_count;
+	number_str = (char *)malloc((d_count +1) * sizeof(char));
+	if (!number_str)
+		return (NULL);
+	if (temp == 0)
+		number_str[0] = '0';
+	while (temp != 0)
+	{
+		if (temp < 0)
+		{
+			number_str[0] = '-';
+			temp = -temp;
+		}
+		number_str[(i--) - 1] = (temp % 10) + '0';
+		temp = temp / 10;
+	}
+	number_str[d_count] = '\0';
+	return (number_str);
+}

@@ -69,6 +69,7 @@ t_list_token	*ft_lstlast(t_list_token *lst);
 char			*ft_strdup(const char *s1);
 void			print_node(t_list_token *node);
 void		ft_putstr(char *str);
+char	*ft_itoa(int n);
 // void 	free_node_list(t_list_token *data);
 
 /// handle ctrl_commands
@@ -116,19 +117,12 @@ void			handle_not_existent_builtins(t_list_token *data, env_var **var);
 
 // un_built_ins2
 
-void			mini_cat(t_list_token *data);
+void			mini_cat(t_list_token *data, env_var *vars);
 void			mini_touch(t_list_token *data, env_var *vars);
-void			mini_wc(t_list_token *data, int lines, int words, int chars);
-void			min_mv(t_list_token *data);
+void			mini_wc(t_list_token *data, env_var *vars);
+void			mini_mv(t_list_token *data, env_var *vars);
 void			mini_expr(t_list_token *data, env_var *vars);
 
-// handle_quotes
-void			mini_echo_quote(t_list_token *data);
-
-// helper_functions
-
-int				ft_strcmp_mod(char *str1, char *str2);
-// char	*ft_strdup(char *s1);
 
 // custom_split.c
 char			**custom_split(const char *s, char c);
@@ -157,6 +151,10 @@ env_var	*mini_unset_pipe(char **commands, env_var *env_vars);
 void	mini_echo_pipe(char **commands, env_var *vars);
 env_var *mini_export_pipe(char **commands, env_var *env_vars);
 
+
+
+/// in builtins  but i need to move it
+void	execute_process(char *path, char **argv, env_var *vars);
 
 
 

@@ -119,7 +119,7 @@ void	mini_exit(t_list_token *data)
 		exit_status = atoi(curr->next->word);
 	}
 
-	ft_putstr("exit");
+	ft_putstr("exit\n");
 	exit(exit_status);
 }
 

@@ -12,200 +12,178 @@
 
 #include "minishell.h"
 
-void mini_cat(t_list_token *data)
+void mini_cat(t_list_token *data, env_var *vars) // remake
 {
-	int fd;
-	ssize_t bytes;
-	char buf[BUF_SIZE];
-	t_list_token	*curr;
-
-	curr = data->next;
-	if(!curr)
-		return ;
-	if (curr->word == NULL || strcmp(curr->word, "-") == 0)
-		fd = STDIN_FILENO;
-	else
-	{
-		fd = open(curr->word, O_RDONLY);
-		if (fd == -1)
-		{
-			perror("open");
-			return;
-		}
-	}
-
-	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
-	{
-		if (write(STDOUT_FILENO, buf, bytes) != bytes)
-		{
-			perror("write");
-			close(fd);
-			return;
-		}
-	}
-	printf("\n");
-	if (bytes == -1)
-		perror("read");
-	if (fd != STDIN_FILENO)
-		close(fd);
-}
-
-
-void mini_touch(t_list_token *data, env_var *vars)
-{
-	int fd;
-	(void)vars;
 	t_list_token *curr;
+	int i;
+	char **argv;
 
-	curr = data->next;
-	if(!curr)
+	i = 0;
+	curr = data;
+	while (curr != NULL)
 	{
-		printf("Try 'touch --help' for more information.\n");
-		return;
+		i++;
+		curr = curr->next;
 	}
-	if (curr->word == NULL)
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
 	{
-		fprintf(stderr, "mini_touch: missing file operand\n");
-		return;
+		argv[i++] = strdup(curr->word);
+		curr = curr->next;
 	}
-	fd = open(curr->word, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-	{
-		perror("open");
-		return;
-	}
-	close(fd);
+	argv[i] = NULL;
+	execute_process("/bin/cat", argv, vars);
+	i = 0;
+	while (argv[i] != NULL)
+		free(argv[i++]);
+	free(argv);
 }
 
-void min_mv(t_list_token *data)
+
+void mini_touch(t_list_token *data, env_var *vars) // remake
 {
-	int src_fd, dest_fd;
-	ssize_t bytes;
-	char buf[BUF_SIZE];
 	t_list_token *curr;
-	char *src;
-	char *dest;
+	int i;
+	char **argv;
 
-	curr = data->next;
-	if(!curr)
+	i = 0;
+	curr = data;
+	while (curr != NULL)
 	{
-		printf("Try 'mv --help' for more information.\n");
-		return;
+		i++;
+		curr = curr->next;
 	}
-	src = curr->word;
-	if(curr->next)
-		dest = curr->next->word;
-	else
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
 	{
-		printf("Try 'mv --help' for more information.\n");
-		return ;
+		argv[i++] = strdup(curr->word);
+		curr = curr->next;
 	}
-	if (src == NULL || dest == NULL)
-	{
-		printf("mv: missing file operand\n");
-		return;
-	}
-	src_fd = open(src, O_RDONLY);
-	if (src_fd == -1)
-	{
-		perror("open");
-		return;
-	}
-	dest_fd = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (dest_fd == -1)
-	{
-		perror("open");
-		close(src_fd);
-		return;
-	}
-	while ((bytes = read(src_fd, buf, BUF_SIZE)) > 0)
-	{
-		if (write(dest_fd, buf, bytes) != bytes)
-		{
-			perror("write");
-			close(src_fd);
-			close(dest_fd);
-			return;
-		}
-	}
-	if (bytes == -1)
-		perror("read");
-	close(src_fd);
-	close(dest_fd);
-	if (unlink(src) == -1)
-		perror("unlink");
+	argv[i] = NULL;
+	execute_process("/bin/touch", argv, vars);
+	i = 0;
+	while (argv[i] != NULL)
+		free(argv[i++]);
+	free(argv);
 }
 
-// extern char **environ;
-
-// void mini_wc(t_list_token *data, int lines, int words, int chars) {
-
-//     char *path = "/usr/bin/wc";
-//     char *args[6] = {"wc", NULL, NULL, NULL, NULL, NULL}; // Maximum 5 arguments + NULL
-
-//     // Prepare argument list for execve
-//     int arg_index = 1;
-//     if (lines) args[arg_index++] = "-l";
-//     if (words) args[arg_index++] = "-w";
-//     if (chars) args[arg_index++] = "-c";
-//     args[arg_index++] = data->word;
-//     args[arg_index] = NULL; // Null-terminate the array
-
-//     // Execute wc command
-//     if (execve(path, args, environ) == -1) {
-//         perror("execve failed");
-//         exit(EXIT_FAILURE);
-//     }
-// }
-
-void mini_wc(t_list_token *data, int lines, int words, int chars)
+void	mini_mv(t_list_token *data, env_var *vars)
 {
-	int fd;
-	int bytes;
-	char buf[BUF_SIZE];
-	int newline_count = 0;
-	int word_count = 0;
-	int byte_count = 0;
-	int in_word = 0;
-	char *str = data->word;
-	
-	if (str == NULL || strcmp(str, "-") == 0)
-		fd = STDIN_FILENO;
-	else
-	{
-		fd = open(str, O_RDONLY);
-		if (fd == -1) {
-			perror("open");
-			return;
-		}
-	}
-	while ((bytes = read(fd, buf, BUF_SIZE)) > 0)
-	{
-		for (int i = 0; i < bytes; i++)
-		{
-			if (buf[i] == '\n')
-				newline_count++;
-			if (isspace(buf[i]))
-				in_word = 0;
-			else if (!in_word)
-			{
-				word_count++;
-				in_word = 1;
-			}
-		}
-		byte_count += bytes;
-	}
-	if (bytes == -1)
-		perror("read");
-	if (fd != STDIN_FILENO)
-		close(fd);
-	if (lines)
-		printf("%d ", newline_count);
-	if (words)
-		printf("%d ", word_count);
-	if (chars)
-		printf("%d ", byte_count);
-	printf("%s\n", str);
+	t_list_token *curr;
+	int i;
+	char **argv;
 
-	// char *path = "/usr/bin/wc";
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		i++;
+		curr = curr->next;
+	}
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		argv[i++] = strdup(curr->word);
+		curr = curr->next;
+	}
+	argv[i] = NULL;
+	execute_process("/bin/mv", argv, vars);
+	i = 0;
+	while (argv[i] != NULL)
+		free(argv[i++]);
+	free(argv);
+}
+
+
+void	mini_wc(t_list_token *data, env_var *vars)
+{
+	t_list_token *curr;
+	int i;
+	char **argv;
+
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		i++;
+		curr = curr->next;
+	}
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		argv[i++] = strdup(curr->word);
+		curr = curr->next;
+	}
+	argv[i] = NULL;
+	execute_process("/usr/bin/wc", argv, vars);
+	i = 0;
+	while (argv[i] != NULL)
+		free(argv[i++]);
+	free(argv);
+}
+
+
+void	execute_process(char *path, char **argv, env_var *vars)
+{
+	int pid;
+	int status;
+
+	pid = fork();
+	if (pid == 0) {
+		// Child process
+		if (execve(path, argv, vars->arr) == -1) {
+			perror("execve");
+			exit(EXIT_FAILURE);
+		}
+	} else if (pid < 0) {
+		perror("fork");
+	} else {
+		// Parent process
+		wait(&status);
+		if (WIFEXITED(status)) {
+			vars->exit_status = WEXITSTATUS(status);
+		} else {
+			vars->exit_status = 2;
+		}
+	}
+}
+
+void mini_expr(t_list_token *data, env_var *vars)
+{
+	t_list_token *curr;
+	int i;
+	char **argv;
+
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		i++;
+		curr = curr->next;
+	}
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		if (strcmp(curr->word, "$?") == 0)
+			argv[i++] = ft_itoa(vars->exit_status);
+		else
+			argv[i++] = strdup(curr->word);
+		curr = curr->next;
+	}
+	argv[i] = NULL;
+	execute_process("/usr/bin/expr",argv,vars);
+	i = 0;
+	while (argv[i] != NULL)
+		free(argv[i++]);
+	free(argv);
 }
