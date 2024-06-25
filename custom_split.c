@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/19 12:11:43 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/25 12:04:26 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,4 +154,3 @@ char	**custom_split(const char *str, char c)
 	arr[word_length] = NULL;
 	return (arr);
 }
-

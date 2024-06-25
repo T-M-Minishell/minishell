@@ -6,18 +6,19 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/24 18:16:38 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/25 18:14:42 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_list_token	*node_creator(t_list_token *data)
+t_word_info_redirect	*node_creator(t_list_token *data)
 {
 	t_list_token	*curr;
-	t_list_token 	*cmd_node;
-	t_redir_cmds 	commands;
+	t_word_info_redirect	*cmd_node;
+	t_redir_cmds	commands;
 	int				length;
+	int				i;
 
 	curr = data;
 	length = 0;
@@ -28,31 +29,61 @@ t_list_token	*node_creator(t_list_token *data)
 	{
 		if (curr->type == REDIRECT)
 		{
-			break;
+			break ;
 		}
 		length++;
 		curr = curr->next;
 	}
 	curr = data;
-	commands.arr = (char **)malloc(siz)
+	commands.arr = (char **)malloc(sizeof(char *) * (length + 1));
+	if (commands.arr == NULL)
+	{
+		printf("mem allocation failed in new redirect node[1]\n");
+		return(NULL);
+	}
+	i = 0;
 	while (curr != NULL)
 	{
-		
+		commands.arr[i++] = strdup(curr->word);
+		if (curr->type == REDIRECT)
+		{
+			break ;
+		}
 		curr = curr->next;
 	}
-	
-	return (0);
+	commands.arr[i] = NULL;
+	cmd_node = (t_list_token *)malloc(sizeof(t_list_token));
+	if (!cmd_node)
+	{
+		printf("mem allocation failed in new redirect node[2]\n");
+		return(NULL);
+	}
+	cmd_node->arr = commands.arr;
+	return(cmd_node);
 }
 
 void	handle_redirects(t_list_token *data)
 {
 	t_list_token	*curr;
-	t_list_token	*cmd_node;
+	t_word_info_redirect 	*cmd_nodes;
+	int i;
 
-	// int fd;
-	// int output;
+	int fd;
+	fd = -1;
 	curr = data;
-	cmd_node = node_creator(data);
+	cmd_nodes = node_creator(curr);
+	if (!cmd_nodes)
+	{
+		return ;
+	}
+	while (cmd_nodes->arr[i] != NULL)
+	{
+		if (strcmp(cmd_nodes->arr[i], "<") == 0)
+		{
+			fd = open()
+		}
+	}
+	
 	// print_node(cmd_node);
 	return ;
 }
