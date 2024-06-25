@@ -41,7 +41,8 @@ void mini_ls(t_list_token *data, env_var *vars)
 	free(argv);
 }
 
-void mini_mkdir(t_list_token *data, env_var *vars) {
+void mini_mkdir(t_list_token *data, env_var *vars)
+{
 	t_list_token *curr;
 	int i;
 	char **argv;
@@ -67,7 +68,8 @@ void mini_mkdir(t_list_token *data, env_var *vars) {
 	free(argv);
 }
 
-void mini_rm(t_list_token *data, env_var *vars) {
+void mini_rm(t_list_token *data, env_var *vars)
+{
 	t_list_token *curr;
 	int i;
 	char **argv;
@@ -93,8 +95,7 @@ void mini_rm(t_list_token *data, env_var *vars) {
 	free(argv);
 }
 
-
-void mini_clean(env_var *vars) /// ned to check
+void mini_clean(env_var *vars) /// need to check
 {
 	pid_t pid;
 	char *path;
@@ -103,20 +104,20 @@ void mini_clean(env_var *vars) /// ned to check
 
 	path = "/bin/clear";
 	pid = fork();
-	if (pid < 0) {
+	if (pid < 0)
+	{
 		perror("ERROR WITH PID\n");
 		return;
-	} else if (pid == 0)
+	}
+	else if (pid == 0)
 		execve(path, arr, vars->arr);
 	else
 		wait(NULL);
 }
 
-
-
-void handle_not_existent_builtins(t_list_token *data, env_var **vars) {
+void handle_not_existent_builtins(t_list_token *data, env_var **vars)
+{
 	t_list_token *curr;
-	(void) vars;
 	curr = data;
 
 	if (curr->word != NULL) {

@@ -100,7 +100,6 @@ void	mini_mv(t_list_token *data, env_var *vars)
 	free(argv);
 }
 
-
 void	mini_wc(t_list_token *data, env_var *vars)
 {
 	t_list_token *curr;
@@ -129,7 +128,6 @@ void	mini_wc(t_list_token *data, env_var *vars)
 		free(argv[i++]);
 	free(argv);
 }
-
 
 void	execute_process(char *path, char **argv, env_var *vars)
 {

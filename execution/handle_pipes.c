@@ -130,7 +130,6 @@ void create_pipes(int (*pipes)[2], int num_cmds) {
 	}
 }
 
-
 env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_var *env_vars) {
 	t_list_commands *current = cmd;
 	int i = 0;
@@ -160,7 +159,7 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
 			perror("fork");
 			free(pipes);
 			exit(EXIT_FAILURE);
-		} else if (pid == 0) {
+		} else if (pid == 0) { // child process
 			if (i > 0)
 				dup2(pipes[i - 1][0], STDIN_FILENO);
 			if (i < num_cmds - 1)
@@ -185,20 +184,19 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
 				close(pipes[i - 1][0]);
 			if (i < num_cmds - 1)
 				close(pipes[i][1]);
+			if (strcmp(current->arr[0], "cat") != 0)
+				waitpid(pid,&status,0);
 			if (WIFEXITED(status)) {
-				exit_status = WEXITSTATUS(status);
-			} else if (WIFSIGNALED(status)) {
-				vars->exit_status = WTERMSIG(status);
-			}
-
-
+                exit_status = WEXITSTATUS(status);
+                if (exit_status != 0) {
+                    vars->exit_status = exit_status;
+                }
+            } else if (WIFSIGNALED(status))
+                vars->exit_status = WTERMSIG(status);
 		}
 		current = current->next;
 		i++;
 	}
-	waitpid(pid, &status, 0);
-
-	vars->exit_status = exit_status;
 	return vars;
 }
 
