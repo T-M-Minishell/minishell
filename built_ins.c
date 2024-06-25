@@ -62,8 +62,8 @@ void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
             curr = curr->next;
         }
         // print new_line if -n is not specified
-        // if (print_new_line)
-        // 	ft_putstr("\n");
+         if (print_new_line)
+         	ft_putstr("\n");
     }
 }
 //change directory

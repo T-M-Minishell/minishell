@@ -122,6 +122,8 @@ void			mini_touch(t_list_token *data, env_var *vars);
 void			mini_wc(t_list_token *data, env_var *vars);
 void			mini_mv(t_list_token *data, env_var *vars);
 void			mini_expr(t_list_token *data, env_var *vars);
+void 			unknown_command(t_list_token *data, env_var *vars);
+
 
 
 // custom_split.c

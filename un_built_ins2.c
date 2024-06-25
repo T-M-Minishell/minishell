@@ -139,19 +139,22 @@ void	execute_process(char *path, char **argv, env_var *vars)
 		// Child process
 		if (execve(path, argv, vars->arr) == -1) {
 			perror("execve");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
+//
 	} else if (pid < 0) {
 		perror("fork");
-	} else {
-		// Parent process
+	}
+	else{// Parent process
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status)) {
 			vars->exit_status = WEXITSTATUS(status);
-		} else if (WIFSIGNALED(status)) {
+		}
+		else if (WIFSIGNALED(status)) {
 			vars->exit_status = WTERMSIG(status);
 		}
 	}
+
 }
 
 void mini_expr(t_list_token *data, env_var *vars)
@@ -180,6 +183,35 @@ void mini_expr(t_list_token *data, env_var *vars)
 	}
 	argv[i] = NULL;
 	execute_process("/usr/bin/expr",argv,vars);
+	i = 0;
+	while (argv[i] != NULL)
+		free(argv[i++]);
+	free(argv);
+}
+
+void unknown_command(t_list_token *data, env_var *vars)
+{
+	t_list_token *curr;
+	int i;
+	char **argv;
+
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		i++;
+		curr = curr->next;
+	}
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		argv[i++] = strdup(curr->word);
+		curr = curr->next;
+	}
+	argv[i] = NULL;
+	execute_process("bin/",argv,vars);
 	i = 0;
 	while (argv[i] != NULL)
 		free(argv[i++]);

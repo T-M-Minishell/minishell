@@ -123,21 +123,22 @@ void handle_not_existent_builtins(t_list_token *data, env_var **vars)
 	if (curr->word != NULL) {
 		if (strcmp(curr->word, "ls") == 0)
 			mini_ls(curr, *vars);
-		if (strcmp(curr->word, "mkdir") == 0)
+		else if (strcmp(curr->word, "mkdir") == 0)
 			mini_mkdir(curr, *vars);
-		if (strcmp(curr->word, "rm") == 0)
+		else if (strcmp(curr->word, "rm") == 0)
 			mini_rm(curr, *vars);
-		if (strcmp(curr->word, "clear") == 0)
+		else if (strcmp(curr->word, "clear") == 0)
 			mini_clean(*vars);
-		if (strcmp(curr->word, "cat") == 0)
+		else if (strcmp(curr->word, "cat") == 0)
 			mini_cat(curr, *vars);
-		if (strcmp(curr->word, "touch") == 0)
+		else if (strcmp(curr->word, "touch") == 0)
 			mini_touch(curr, *vars); ///
-		if (strcmp(curr->word, "mv") == 0)
+		else if (strcmp(curr->word, "mv") == 0)
 			mini_mv(curr, *vars);
-		if (strcmp(curr->word, "wc") == 0)
+		else if (strcmp(curr->word, "wc") == 0)
 			mini_wc(curr, *vars);
-		if (strcmp(curr->word, "expr") == 0)
+		else if (strcmp(curr->word, "expr") == 0)
 			mini_expr(curr, *vars);
+
 	}
 }
