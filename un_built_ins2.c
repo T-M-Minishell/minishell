@@ -139,17 +139,17 @@ void	execute_process(char *path, char **argv, env_var *vars)
 		// Child process
 		if (execve(path, argv, vars->arr) == -1) {
 			perror("execve");
-			exit(EXIT_FAILURE);
+			exit(1);
 		}
 	} else if (pid < 0) {
 		perror("fork");
 	} else {
 		// Parent process
-		wait(&status);
+		waitpid(pid, &status, 0);
 		if (WIFEXITED(status)) {
 			vars->exit_status = WEXITSTATUS(status);
-		} else {
-			vars->exit_status = 2;
+		} else if (WIFSIGNALED(status)) {
+			vars->exit_status = WTERMSIG(status);
 		}
 	}
 }
@@ -173,7 +173,7 @@ void mini_expr(t_list_token *data, env_var *vars)
 	while (curr != NULL)
 	{
 		if (strcmp(curr->word, "$?") == 0)
-			argv[i++] = ft_itoa(vars->exit_status);
+			argv[i++] = strdup(ft_itoa(vars->exit_status));
 		else
 			argv[i++] = strdup(curr->word);
 		curr = curr->next;
