@@ -6,19 +6,125 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/25 18:14:42 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/06/26 17:34:36 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+
+// void handle_redirects(t_list_token *data) {
+//     t_list_token *curr = data;
+//     t_word_info_redirect *cmd_nodes;
+//     int i, fd, j, length;
+//     char **output_file_arr;
+
+//     curr = data;
+//     length = 0;
+//     cmd_nodes = node_creator(curr);
+//     if (!cmd_nodes) {
+//         return;
+//     }
+//     while (curr != NULL) {
+//         length++;
+//         curr = curr->next;
+//     }
+//     output_file_arr = (char **)malloc(sizeof(char *) * (length + 1));
+//     if (!output_file_arr) {
+//         return;
+//     }
+//     i = 0;
+//     j = 0;
+//     while (cmd_nodes->arr[i] != NULL) {
+//         output_file_arr[j] = cmd_nodes->arr[i];
+//         i++;
+//         j++;
+//     }
+//     output_file_arr[j] = NULL;
+
+//     for (i = 0; cmd_nodes->arr[i] != NULL; i++) {
+//         if (strcmp(cmd_nodes->arr[i], ">") == 0 && cmd_nodes->arr[i + 1] != NULL) {
+//             fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//             if (fd < 0) {
+//                 printf("Error opening file\n");
+//                 continue; // Continue to the next command if file opening fails
+//             }
+//             if (dup2(fd, STDOUT_FILENO) == -1) {
+//                 printf("Error duplicating file descriptor\n");
+//                 close(fd);
+//                 continue; // Continue to the next command if dup2 fails
+//             }
+//             close(fd); // Close the file descriptor as it's no longer needed
+//             i++; // Skip the filename that was just redirected to
+//         }
+//     }
+
+//     // Optionally, print the command before redirection
+//     for (j = 0; output_file_arr[j] != NULL && strcmp(output_file_arr[j], ">") != 0; j++) {
+//         printf("%s ", output_file_arr[j]);
+//     }
+//     printf("\n");
+
+//     free(output_file_arr); // Free allocated memory
+// }
+
+// #include <fcntl.h>
+// #include <stdio.h>
+// #include <string.h>
+// #include <unistd.h>
+// #include <stdlib.h>
+
+// // Assuming t_list_token and t_word_info_redirect are defined elsewhere
+// // along with the REDIRECT enum or define
+
+// void handle_redirects(t_list_token *data) {
+//     t_list_token *curr = data;
+//     t_word_info_redirect *cmd_nodes;
+//     int fd = -1;
+//     int stdout_copy = dup(STDOUT_FILENO);
+//     int stderr_copy = dup(STDERR_FILENO);
+
+//     cmd_nodes = node_creator(curr); // Assuming this function prepares the command nodes correctly
+//     if (!cmd_nodes) {
+//         return;
+//     }
+
+//     for (int i = 0; cmd_nodes->arr[i] != NULL; i++) {
+//         if (strcmp(cmd_nodes->arr[i], ">") == 0 && cmd_nodes->arr[i + 1] != NULL) {
+//             fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//             if (fd >= 0) dup2(fd, STDOUT_FILENO);
+//         } else if (strcmp(cmd_nodes->arr[i], ">>") == 0 && cmd_nodes->arr[i + 1] != NULL) {
+//             fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+//             if (fd >= 0) dup2(fd, STDOUT_FILENO);
+//         } else if (strcmp(cmd_nodes->arr[i], "2>") == 0 && cmd_nodes->arr[i + 1] != NULL) {
+//             fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//             if (fd >= 0) dup2(fd, STDERR_FILENO);
+//         } else if (strcmp(cmd_nodes->arr[i], "2>>") == 0 && cmd_nodes->arr[i + 1] != NULL) {
+//             fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+//             if (fd >= 0) dup2(fd, STDERR_FILENO);
+//         }
+//         if (fd >= 0) {
+//             close(fd);
+//             fd = -1;
+//         }
+//     }
+
+//     // Execute the command here (not shown)
+
+//     // Restore stdout and stderr
+//     dup2(stdout_copy, STDOUT_FILENO);
+//     dup2(stderr_copy, STDERR_FILENO);
+//     close(stdout_copy);
+//     close(stderr_copy);
+// }
+
 t_word_info_redirect	*node_creator(t_list_token *data)
 {
-	t_list_token	*curr;
+	t_list_token			*curr;
 	t_word_info_redirect	*cmd_node;
-	t_redir_cmds	commands;
-	int				length;
-	int				i;
+	t_redir_cmds			commands;
+	int						length;
+	int						i;
 
 	curr = data;
 	length = 0;
@@ -29,6 +135,7 @@ t_word_info_redirect	*node_creator(t_list_token *data)
 	{
 		if (curr->type == REDIRECT)
 		{
+			length++;
 			break ;
 		}
 		length++;
@@ -39,7 +146,7 @@ t_word_info_redirect	*node_creator(t_list_token *data)
 	if (commands.arr == NULL)
 	{
 		printf("mem allocation failed in new redirect node[1]\n");
-		return(NULL);
+		return (NULL);
 	}
 	i = 0;
 	while (curr != NULL)
@@ -47,43 +154,102 @@ t_word_info_redirect	*node_creator(t_list_token *data)
 		commands.arr[i++] = strdup(curr->word);
 		if (curr->type == REDIRECT)
 		{
+			curr = curr->next;
+			if ((curr->type != REDIRECT))
+			{
+				commands.arr[i++] = strdup(curr->word);
+			}
 			break ;
 		}
 		curr = curr->next;
 	}
 	commands.arr[i] = NULL;
-	cmd_node = (t_list_token *)malloc(sizeof(t_list_token));
+	cmd_node = (t_word_info_redirect *)malloc(sizeof(t_word_info_redirect));
 	if (!cmd_node)
 	{
 		printf("mem allocation failed in new redirect node[2]\n");
-		return(NULL);
+		return (NULL);
 	}
 	cmd_node->arr = commands.arr;
-	return(cmd_node);
+	return (cmd_node);
 }
 
 void	handle_redirects(t_list_token *data)
 {
-	t_list_token	*curr;
-	t_word_info_redirect 	*cmd_nodes;
-	int i;
+	t_list_token			*curr;
+	t_word_info_redirect	*cmd_nodes;
+	int						i;
+	int						fd;
+	char					**output_file_arr;
+	int						j;
+	int						length;
 
-	int fd;
+	output_file_arr = NULL;
 	fd = -1;
 	curr = data;
+	length = 0;
 	cmd_nodes = node_creator(curr);
 	if (!cmd_nodes)
 	{
 		return ;
 	}
+	while (curr != NULL)
+	{
+		if (curr->type == REDIRECT)
+		{
+			length++;
+			break ;
+		}
+		length++;
+		curr = curr->next;
+	}
+	output_file_arr = (char **)malloc(sizeof(char *) * (length + 1));
+	if (!output_file_arr)
+	{
+		return;
+	}
+	j = 0;
+	i = 0;
 	while (cmd_nodes->arr[i] != NULL)
 	{
-		if (strcmp(cmd_nodes->arr[i], "<") == 0)
+		output_file_arr[j] = cmd_nodes->arr[i];
+		if (strcmp(cmd_nodes->arr[i], ">") == 0)
 		{
-			fd = open()
+			break ;
 		}
+		i++;
+		j++;
 	}
-	
+	output_file_arr[j] = NULL;
+	i = 0;
+	while (cmd_nodes->arr[i] != NULL)
+	{
+		if (strcmp(cmd_nodes->arr[i], ">") == 0 && cmd_nodes->arr[i
+			+ 1] != NULL)
+		{
+			fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC,
+					0644);
+			if (fd < 0)
+			{
+				printf("Error oppening file\n");
+				break;
+			}
+			dup2(fd, STDOUT_FILENO);
+			if (fd != -1)
+			{
+				j = 0;
+				while (output_file_arr[j] != NULL && strcmp(output_file_arr[j], ">") != 0)
+				{
+					printf("%s ", output_file_arr[j]);
+					j++;
+				}
+				printf("\n");
+				close(fd);
+				break;
+			}
+		}
+		i++;
+	}
 	// print_node(cmd_node);
 	return ;
 }
