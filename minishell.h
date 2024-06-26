@@ -90,6 +90,7 @@ env_var			*add_env_var(env_var *old_env_vars, char *word);
 env_var			*delete_env_var(env_var *old_env_vars, char *key);
 char			*get_key_from_word(char *word);
 char			*get_value_from_var(char *word, env_var *vars);
+bool 			check_if_alphanumeric(char *str);
 
 /// built_ins
 void			mini_echo(t_list_token *data, env_var *vars);
@@ -114,16 +115,6 @@ void			prepare_for_tokenization_word(char *str, t_list_token **data,
 // ceva /
 char			**turn_word_into_arr(t_list_token *data);
 void			handle_not_existent_builtins(t_list_token *data, env_var **var);
-
-// un_built_ins2
-
-void			mini_cat(t_list_token *data, env_var *vars);
-void			mini_touch(t_list_token *data, env_var *vars);
-void			mini_wc(t_list_token *data, env_var *vars);
-void			mini_mv(t_list_token *data, env_var *vars);
-void			mini_expr(t_list_token *data, env_var *vars);
-void 			unknown_command(t_list_token *data, env_var *vars);
-
 
 
 // custom_split.c
@@ -155,8 +146,19 @@ env_var *mini_export_pipe(char **commands, env_var *env_vars);
 
 
 
-/// in builtins  but i need to move it
+// simple comands
 void	execute_process(char *path, char **argv, env_var *vars);
+void	exec_line(t_list_token *data, env_var *vars);
+
+// get_path
+char 	*get_env_path(env_var *env_vars);
+char	*get_path(char *command, env_var *env_vars);
+
+
+
+
+
+
 
 
 

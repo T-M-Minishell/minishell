@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/22 14:15:40 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 12:28:35 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ bool check_if_builtin(char *word)
             return true;
         }
     }
-    // printf("test in check\n");
     return false;
 }
 

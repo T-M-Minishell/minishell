@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/17 19:03:32 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 15:08:24 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ t_word_info string_gen(const char *str, char c)
     word_info.char_counted = i;
     return (word_info);
 }
+
 char    **custom_split(const char *str, char c)
 {
     int     i;

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 11:48:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/23 14:54:05 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:09:29 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,25 +52,26 @@ void	mini_exit_pipe(char **command)
 }
 
 env_var *mini_unset_pipe(char **commands, env_var *env_vars) {
-    int i = 0;
-	int j = 0;
+    int i;
+	int j;
 	char *key;
 	int flag;
 
 	flag = 0;
+    i = 0;
+    j = 0;
+    env_vars->exit_status = 1;
     if (commands[i] == NULL)
         return env_vars;
-
     i++;
-    if (commands[i] == NULL) {
-        ft_putstr("unset: requires an argument\n");
-        return env_vars;
+    if (commands[i] == NULL)
+    {
+        return(perror("unset: requires an argument\n") ,env_vars);
+        // ft_putstr();
+        // return env_vars;
     }
-
     if (strchr(commands[i], '=') != NULL)
-	{
 		 return env_vars;
-	}
 	while(env_vars->arr[j])
 	{
 		key = get_key_from_word(env_vars->arr[j]);
@@ -80,13 +81,9 @@ env_var *mini_unset_pipe(char **commands, env_var *env_vars) {
 		j++;
 	}
 	if (flag == 1)
-	{
 		while (commands[i] != NULL)
-		{
-       		env_vars = delete_env_var(env_vars, commands[i]);
-        	i++;
-   		}
-	}
+       		env_vars = delete_env_var(env_vars, commands[i++]);
+    env_vars->exit_status = 0;
     return env_vars;
 }
 
@@ -111,11 +108,19 @@ void mini_echo_pipe(char **commands, env_var *vars)
 	{
         if (commands[i][0] == '$')
 		{
+            if(strcmp(commands[i], "$?") == 0)
+				{
+					printf("%d\n", vars->exit_status);
+					print_new_line = 0;
+					vars->exit_status = 0;
+					// curr = curr->next;
+					// break;
+				}
             char *value = get_value_from_var(commands[i] + 1, vars); // +1 to skip the $
             if (value != NULL)
                 ft_putstr(value);
-			else
-                ft_putstr(" ");
+			// else
+            //     ft_putstr(" ");
         }
 		else
             ft_putstr(commands[i]);
@@ -124,8 +129,9 @@ void mini_echo_pipe(char **commands, env_var *vars)
         i++;
     }
     // Print new line if -n is not specified
-    // if (print_new_line)
-    //     ft_putstr("\n");
+    vars->exit_status = 0;
+    if (print_new_line)
+        ft_putstr("\n");
 }
 
 env_var *mini_export_pipe(char **commands, env_var *env_vars)
@@ -133,22 +139,30 @@ env_var *mini_export_pipe(char **commands, env_var *env_vars)
     int i = 0;
     int j;
 
+    env_vars->exit_status = 1;
     if (commands[i] == NULL) {
         printf("export: not enough arguments\n");
+        env_vars->exit_status = 1;
         return env_vars;
     }
 
-    while (commands[i] != NULL) {
+    while (commands[i] != NULL)
+    {
         char *equal_pos = strchr(commands[i], '=');
         if (equal_pos == NULL) {
             i++;
             continue;
         }
-
+        if(!check_if_alphanumeric(commands[i]))
+	    {
+		    printf("bash: export: `%s': not a valid identifier\n",commands[i]);
+		    return  env_vars;
+	    }
         int key_len = equal_pos - commands[i];
         char *key = malloc(key_len + 1);
         if (!key) {
             printf("Memory allocation error\n");
+            env_vars->exit_status = 1;
             return env_vars;
         }
         strncpy(key, commands[i], key_len);
@@ -195,6 +209,7 @@ env_var *mini_export_pipe(char **commands, env_var *env_vars)
         free(value);
         i++;
     }
+    env_vars->exit_status = 0;
 
     return env_vars;
 }

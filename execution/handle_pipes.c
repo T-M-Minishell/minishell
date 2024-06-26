@@ -6,49 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/24 16:04:26 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:25:19 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-
-char *find_path(t_list_commands *cmd) {
-	t_list_commands *command;
-	char *path;
-
-	command = cmd;
-
-	if (strcmp(command->arr[0], "pwd") == 0) // mayb not need here
-		path = "/bin/pwd";
-	else if (strcmp(command->arr[0], "clear") == 0)
-		path = "/bin/clear";
-	else if (strcmp(command->arr[0], "rm") == 0)
-		path = "/bin/rm";
-	else if (strcmp(command->arr[0], "mv") == 0)
-		path = "/bin/mv";
-	else if (strcmp(command->arr[0], "mkdir") == 0)
-		path = "/bin/mkdir";
-	else if (strcmp(command->arr[0], "ls") == 0)
-		path = "/bin/ls";
-	else if (strcmp(command->arr[0], "touch") == 0)
-		path = "/bin/touch";
-	else if (strcmp(command->arr[0], "cat") == 0)
-		path = "/bin/cat";
-	else if (strcmp(command->arr[0], "wc") == 0)
-		path = "/usr/bin/wc";
-	else if (strcmp(command->arr[0], "grep") == 0)
-		path = "/bin/grep";
-	else if (strcmp(command->arr[0], "expr") == 0)
-		path = "/usr/bin/expr";
-	else
-		path = NULL;
-	return (path);
-}
-
 
 int count_nb_of_pipes(t_list_token *data) {
 	int nb;
@@ -174,10 +136,16 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
 				if (execute_builtins_with_output(current->arr, vars) == 1)
 					_exit(EXIT_SUCCESS);
 			} else {
-				char *path = find_path(current);
+				char *path = get_path(current->arr[0],vars);
+				if(!path)
+				{
+					printf("%s: command not found\n", current->arr[0]);
+					free(path);
+					_exit(127);
+				}
 				execve(path, current->arr, vars->arr);
 				perror("execve");
-				_exit(127);
+				
 			}
 		} else { // parent process
 			if (i > 0)

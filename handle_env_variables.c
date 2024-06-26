@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/23 12:10:20 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:16:42 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ env_var *get_env_vars(char **envp)
 	while (envp[++i])
 		vars->arr[i] = strdup(envp[i]);
 	vars->arr[i] = NULL;
+    vars->exit_status = 0;
 	return(vars);
 }
 

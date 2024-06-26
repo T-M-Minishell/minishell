@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/24 13:25:50 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 16:16:51 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,11 @@
 
 // 1. echo with option -n
 
-void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
+void    mini_echo(t_list_token *data, env_var *vars)
 {
     t_list_token *curr;
 
     curr = data;
-	// printf("test-----\n");
     if (curr->next == NULL)
         ft_putstr("\n");
     //  check_for_quotes(curr->word);
@@ -49,23 +48,28 @@ void    mini_echo(t_list_token *data, env_var *vars) // to do for env variables
 				if(strcmp(curr->word, "$?") == 0)
 				{
 					printf("%d\n", vars->exit_status);
-					break ;
+					print_new_line = 0;
+					vars->exit_status = 0;
+					curr = curr->next;
+					continue;
+					
 				}	
                 char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
                 if (value != NULL)
                     ft_putstr(value);
-                else
-                    ft_putstr(" ");
+                // else
+                //     ft_putstr(" ");
             }
             else
                 ft_putstr(curr->word);
             curr = curr->next;
         }
         // print new_line if -n is not specified
-         if (print_new_line)
+		if (print_new_line)
          	ft_putstr("\n");
     }
 }
+
 //change directory
 int	mini_cd(t_list_token *data)
 {
@@ -151,7 +155,12 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 		return (NULL);
 	curr = curr->next;
 	if (curr->word == NULL)
+	{
 		printf("unset: requires an argument\n");
+		env_vars->exit_status = 1;
+		return (NULL);
+	}
+		
 	if(strchr(curr->word,'=')!= NULL)
 		return env_vars;
 	while (env_vars->arr[i])
@@ -171,7 +180,7 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 		curr = curr->next;
 		}
 	}
-
+		env_vars->exit_status = 0;
 	return (env_vars);
 }
 
@@ -180,7 +189,7 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 	t_list_token	*curr;
 	int				i;
 
-	
+	(*env_vars)->exit_status = 1;
 	curr = data;
 	if (curr->next == NULL)
 	{
@@ -199,6 +208,12 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		printf("export: argument should be in the format key=value\n");
 		return ;
 	}
+	if(!check_if_alphanumeric(curr->word))
+	{
+		printf("bash: export: `%s': not a valid identifier\n",curr->word);
+		return ;
+	}
+		
 	int key_len = equal_pos - curr->word;
 	char *key = malloc(key_len + 1);
 	strncpy(key, curr->word, key_len);
@@ -221,6 +236,7 @@ void	mini_export(t_list_token *data, env_var **env_vars)
 		i++;
 	}
 	*env_vars = add_env_var(*env_vars, curr->word);
+	(*env_vars)->exit_status = 0;
 	free(key);
 	free(value);
 }
