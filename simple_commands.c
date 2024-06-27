@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/26 17:29:16 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/26 17:36:02 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void	execute_process(char *path, char **argv, env_var *vars)
 		// Child process
 		if (execve(path, argv, vars->arr) == -1) {
 			perror("execve");
+			// if(!path)
+			// 	free_exec_args(path, argv);
 			exit(127);
 		}
 	}
@@ -74,12 +76,12 @@ void exec_line(t_list_token *data, env_var *vars) {
     }
     argv[i] = NULL;
     path = get_path(argv[0], vars);
-	i = 0;
     if (!path)
 	{
         printf("%s: command not found\n", argv[0]);
 		free_exec_args(path,argv);
-        return;
+		vars->exit_status = 127;
+		return ;
     }
     execute_process(path, argv, vars);
   	free_exec_args(path,argv);

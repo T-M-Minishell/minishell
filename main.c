@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/23 14:48:17 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:21:45 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	print_logo(void)
 }
 
 
-int main(int argc, char **argv, char **envp) {
+int main(int argc, char **argv, char **envp)
+{
 	t_input input;
 	t_list_token *data;
 	env_var *env_vars = NULL;
@@ -40,11 +41,8 @@ int main(int argc, char **argv, char **envp) {
 	last_exit_status = 0;
 	input.prompt = PROMPT;
 	print_logo();
-
-//	int i = 0;
 	// Initialize environment variables
 	env_vars = get_env_vars(envp); // works
-
 
 	// Initialize token list
 	if (argc != 1) {
@@ -52,23 +50,18 @@ int main(int argc, char **argv, char **envp) {
 		exit(1);
 	}
 	data = NULL;
-
-
-	while (1) {
+	while (1)
+	{
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
 		ctrl_commands();
-
 		// Read user input using readline
 		input.line = readline(input.prompt);
-
 		handle_line(&input, data, &env_vars);
 		// Add the line to history
 		if (input.line && *input.line)
 			add_history(input.line);
 		// Free the memory allocated by readline
-		free(input.line);
-//		free(env_vars);
+		free(input.line);		
 	}
 	return 0;
 }
-

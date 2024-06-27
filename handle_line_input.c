@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/26 13:14:59 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:37:32 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 		else if (strcmp(curr->word, "pwd") == 0)
 			mini_pwd();
 		else if (strcmp(curr->word, "exit") == 0)
-			mini_exit(curr);
+			mini_exit(curr,(*env_vars)->exit_status);
 		else if (strcmp(curr->word, "export") == 0)
 			mini_export(curr, env_vars);
 		else if (strcmp(curr->word, "unset") == 0)

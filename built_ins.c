@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/26 16:16:51 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:39:00 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,20 @@
 
 //CVb3d2023
 
-
-// 1. echo with option -n
-
 void    mini_echo(t_list_token *data, env_var *vars)
 {
     t_list_token *curr;
 
     curr = data;
+	char *value;
+	int print_new_line;
     if (curr->next == NULL)
         ft_putstr("\n");
     //  check_for_quotes(curr->word);
     else
     {
         curr = curr->next;
-        int print_new_line = 1;
+        print_new_line = 1;
         // check for -n function
         while (curr->word != NULL && curr->word[0] == '-'
             && curr->word[1] == 'n')
@@ -54,17 +53,14 @@ void    mini_echo(t_list_token *data, env_var *vars)
 					continue;
 					
 				}	
-                char *value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
+                value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
                 if (value != NULL)
                     ft_putstr(value);
-                // else
-                //     ft_putstr(" ");
             }
             else
                 ft_putstr(curr->word);
             curr = curr->next;
         }
-        // print new_line if -n is not specified
 		if (print_new_line)
          	ft_putstr("\n");
     }
@@ -113,18 +109,22 @@ void	mini_pwd(void)
 }
 
 
-void	mini_exit(t_list_token *data)
+void mini_exit(t_list_token *data, int last_exit_status)
 {
-	int exit_status = 0;
-	t_list_token *curr;
+    int exit_status = last_exit_status;
+    t_list_token *curr = data->next; 
 
-	curr = data;
-	if (curr->next != NULL && curr->next->word != NULL) {
-		exit_status = atoi(curr->next->word);
-	}
-
-	ft_putstr("exit\n");
-	exit(exit_status);
+    if (curr != NULL) {
+        if (curr->next != NULL)
+		{
+            ft_putstr("exit\nminishell: exit: too many arguments\n");
+            return;
+        }
+        exit_status = atoi(curr->word);
+       
+    }
+    ft_putstr("exit\n");
+    exit(exit_status % 256);
 }
 
 void	mini_env(env_var *env_vars)

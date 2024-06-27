@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/26 17:25:19 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:39:47 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,8 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
 
 	while (i < num_cmds) {
 		if (check_if_builtin(current->arr[0])) {
-			if (execute_builtins_with_no_output(current->arr) == 1) {
+			if (execute_builtins_with_no_output(current->arr) == 1)
+			{
 				current = current->next;
 				num_cmds--;
 				continue;

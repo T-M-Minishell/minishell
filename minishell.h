@@ -96,7 +96,7 @@ bool 			check_if_alphanumeric(char *str);
 void			mini_echo(t_list_token *data, env_var *vars);
 int				mini_cd(t_list_token *data);
 void			mini_pwd(void);
-void			mini_exit(t_list_token *data);
+void			mini_exit(t_list_token *data,int last_exit_status);
 void			mini_env(env_var *env_vars);
 env_var			*mini_unset(t_list_token *data, env_var *env_vars);
 void			mini_export(t_list_token *data, env_var **env_vars);
