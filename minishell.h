@@ -23,6 +23,7 @@ typedef struct s_env_var
 {
 	char		**arr;
 	int			exit_status;
+	int			*exported;
 }				env_var;
 
 typedef struct s_input

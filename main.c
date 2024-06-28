@@ -36,9 +36,9 @@ int main(int argc, char **argv, char **envp)
 	t_list_token *data;
 	env_var *env_vars = NULL;
 	(void)argv;
-	int	last_exit_status;
+	// int	last_exit_status;
 	
-	last_exit_status = 0;
+	// last_exit_status = 0;
 	input.prompt = PROMPT;
 	print_logo();
 	// Initialize environment variables

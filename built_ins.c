@@ -137,9 +137,15 @@ void	mini_env(env_var *env_vars)
 	i = 0;
 	while (env_vars->arr[i])
 	{
-		ft_putstr(env_vars->arr[i]);
-		ft_putstr("\n");
-		i++;
+        if(strchr(env_vars->arr[i], '=') == NULL)
+            i++;
+        else
+        {
+            ft_putstr(env_vars->arr[i]);
+		    ft_putstr("\n");
+		    i++;
+        }
+		
 	}
 }
 
@@ -186,10 +192,13 @@ env_var	*mini_unset(t_list_token *data, env_var *env_vars) // to do
 		env_vars->exit_status = 0;
 	return (env_vars);
 }
+
+
+
 void    mini_export(t_list_token *data, env_var **env_vars)
 {
-    t_list_token    *curr;
-    int             i;
+   t_list_token *curr;
+    int i;
 
     curr = data;
     if (curr->next == NULL) // No arguments were passed
@@ -198,30 +207,34 @@ void    mini_export(t_list_token *data, env_var **env_vars)
         i = 0;
         while ((*env_vars)->arr[i] != NULL)
         {
-            printf("declare -x %s\n", (*env_vars)->arr[i]);
-            i++;
+            if(strchr((*env_vars)->arr[i], '=') == NULL)
+                printf("declare -x %s\n", get_key_from_word((*env_vars)->arr[i++]));
+            else
+            {
+                printf("declare -x %s=\"%s\"\n", get_key_from_word((*env_vars)->arr[i]),strchr((*env_vars)->arr[i], '=') + 1);
+                i++;
+            }
+            
         }
-        (*env_vars)->exit_status = 0; // Successful execution
+        (*env_vars)->exit_status = 0;  
         return;
     }
     curr = curr->next;
     char *equal_pos = strchr(curr->word, '=');
-    if (equal_pos == NULL)
+    char *key, *value;
+    if (equal_pos == NULL) // No equal sign found
     {
-        printf("export: argument should be in the format key=value\n");
-        return;
+        key = strdup(curr->word);
+        value = strdup("");
     }
-    if(!check_if_alphanumeric(curr->word))
+    else
     {
-        printf("bash: export: `%s': not a valid identifier\n",curr->word);
-        return;
+        int key_len = equal_pos - curr->word;
+        key = malloc(key_len + 1);
+        strncpy(key, curr->word, key_len);
+        key[key_len] = '\0';
+        value = strdup(equal_pos + 1);
     }
-        
-    int key_len = equal_pos - curr->word;
-    char *key = malloc(key_len + 1);
-    strncpy(key, curr->word, key_len);
-    key[key_len] = '\0';
-    char *value = strdup(equal_pos + 1);
     i = 0;
     while ((*env_vars)->arr[i] != NULL)
     {
@@ -243,55 +256,3 @@ void    mini_export(t_list_token *data, env_var **env_vars)
     free(key);
     free(value);
 }
-
-// void	mini_export(t_list_token *data, env_var **env_vars)
-// {
-// 	t_list_token	*curr;
-// 	int				i;
-
-// 	(*env_vars)->exit_status = 1;
-// 	curr = data;
-// 	if (curr->next == NULL)
-// 	{
-// 		printf("export: not enough arguments\n");
-// 		return ;
-// 	}
-// 	curr = curr->next;
-// 	char *equal_pos = strchr(curr->word, '=');
-// 	if (equal_pos == NULL)
-// 	{
-// 		printf("export: argument should be in the format key=value\n");
-// 		return ;
-// 	}
-// 	if(!check_if_alphanumeric(curr->word))
-// 	{
-// 		printf("bash: export: `%s': not a valid identifier\n",curr->word);
-// 		return ;
-// 	}
-		
-// 	int key_len = equal_pos - curr->word;
-// 	char *key = malloc(key_len + 1);
-// 	strncpy(key, curr->word, key_len);
-// 	key[key_len] = '\0';
-// 	char *value = strdup(equal_pos + 1);
-// 	i = 0;
-// 	while ((*env_vars)->arr[i] != NULL)
-// 	{
-// 		char *copy = get_key_from_word((*env_vars)->arr[i]);
-// 		if (strcmp(key, copy) == 0)
-// 		{
-// 			free(copy);
-// 			free((*env_vars)->arr[i]);
-// 			(*env_vars)->arr[i] = strdup(curr->word);
-// 			free(key);
-// 			free(value);
-// 			return ;
-// 		}
-// 		free(copy);
-// 		i++;
-// 	}
-// 	*env_vars = add_env_var(*env_vars, curr->word);
-// 	(*env_vars)->exit_status = 0;
-// 	free(key);
-// 	free(value);
-// }

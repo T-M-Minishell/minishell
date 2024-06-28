@@ -41,9 +41,6 @@ void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
 			mini_env(*env_vars);
 		else
 			exec_line(curr,*env_vars);
-
-			// handle_not_existent_builtins(curr, env_vars);
-		// (*env_vars)->exit_status = 0;
 	}
 }
 void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)

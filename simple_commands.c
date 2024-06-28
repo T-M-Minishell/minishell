@@ -50,7 +50,8 @@ void	execute_process(char *path, char **argv, env_var *vars)
 	}
 }
 
-void exec_line(t_list_token *data, env_var *vars) {
+void exec_line(t_list_token *data, env_var *vars)
+{
     t_list_token *curr;
     int i;
     char **argv;
