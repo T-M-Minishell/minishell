@@ -20,21 +20,21 @@ void    mini_echo(t_list_token *data, env_var *vars)
 
     curr = data;
 	char *value;
-	int print_new_line;
+	// int print_new_line;
     if (curr->next == NULL)
         ft_putstr("\n");
     //  check_for_quotes(curr->word);
     else
     {
         curr = curr->next;
-        print_new_line = 1;
+        // print_new_line = 1;
         // check for -n function
         while (curr->word != NULL && curr->word[0] == '-'
             && curr->word[1] == 'n')
         {
             if (strcmp(curr->word, "-n-") == 0)
                 break ;
-            print_new_line = 0;
+            // print_new_line = 0;
             curr = curr->next;
         }
         // print each arg with space
@@ -46,26 +46,34 @@ void    mini_echo(t_list_token *data, env_var *vars)
             {
 				if(strcmp(curr->word, "$?") == 0)
 				{
-					printf("%d\n", vars->exit_status);
-					// if(curr->next == NULL)
-					// 	print_new_line = 1;
-					// else
-					print_new_line = 0;
+					// printf("%d ", vars->exit_status);
+                    ft_putstr(ft_itoa(vars->exit_status));
+                    ft_putstr(" ");
 					vars->exit_status = 0;
-					curr = curr->next;
-					continue;
-					
-				}	
-                value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
-                if (value != NULL)
-                    ft_putstr(value);
+				}
+                else
+                {
+                    printf("%s ", curr->word);	
+                    value = get_value_from_var((curr->word +1),vars); // + 1 for jumping the $ sign
+                    if (value != NULL)
+                    {
+                        ft_putstr(value);
+                        ft_putstr(" ");
+                    }
+
+                }
             }
             else
+            {
                 ft_putstr(curr->word);
+                ft_putstr(" ");
+            }
             curr = curr->next;
         }
-		if (print_new_line == 1)
-         	ft_putstr("\n");
+        printf("\n");
+        // printf("echo test");
+		// if (print_new_line == 1)
+        //  	ft_putstr("\n");
     }
 }
 
