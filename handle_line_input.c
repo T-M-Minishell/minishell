@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 // void handle_redirects(t_list_token *data) {
 //     t_list_token *curr = data;
 //     t_word_info_redirect *cmd_nodes;
@@ -117,14 +116,38 @@
 //     close(stdout_copy);
 //     close(stderr_copy);
 // }
-
-t_word_info_redirect	*node_creator(t_list_token *data)
+void free_cmd_node(t_word_info_redirect *head)
 {
-	t_list_token			*curr;
-	t_word_info_redirect	*cmd_node;
-	t_redir_cmds			commands;
-	int						length;
-	int						i;
+	t_word_info_redirect *temp;
+
+	if (head != NULL)
+	{
+		// Free each string in the arr
+		int i = 0;
+		if (head->arr[i] != NULL)
+		{
+
+			while (head->arr[i] != NULL)
+			{
+				free(head->arr[i]);
+				i++;
+			}
+			// Free the arr itself
+			free(head->arr);
+			// Move to the next node and free the current node
+			temp = head;
+			free(temp);
+		}
+	}
+}
+
+t_word_info_redirect *node_creator(t_list_token *data)
+{
+	t_list_token *curr;
+	t_word_info_redirect *cmd_node;
+	t_redir_cmds commands;
+	int length;
+	int i;
 
 	curr = data;
 	length = 0;
@@ -136,7 +159,7 @@ t_word_info_redirect	*node_creator(t_list_token *data)
 		if (curr->type == REDIRECT)
 		{
 			length++;
-			break ;
+			break;
 		}
 		length++;
 		curr = curr->next;
@@ -159,7 +182,7 @@ t_word_info_redirect	*node_creator(t_list_token *data)
 			{
 				commands.arr[i++] = strdup(curr->word);
 			}
-			break ;
+			break;
 		}
 		curr = curr->next;
 	}
@@ -174,31 +197,33 @@ t_word_info_redirect	*node_creator(t_list_token *data)
 	return (cmd_node);
 }
 
-void	handle_redirects(t_list_token *data)
+void handle_redirects(t_list_token *data)
 {
-	t_list_token			*curr;
-	t_word_info_redirect	*cmd_nodes;
-	int						i;
-	int						fd;
-	char					**output_file_arr;
-	int						j;
-	int						length;
+	t_list_token *curr;
+	t_word_info_redirect *cmd_nodes;
+	int i;
+	int fd;
+	char **output_file_arr;
+	int j;
+	int length;
+	int fd_std_output;
 
 	output_file_arr = NULL;
 	fd = -1;
+	fd_std_output = -1;
 	curr = data;
 	length = 0;
 	cmd_nodes = node_creator(curr);
 	if (!cmd_nodes)
 	{
-		return ;
+		return;
 	}
 	while (curr != NULL)
 	{
 		if (curr->type == REDIRECT)
 		{
 			length++;
-			break ;
+			break;
 		}
 		length++;
 		curr = curr->next;
@@ -212,10 +237,15 @@ void	handle_redirects(t_list_token *data)
 	i = 0;
 	while (cmd_nodes->arr[i] != NULL)
 	{
-		output_file_arr[j] = cmd_nodes->arr[i];
+		output_file_arr[j] = strdup(cmd_nodes->arr[i]);
+		if (output_file_arr[j] == NULL)
+		{
+			printf("mem allocation failed in new redirect node[1]\n");
+			return;
+		}
 		if (strcmp(cmd_nodes->arr[i], ">") == 0)
 		{
-			break ;
+			break;
 		}
 		i++;
 		j++;
@@ -224,40 +254,58 @@ void	handle_redirects(t_list_token *data)
 	i = 0;
 	while (cmd_nodes->arr[i] != NULL)
 	{
-		if (strcmp(cmd_nodes->arr[i], ">") == 0 && cmd_nodes->arr[i
-			+ 1] != NULL)
+		if (strcmp(cmd_nodes->arr[i], ">") == 0 && cmd_nodes->arr[i + 1] != NULL)
 		{
+			fd_std_output = dup(STDOUT_FILENO);
+			if (fd_std_output == -1)
+			{
+				printf("Error duplicating file descriptor[fdout]\n");
+				return;
+			}
 			fd = open(cmd_nodes->arr[i + 1], O_WRONLY | O_CREAT | O_TRUNC,
-					0644);
+					  0644);
 			if (fd < 0)
 			{
 				printf("Error oppening file\n");
-				break;
+				return;
 			}
 			dup2(fd, STDOUT_FILENO);
-			if (fd != -1)
+			if (fd < 0)
 			{
-				j = 0;
-				while (output_file_arr[j] != NULL && strcmp(output_file_arr[j], ">") != 0)
-				{
-					printf("%s ", output_file_arr[j]);
-					j++;
-				}
-				printf("\n");
+				printf("Error duplicating file descriptor\n");
 				close(fd);
-				break;
+				return;
 			}
+			close(fd);
+			j = 0;
+			while (output_file_arr[j] != NULL && strcmp(output_file_arr[j], ">") != 0)
+			{
+				printf("%s ", output_file_arr[j]);
+				j++;
+			}
+			printf("\n");
+			break;
 		}
 		i++;
 	}
+	dup2(fd_std_output, STDOUT_FILENO);
+	close(fd_std_output);
+	i = 0;
+	while (output_file_arr[i] != NULL)
+	{
+		free(output_file_arr[i]);
+		i++;
+	}
+	free(output_file_arr);
+	free_cmd_node(cmd_nodes);
 	// print_node(cmd_node);
-	return ;
+	return;
 }
 
-void	handle_tokens_in_prompt(t_list_token *data, char **envp,
-		env_var **env_vars)
+void handle_tokens_in_prompt(t_list_token *data, char **envp,
+							 env_var **env_vars)
 {
-	t_list_token	*curr;
+	t_list_token *curr;
 
 	curr = data;
 	(void)envp;
@@ -288,13 +336,13 @@ void	handle_tokens_in_prompt(t_list_token *data, char **envp,
 	}
 }
 
-void	handle_line(t_input *input, t_list_token *data, char **envp,
-		env_var **env_vars)
+void handle_line(t_input *input, t_list_token *data, char **envp,
+				 env_var **env_vars)
 {
-	t_token_type	token;
-	char			**arr;
-	int				i;
-	char			*line_start;
+	t_token_type token;
+	char **arr;
+	int i;
+	char *line_start;
 
 	line_start = input->line;
 	if (input->line == NULL)
@@ -303,14 +351,14 @@ void	handle_line(t_input *input, t_list_token *data, char **envp,
 		exit(1);
 	}
 	if (input->line[0] == '\0')
-		return ;
+		return;
 	while (*line_start == ' ')
 		line_start++;
 	if (*line_start == '\0')
-		return ;
+		return;
 	arr = custom_split((char *)(input->line + (line_start - input->line)), ' ');
 	if (arr == NULL)
-		return ;
+		return;
 	i = 0;
 	while (arr[i] != NULL)
 	{
