@@ -1,17 +1,7 @@
 
-modify builtins to work for both
+expr $? + $? | echo $?  // probably need to change in the child process
 
 
 
-echo problem -n ,-check on bash
 
-
-export | wc -l -- just need to cheK in the function for pipe
-
-
-expr $? + $? | echo $?
-
-export | env
-
-export | ls
 

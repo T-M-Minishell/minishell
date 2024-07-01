@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 17:52:19 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 18:09:50 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ env_var	*parent_process(t_list_commands *current, int pid,int (*pipes)[2], env_v
 
 	i = vars->index;
 	status = 0;
-	
 	if (i > 0)
 		close(pipes[i - 1][0]);
 	if (i < vars->num_cmds - 1)
@@ -93,10 +92,10 @@ env_var	*parent_process(t_list_commands *current, int pid,int (*pipes)[2], env_v
 
 env_var *execute_commands(t_list_commands *current, int (*pipes)[2], env_var *vars)
 {
-	int i = 0;
+	int i;
 	int pid;
-	// int status = 0;
-	
+
+	i = 0;	
 	while (i < vars->num_cmds)
 	{
 		vars = builtin_check_in_pipe(current, vars);
