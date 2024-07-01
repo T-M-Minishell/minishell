@@ -25,6 +25,7 @@ typedef struct s_env_var
 	int			exit_status;
 	int 		num_cmds;
 	int			flag_mod;
+	int			index;
 	int			*exported;
 }				env_var;
 

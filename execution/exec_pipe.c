@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 17:40:33 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:52:19 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,32 @@ void child_process(t_list_commands *current, int (*pipes)[2], env_var *vars, int
 }
 
 
+env_var	*parent_process(t_list_commands *current, int pid,int (*pipes)[2], env_var *vars)
+{
+	int status;
+	int i;
+
+	i = vars->index;
+	status = 0;
+	
+	if (i > 0)
+		close(pipes[i - 1][0]);
+	if (i < vars->num_cmds - 1)
+		close(pipes[i][1]);
+	if (strcmp(current->arr[0], "cat") != 0)
+		waitpid(pid,&status,0);
+	if (WIFEXITED(status))
+		vars->exit_status = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		vars->exit_status = WTERMSIG(status);
+	return(vars);
+}
+
 env_var *execute_commands(t_list_commands *current, int (*pipes)[2], env_var *vars)
 {
 	int i = 0;
 	int pid;
-	int status = 0;
-
+	// int status = 0;
 	
 	while (i < vars->num_cmds)
 	{
@@ -92,21 +112,12 @@ env_var *execute_commands(t_list_commands *current, int (*pipes)[2], env_var *va
 			free(pipes);
 			exit(EXIT_FAILURE);
 		}
-		else if (pid == 0)
-			// child process
+		else if (pid == 0)// child process
 			child_process(current,pipes,vars,i);
 		else
 		{ // parent process
-			if (i > 0)
-				close(pipes[i - 1][0]);
-			if (i < vars->num_cmds - 1)
-				close(pipes[i][1]);
-			if (strcmp(current->arr[0], "cat") != 0)
-				waitpid(pid,&status,0);
-			if (WIFEXITED(status))
-                vars->exit_status = WEXITSTATUS(status);
-            else if (WIFSIGNALED(status))
-                vars->exit_status = WTERMSIG(status);
+			vars->index = i;
+			vars = parent_process(current,pid,pipes,vars);
 		}
 		current = current->next;
 		i++;
