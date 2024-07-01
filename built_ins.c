@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:57:39 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:17:01 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,7 +272,6 @@
 /// ----------------new way-----------------------
 
 
-
 void mini_echo(char **commands, env_var *vars)
 {
     int i = 1; // Start from the first command after "echo"
@@ -285,13 +284,21 @@ void mini_echo(char **commands, env_var *vars)
     }
 
     // Check for -n flag
-    while (commands[i] != NULL && strcmp(commands[i], "-n") == 0) {
-        print_newline = 0; // Don't print newline
-        i++;
+    while (commands[i] != NULL && commands[i][0] == '-' && commands[i][1] != '\0') {
+        int j = 1;
+        while (commands[i][j] == 'n') {
+            j++;
+        }
+        if (commands[i][j] == '\0') {
+            print_newline = 0; // Don't print newline
+            i++;
+        } else {
+            break; // Stop if we encounter a non-`n` character
+        }
     }
 
     // Print each argument
-    for (; commands[i] != NULL; i++) {
+    while (commands[i] != NULL) {
         if (commands[i][0] == '$') {
             if (strcmp(commands[i], "$?") == 0) {
                 ft_putstr(ft_itoa(vars->exit_status));
@@ -308,13 +315,13 @@ void mini_echo(char **commands, env_var *vars)
             ft_putstr(commands[i]);
             ft_putstr(" ");
         }
+        i++;
     }
 
     if (print_newline) {
         ft_putstr("\n");
     }
-	vars->exit_status = 0;
-
+    vars->exit_status = 0;
 }
 
 int mini_cd(char **commands)
@@ -386,10 +393,10 @@ void mini_env(env_var *env_vars)
         i++;
     }
 }
-
 env_var *mini_unset(char **commands, env_var *env_vars)
 {
-    int i, flag;
+    int i = 1;
+    int flag;
     char *key;
 
     if (commands[1] == NULL)
@@ -399,15 +406,17 @@ env_var *mini_unset(char **commands, env_var *env_vars)
         return env_vars;
     }
 
-    for (i = 1; commands[i] != NULL; i++)
+    while (commands[i] != NULL)
     {
         if (strchr(commands[i], '=') != NULL)
         {
+            i++;
             continue;
         }
 
         flag = 0;
-        for (int j = 0; env_vars->arr[j]; j++)
+        int j = 0;
+        while (env_vars->arr[j] != NULL)
         {
             key = get_key_from_word(env_vars->arr[j]);
             if (strcmp(commands[i], key) == 0)
@@ -417,12 +426,15 @@ env_var *mini_unset(char **commands, env_var *env_vars)
                 break;
             }
             free(key);
+            j++;
         }
 
         if (flag == 1)
         {
             env_vars = delete_env_var(env_vars, commands[i]);
         }
+
+        i++;
     }
 
     env_vars->exit_status = 0;
@@ -432,12 +444,12 @@ env_var *mini_unset(char **commands, env_var *env_vars)
 
 env_var *mini_export(char **commands, env_var **env_vars)
 {
-    int i;
+    int i = 0;
     char *equal_pos, *key, *value;
-	
+
     if (commands[1] == NULL)
     {
-        for (i = 0; (*env_vars)->arr[i] != NULL; i++)
+        while ((*env_vars)->arr[i] != NULL)
         {
             if (strchr((*env_vars)->arr[i], '=') == NULL)
             {
@@ -447,20 +459,22 @@ env_var *mini_export(char **commands, env_var **env_vars)
             {
                 printf("declare -x %s=\"%s\"\n", get_key_from_word((*env_vars)->arr[i]), strchr((*env_vars)->arr[i], '=') + 1);
             }
+            i++;
         }
         (*env_vars)->exit_status = 0;
         return (*env_vars);
     }
 
-    for (i = 1; commands[i] != NULL; i++)
+    i = 1;
+    while (commands[i] != NULL)
     {
-		if(!check_if_alphanumeric(commands[1]))
-		{
-			printf("minishell : export : %s : not a valid identifier\n", commands[1]);
-			(*env_vars)->exit_status = 1;
-			return(*env_vars);
-		}
-		
+        if (!check_if_alphanumeric(commands[i]))
+        {
+            printf("minishell: export: %s: not a valid identifier\n", commands[i]);
+            (*env_vars)->exit_status = 1;
+            return (*env_vars);
+        }
+
         equal_pos = strchr(commands[i], '=');
         if (equal_pos == NULL) // No equal sign found
         {
@@ -495,8 +509,9 @@ env_var *mini_export(char **commands, env_var **env_vars)
         *env_vars = add_env_var(*env_vars, commands[i]);
         free(key);
         free(value);
+        i++;
     }
     (*env_vars)->exit_status = 0;
-	return (*env_vars);
+    return (*env_vars);
 }
 

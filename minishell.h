@@ -23,6 +23,7 @@ typedef struct s_env_var
 {
 	char		**arr;
 	int			exit_status;
+	int 		num_cmds;
 	int			*exported;
 }				env_var;
 
@@ -168,7 +169,10 @@ env_var	*exec_line(t_list_token *data, env_var *vars);
 char 	*get_env_path(env_var *env_vars);
 char	*get_path(char *command, env_var *env_vars);
 
+///// exec_pipe
+env_var *execute_commands(t_list_commands *cmd,int num_cmds ,int (*pipes)[2], env_var *env_vars);
 
+// env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_var *env_vars);
 
 
 

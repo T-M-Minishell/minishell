@@ -6,9 +6,12 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:03:26 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 13:56:22 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "../minishell.h"
+
 
 #include "../minishell.h"
 
@@ -111,7 +114,7 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
 				continue;
 			}
 			if (check_for_env_commands(current->arr)) {
-				vars = exec_env_var_fct(current->arr, vars);
+				// vars = exec_env_var_fct(current->arr, vars);
 				current = current->next;
 				num_cmds--;
 				continue;
@@ -251,6 +254,3 @@ env_var *handle_pipe(t_list_token *data, env_var *env_vars) {
 	free_command_list(cmd_head);
 	return env_vars;
 }
-
-
-
