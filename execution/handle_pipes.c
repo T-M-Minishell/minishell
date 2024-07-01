@@ -6,14 +6,12 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 13:56:22 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 17:20:43 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-#include "../minishell.h"
 
 int count_nb_of_pipes(t_list_token *data)
 {
@@ -61,7 +59,7 @@ char **convert_tokens_to_argv(t_list_token *data) {
 	argv[count] = NULL;
 	return argv;
 }
-/////----------------EXECUTION----------------------
+
 
 int count_commands(t_list_commands *cmd) {
 	int num_cmds = 0;
@@ -96,83 +94,6 @@ void create_pipes(int (*pipes)[2], int num_cmds) {
 	}
 }
 
-env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], env_var *env_vars) {
-	t_list_commands *current = cmd;
-	int i = 0;
-	int pid;
-	int j;
-	env_var *vars = env_vars;
-	int status = 0;
-	int exit_status = 0;
-
-	while (i < num_cmds) {
-		if (check_if_builtin(current->arr[0])) {
-			if (execute_builtins_with_no_output(current->arr, env_vars) == 1)
-			{
-				current = current->next;
-				num_cmds--;
-				continue;
-			}
-			if (check_for_env_commands(current->arr)) {
-				// vars = exec_env_var_fct(current->arr, vars);
-				current = current->next;
-				num_cmds--;
-				continue;
-			}
-		}
-
-		pid = fork();
-		if (pid < 0) {
-			perror("fork");
-			free(pipes);
-			exit(EXIT_FAILURE);
-		} else if (pid == 0) { // child process
-			if (i > 0)
-				dup2(pipes[i - 1][0], STDIN_FILENO);
-			if (i < num_cmds - 1)
-				dup2(pipes[i][1], STDOUT_FILENO);
-
-			for (j = 0; j < num_cmds - 1; j++) {
-				close(pipes[j][0]);
-				close(pipes[j][1]);
-			}
-
-			if (check_if_builtin(current->arr[0])) {
-				if (execute_builtins_with_output(current->arr, vars) == 1)
-					_exit(EXIT_SUCCESS);
-			} else {
-				char *path = get_path(current->arr[0],vars);
-				if(!path)
-				{
-					printf("%s: command not found\n", current->arr[0]);
-					free(path);
-					_exit(127);
-				}
-				execve(path, current->arr, vars->arr);
-				perror("execve");
-				
-			}
-		} else { // parent process
-			if (i > 0)
-				close(pipes[i - 1][0]);
-			if (i < num_cmds - 1)
-				close(pipes[i][1]);
-			if (strcmp(current->arr[0], "cat") != 0)
-				waitpid(pid,&status,0);
-			if (WIFEXITED(status)) {
-                exit_status = WEXITSTATUS(status);
-                if (exit_status != 0) {
-                    vars->exit_status = exit_status;
-                }
-            } else if (WIFSIGNALED(status))
-                vars->exit_status = WTERMSIG(status);
-		}
-		current = current->next;
-		i++;
-	}
-	return vars;
-}
-
 
 void cleanup_pipes_and_wait(int (*pipes)[2], int num_cmds) {
 	int j = 0;
@@ -192,16 +113,16 @@ void cleanup_pipes_and_wait(int (*pipes)[2], int num_cmds) {
 }
 
 env_var *implementing_pipe(t_list_commands *cmd, env_var *env_vars, t_list_token *data) {
-	int num_cmds = count_commands(cmd);
+	env_vars->num_cmds = count_commands(cmd);
 	(void) data; // Suppress unused variable warning
 
-	if (num_cmds < 1) return env_vars;
+	if (env_vars->num_cmds < 1) return env_vars;
 
-	int (*pipes)[2] = allocate_pipes(num_cmds);
-	if (pipes != NULL) create_pipes(pipes, num_cmds);
+	int (*pipes)[2] = allocate_pipes(env_vars->num_cmds);
+	if (pipes != NULL) create_pipes(pipes, env_vars->num_cmds);
 
-	env_vars = execute_commands(cmd, num_cmds, pipes, env_vars);
-	if (pipes != NULL) cleanup_pipes_and_wait(pipes, num_cmds);
+	env_vars = execute_commands(cmd, pipes, env_vars);
+	if (pipes != NULL) cleanup_pipes_and_wait(pipes, env_vars->num_cmds);
 
 	return env_vars;
 }

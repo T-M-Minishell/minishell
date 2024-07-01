@@ -12,3 +12,6 @@ export | wc -l -- just need to cheK in the function for pipe
 expr $? + $? | echo $?
 
 export | env
+
+export | ls
+
