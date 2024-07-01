@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:04:22 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:44:58 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ env_var *exec_env_var_fct(char **commands, env_var *vars)
 	}
 	if (strcmp(commands[0], "export") == 0)
 	{
-		  env_vars = mini_export_pipe(commands, vars); 
+		  env_vars = mini_export(commands, &vars); 
 	}
       
     return env_vars;

@@ -151,12 +151,12 @@ bool check_for_env_commands(char **commands);
 
 
 
-// builtins_for_pipes
-int		mini_cd_pipe(char **command);
-void	mini_exit_pipe(char **command);
-env_var	*mini_unset_pipe(char **commands, env_var *env_vars);
-void	mini_echo_pipe(char **commands, env_var *vars);
-env_var *mini_export_pipe(char **commands, env_var *env_vars);
+// // builtins_for_pipes
+// int		mini_cd_pipe(char **command);
+// void	mini_exit_pipe(char **command);
+// env_var	*mini_unset_pipe(char **commands, env_var *env_vars);
+// void	mini_echo_pipe(char **commands, env_var *vars);
+// env_var *mini_export_pipe(char **commands, env_var *env_vars);
 
 
 

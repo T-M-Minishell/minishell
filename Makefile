@@ -5,8 +5,7 @@ SRC = main.c handle_ctrl_commands.c handle_line_input.c  built_ins.c \
 	token_assignation.c utils/utils.c utils/utils2.c \
 	handle_env_variables.c  token_preparation.c simple_commands.c\
 	utils/utils3.c utils/utils4.c custom_split.c execution/handle_pipes.c\
-	execution/exec_utils.c execution/handle_builtins_type.c execution/buildins_for_pipe.c\
-	execution/get_path.c
+	execution/exec_utils.c execution/handle_builtins_type.c execution/get_path.c\
 
 
 LDFLAGS = -lreadline
