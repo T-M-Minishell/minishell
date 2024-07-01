@@ -1,0 +1,14 @@
+
+modify builtins to work for both
+
+
+
+echo problem -n ,-check on bash
+
+cat | wc -l | ls  -----> problem, the wc waits for cat to finish so he cand delever the otput,
+    never finish because of waitpid
+
+export | wc -l -- just need to cheK in the function for pipe
+
+
+

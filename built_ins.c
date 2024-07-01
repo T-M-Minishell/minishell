@@ -14,7 +14,7 @@
 
 //CVb3d2023
 
-void    mini_echo(t_list_token *data, env_var *vars)
+void    mini_echo(t_list_token *data, env_var *vars) // still need the flag
 {
     t_list_token *curr;
 
@@ -34,7 +34,7 @@ void    mini_echo(t_list_token *data, env_var *vars)
         {
             if (strcmp(curr->word, "-n-") == 0)
                 break ;
-            // print_new_line = 0;
+            // ft_putstr("\n");
             curr = curr->next;
         }
         // print each arg with space
