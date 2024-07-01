@@ -1,0 +1,12 @@
+
+modify builtins to work for both
+
+
+
+echo problem -n ,-check on bash
+
+
+export | wc -l -- just need to cheK in the function for pipe
+
+
+

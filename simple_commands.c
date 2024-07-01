@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/26 17:36:02 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:36:26 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,8 @@ void	execute_process(char *path, char **argv, env_var *vars)
 	}
 }
 
-void exec_line(t_list_token *data, env_var *vars) {
+env_var *exec_line(t_list_token *data, env_var *vars)
+{
     t_list_token *curr;
     int i;
     char **argv;
@@ -75,17 +76,22 @@ void exec_line(t_list_token *data, env_var *vars) {
         curr = curr->next;
     }
     argv[i] = NULL;
+	if(check_if_builtin(argv[0]))
+	{
+		vars = handle_tokens_in_prompt(argv, &vars);
+		return(vars);
+	}
     path = get_path(argv[0], vars);
     if (!path)
 	{
         printf("%s: command not found\n", argv[0]);
 		free_exec_args(path,argv);
 		vars->exit_status = 127;
-		return ;
+		return(vars);
     }
     execute_process(path, argv, vars);
   	free_exec_args(path,argv);
-	return;
+	return (vars);
 }
 
 

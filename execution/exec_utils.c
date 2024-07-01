@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/26 12:28:35 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 11:46:43 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 bool check_if_builtin(char *word)
 {
     char *arr_of_builtins[] =
-		{"echo","cd","export", "unset", "env", "exit"};
+		{"echo","cd","export", "unset", "env", "exit","pwd"};
     int num_of_builtins = sizeof(arr_of_builtins) / sizeof(arr_of_builtins[0]);
     
     for (int i = 0; i < num_of_builtins; i++)

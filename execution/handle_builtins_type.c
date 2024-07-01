@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/23 14:29:34 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:04:22 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,19 +23,19 @@ bool check_for_env_commands(char **commands)
 		return (false);
 }
 
-int	execute_builtins_with_no_output(char **commands)
+int	execute_builtins_with_no_output(char **commands ,env_var *vars)
 {
 	int flag;
 
 	flag = 0;
 	if(strcmp(commands[0], "cd") == 0)
 	{
-		mini_cd_pipe(commands);
+		mini_cd(commands);
 		flag++;
 	}
 	if(strcmp(commands[0], "exit") == 0)
 	{
-		mini_exit_pipe(commands);
+		mini_exit(commands, vars->exit_status); /// need to check
 		flag++;
 	}
 	return(flag);
@@ -53,7 +53,7 @@ int	execute_builtins_with_output(char **commands, env_var *vars)
 	}
 	else if(strcmp(commands[0], "echo") == 0)
 	{
-		mini_echo_pipe(commands, vars);
+		mini_echo(commands, vars);
 		flag = 1;
 	}
 	return(flag);
@@ -65,7 +65,7 @@ env_var *exec_env_var_fct(char **commands, env_var *vars)
 
     if (strcmp(commands[0], "unset") == 0)
 	{
-		env_vars = mini_unset_pipe(commands, vars);
+		env_vars = mini_unset(commands, vars);
 	}
 	if (strcmp(commands[0], "export") == 0)
 	{

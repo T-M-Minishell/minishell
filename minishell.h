@@ -23,6 +23,7 @@ typedef struct s_env_var
 {
 	char		**arr;
 	int			exit_status;
+	int			*exported;
 }				env_var;
 
 typedef struct s_input
@@ -72,12 +73,15 @@ void		ft_putstr(char *str);
 char	*ft_itoa(int n);
 // void 	free_node_list(t_list_token *data);
 
-/// handle ctrl_commands
+	/// handle ctrl_commands
 void			ctrl_commands(void);
 
-// handle line_input
+	// handle line_input
 void			handle_line(t_input *input, t_list_token *data, env_var **env_vars);
-void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars);
+// void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars);
+env_var *handle_tokens_in_prompt(char **commands, env_var **env_vars);
+
+
 
 
 // // history
@@ -93,13 +97,23 @@ char			*get_value_from_var(char *word, env_var *vars);
 bool 			check_if_alphanumeric(char *str);
 
 /// built_ins
-void			mini_echo(t_list_token *data, env_var *vars);
-int				mini_cd(t_list_token *data);
+// void			mini_echo(t_list_token *data, env_var *vars);
+// int				mini_cd(t_list_token *data);
+// void			mini_pwd(void);
+// void			mini_exit(t_list_token *data,int last_exit_status);
+// void			mini_env(env_var *env_vars);
+// env_var			*mini_unset(t_list_token *data, env_var *env_vars);
+// void			mini_export(t_list_token *data, env_var **env_vars);
+///---------the other option----------
+void			mini_echo(char **commands, env_var *vars);
+int				mini_cd(char **commands);
 void			mini_pwd(void);
-void			mini_exit(t_list_token *data,int last_exit_status);
+void			mini_exit(char **commands,int last_exit_status);
 void			mini_env(env_var *env_vars);
-env_var			*mini_unset(t_list_token *data, env_var *env_vars);
-void			mini_export(t_list_token *data, env_var **env_vars);
+env_var			*mini_unset(char **commands, env_var *env_vars);
+env_var			*mini_export(char **commands, env_var **env_vars);
+
+
 
 // handle_dolar
 
@@ -129,7 +143,7 @@ env_var	*handle_pipe(t_list_token *data, env_var *env_vars);
 bool check_if_builtin(char *word);
 
 // handle_builtins_type
-int execute_builtins_with_no_output(char **commands);
+int	execute_builtins_with_no_output(char **commands ,env_var *vars);
 int	execute_builtins_with_output(char **commands, env_var *vars);
 env_var *exec_env_var_fct(char **commands, env_var *vars);
 bool check_for_env_commands(char **commands);
@@ -148,7 +162,7 @@ env_var *mini_export_pipe(char **commands, env_var *env_vars);
 
 // simple comands
 void	execute_process(char *path, char **argv, env_var *vars);
-void	exec_line(t_list_token *data, env_var *vars);
+env_var	*exec_line(t_list_token *data, env_var *vars);
 
 // get_path
 char 	*get_env_path(env_var *env_vars);

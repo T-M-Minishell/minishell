@@ -181,43 +181,16 @@ char	*get_path(char *command, env_var *env_vars)
     while (paths[i])
     {
         tmp = ft_strjoin(paths[i], "/");
-        full_path = ft_strjoin(tmp, command); // Use the result of the first ft_strjoin
-        free(tmp); // Free the temporary variable to prevent memory leaks
+        full_path = ft_strjoin(tmp, command); //
         if (access(full_path, F_OK) == 0)
         {
-            free_arr_path(paths); // Free the paths array before returning
-            return full_path; // Return the found path
+            free_arr_path(paths); 
+            return full_path; 
         }
-        free(full_path); // Free the full_path if not returning
+        free(full_path); //
         i++;
     }
-    free_arr_path(paths); // Free the paths array if no path is found
+    free_arr_path(paths); 
     return (NULL);
 }
-
-// char	*get_path(char *command, env_var *env_vars)
-// {
-// 	char *path;
-// 	char **paths;
-// 	char *tmp;
-// 	int i;
-
-// 	path = get_env_path(env_vars);
-// 	paths = ft_split(path, ':');
-// 	i = 0;
-// 	while (paths[i])
-// 	{
-// 		tmp = ft_strjoin(paths[i], "/");
-// 		tmp = ft_strjoin(tmp, command);
-// 		if (access(tmp, F_OK) == 0)
-// 		{
-// 			free_arr_path(paths);
-// 			return (tmp);
-// 		}
-// 		free(tmp);
-// 		i++;
-// 	}
-// 	free_arr_path(paths);
-// 	return (NULL);
-// }
 

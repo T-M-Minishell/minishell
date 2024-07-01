@@ -6,13 +6,14 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/27 16:39:47 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:03:26 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int count_nb_of_pipes(t_list_token *data) {
+int count_nb_of_pipes(t_list_token *data)
+{
 	int nb;
 
 	nb = 0;
@@ -103,7 +104,7 @@ env_var *execute_commands(t_list_commands *cmd, int num_cmds, int (*pipes)[2], e
 
 	while (i < num_cmds) {
 		if (check_if_builtin(current->arr[0])) {
-			if (execute_builtins_with_no_output(current->arr) == 1)
+			if (execute_builtins_with_no_output(current->arr, env_vars) == 1)
 			{
 				current = current->next;
 				num_cmds--;
