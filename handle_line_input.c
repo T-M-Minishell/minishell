@@ -6,43 +6,12 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:35:32 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:47:37 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
-// void	handle_tokens_in_prompt(t_list_token *data,	env_var **env_vars)
-// {
-// 	t_list_token	*curr;
-
-// 	curr = NULL;
-// 	curr = data;
-
-// 	if (curr->word != NULL)
-// 	{
-// 		// if (strchr(curr->word, '='))
-// 		// 	*env_vars = add_env_var(*env_vars, curr->word);
-// 		if (strcmp(curr->word, "echo") == 0)
-// 			mini_echo(curr, *env_vars);
-// 		else if (strcmp(curr->word, "cd") == 0)
-// 			mini_cd(curr);
-// 		else if (strcmp(curr->word, "pwd") == 0)
-// 			mini_pwd();
-// 		else if (strcmp(curr->word, "exit") == 0)
-// 			mini_exit(curr,(*env_vars)->exit_status);
-// 		else if (strcmp(curr->word, "export") == 0)
-// 			mini_export(curr, env_vars);
-// 		else if (strcmp(curr->word, "unset") == 0)
-// 			*env_vars = mini_unset(curr, *env_vars);
-// 		else if (strcmp(curr->word, "env") == 0)
-// 			mini_env(*env_vars);
-// 		else
-// 			exec_line(curr,*env_vars);
-// 	}
-// }
 
 env_var *handle_tokens_in_prompt(char **commands, env_var **env_vars)
 {
@@ -62,10 +31,6 @@ env_var *handle_tokens_in_prompt(char **commands, env_var **env_vars)
             *env_vars = mini_unset(commands, *env_vars);
         else if (strcmp(commands[0], "env") == 0)
             mini_env(*env_vars);
-        // else
-        // {
-        //     exec_line(commands, *env_vars);
-        // }
     }
 	return (*env_vars);
 }

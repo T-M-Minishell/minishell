@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:44:58 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:48:53 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ int	execute_builtins_with_output(char **commands, env_var *vars)
 		mini_echo(commands, vars);
 		flag = 1;
 	}
+	else if(strcmp(commands[0], "pwd") == 0)
+	{
+		mini_pwd();
+		flag = 1;
+	}
 	return(flag);
 }
 
@@ -69,7 +74,7 @@ env_var *exec_env_var_fct(char **commands, env_var *vars)
 	}
 	if (strcmp(commands[0], "export") == 0)
 	{
-		  env_vars = mini_export(commands, &vars); 
+		env_vars = mini_export(commands, &vars); 
 	}
       
     return env_vars;

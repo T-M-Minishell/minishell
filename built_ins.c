@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:29:23 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/01 12:57:39 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -434,7 +434,7 @@ env_var *mini_export(char **commands, env_var **env_vars)
 {
     int i;
     char *equal_pos, *key, *value;
-
+	
     if (commands[1] == NULL)
     {
         for (i = 0; (*env_vars)->arr[i] != NULL; i++)
@@ -454,6 +454,13 @@ env_var *mini_export(char **commands, env_var **env_vars)
 
     for (i = 1; commands[i] != NULL; i++)
     {
+		if(!check_if_alphanumeric(commands[1]))
+		{
+			printf("minishell : export : %s : not a valid identifier\n", commands[1]);
+			(*env_vars)->exit_status = 1;
+			return(*env_vars);
+		}
+		
         equal_pos = strchr(commands[i], '=');
         if (equal_pos == NULL) // No equal sign found
         {
