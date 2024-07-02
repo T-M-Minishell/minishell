@@ -46,6 +46,8 @@ typedef struct s_word_info
 typedef struct s_word_info_redirect
 {
     char    **arr;
+	t_token_type token;
+	struct  s_word_info_redirect *next;
 }           t_word_info_redirect;
 
 #endif
