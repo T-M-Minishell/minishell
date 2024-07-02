@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:52:15 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/26 16:07:44 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:59:07 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,6 +176,8 @@ char	*get_path(char *command, env_var *env_vars)
     int i;
 
     path = get_env_path(env_vars);
+	if(!path)
+		return (NULL);
     paths = ft_split(path, ':');
     i = 0;
     while (paths[i])
