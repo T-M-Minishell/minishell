@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 12:47:37 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:37:57 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 	char			*line_start;
 
 	line_start = input->line;
-	if (input->line == NULL)
-	{
-		printf("exit\n");
-		exit(1);
-	}
+	// if (input->line == NULL)
+	// {
+	// 	printf("exit\n");
+	// 	exit(1);
+	// }
 	if (input->line[0] == '\0')
 		return ;
 	while (*line_start == ' ')

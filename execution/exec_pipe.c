@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 18:09:50 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:19:10 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ void child_process(t_list_commands *current, int (*pipes)[2], env_var *vars, int
 		dup2(pipes[i - 1][0], STDIN_FILENO);
 	if (i < vars->num_cmds - 1)
 		dup2(pipes[i][1], STDOUT_FILENO);
-
 	while( j < vars->num_cmds - 1)
 	{
 		close(pipes[j][0]);
@@ -58,7 +57,7 @@ void child_process(t_list_commands *current, int (*pipes)[2], env_var *vars, int
 	else
 	{
 		path = get_path(current->arr[0],vars);
-		if(!path)
+		if (!path)
 		{
 			printf("%s: command not found\n", current->arr[0]);
 			free(path);
@@ -68,7 +67,6 @@ void child_process(t_list_commands *current, int (*pipes)[2], env_var *vars, int
 		perror("execve");
 	}
 }
-
 
 env_var	*parent_process(t_list_commands *current, int pid,int (*pipes)[2], env_var *vars)
 {

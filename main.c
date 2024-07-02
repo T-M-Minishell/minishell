@@ -6,11 +6,12 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 11:11:27 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 14:44:33 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "errno.h"
 
 void	print_logo(void)
 {
@@ -40,22 +41,28 @@ int main(int argc, char **argv, char **envp)
 	
 	// last_exit_status = 0;
 	input.prompt = PROMPT;
-	print_logo();
+
 	// Initialize environment variables
 	env_vars = get_env_vars(envp); // works
 
 	// Initialize token list
 	if (argc != 1) {
-		printf("args are not allowed\n");
+		printf("Args are not allowed\n");
 		exit(1);
 	}
+	print_logo();
 	data = NULL;
 	while (1)
 	{
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
-		ctrl_commands();
+		ctrl_commands(&input.line);
 		// Read user input using readline
 		input.line = readline(input.prompt);
+		if (input.line == NULL)
+		{
+			printf("exit\n");
+			exit(1);
+        }	
 		handle_line(&input, data, &env_vars);
 		// Add the line to history
 		if (input.line && *input.line)
