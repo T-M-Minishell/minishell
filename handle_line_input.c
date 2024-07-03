@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/03 12:42:54 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/03 17:32:52 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,10 @@ env_var *handle_tokens_in_prompt(char **commands, env_var **env_vars)
 
 void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 {
-	t_token_type	token;
-	char			**arr;
-	int				i;
-	char			*line_start;
+	t_token_type token;
+	char **arr;
+	int i;
+	char *line_start;
 
 	line_start = input->line;
 	if (input->line == NULL)
@@ -49,14 +49,14 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 		exit(1);
 	}
 	if (input->line[0] == '\0')
-		return ;
+		return;
 	while (*line_start == ' ')
 		line_start++;
 	if (*line_start == '\0')
-		return ;
+		return;
 	arr = custom_split((char *)(input->line + (line_start - input->line)), ' ');
 	if (arr == NULL)
-		return ;
+		return;
 	i = 0;
 	while (arr[i] != NULL)
 	{
