@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:52:15 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/02 14:59:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:44:30 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,13 +183,14 @@ char	*get_path(char *command, env_var *env_vars)
     while (paths[i])
     {
         tmp = ft_strjoin(paths[i], "/");
-        full_path = ft_strjoin(tmp, command); //
+        full_path = ft_strjoin(tmp, command);
+		free(tmp);
         if (access(full_path, F_OK) == 0)
         {
             free_arr_path(paths); 
             return full_path; 
         }
-        free(full_path); //
+        free(full_path);
         i++;
     }
     free_arr_path(paths); 

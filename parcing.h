@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:28 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/24 17:56:21 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:06:20 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,19 @@ typedef enum s_token_type
 	WORD,
 	REDIRECT,
 	QUOTE,
+	REDIRECT_IN,     // <
+	REDIRECT_OUT,    // >
+	REDIRECT_APPEND, // >>
+	HEREDOC          // <<
 }						t_token_type;
 
 typedef struct s_list_token
 {
 	t_token_type		type;
 	int					index;
-	
+	char				*red;
 	char				*word;
-	char	*token;
+	char				*token;
 	char 				**arr;
 	struct s_list_token	*next;
 	struct s_list_token	*prev;

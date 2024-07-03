@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/01 11:46:43 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:09:28 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,33 @@ bool check_for_pipe_in_line(t_list_token *data)
     if (last_was_pipe || nb_of_pipes == 0)
         return false;
     
+    return true;
+}
+
+
+bool    check_for_redirects_in_line(t_list_token *data)
+{
+    t_list_token *curr = data;
+    bool is_first = true;
+    bool last_was_redirect = false;
+    int nb_of_redirects = 0;
+
+    while (curr != NULL)
+    {
+        // printf("%s\n", curr->word);
+        if (strcmp(curr->word, ">") == 0 || strcmp(curr->word, ">>") == 0 || strcmp(curr->word, "<") == 0)
+        {
+            nb_of_redirects++;
+            if (is_first || last_was_redirect)
+                return false;
+            last_was_redirect = true;
+        }
+        else
+            last_was_redirect = false;
+        is_first = false;
+        curr = curr->next;   
+    }
+    if (last_was_redirect || nb_of_redirects == 0)
+        return false;
     return true;
 }

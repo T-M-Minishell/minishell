@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_preparation.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 15:50:41 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/15 16:37:06 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/03 15:08:33 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,20 +69,20 @@ void	prepare_for_tokenization_word(char *str, t_list_token **data,
 	free(cpy);
 }
 
-t_token_type	check_token(char *str)
+t_token_type check_token(char *str) /// testing
 {
-	int	i;
-
-	i = 0;
-	while (str[i] != '\0')
-	{
-		if (str[i] == '"')
-			return (QUOTE);
-		else if (str[i] == '|')
-			return (PIPE);
-		else if (str[i] == '>' || str[i] == '<')
-			return (REDIRECT);
-		i++;
-	}
-	return (WORD);
+	if (strcmp(str, "|") == 0)
+		return PIPE;
+	// else if (strcmp(str, "<") == 0)
+	// 	return REDIRECT_IN;
+	// else if (strcmp(str, ">") == 0)
+	// 	return REDIRECT_OUT;
+	// else if (strcmp(str, ">>") == 0)
+	// 	return REDIRECT_APPEND;
+	// else if (strcmp(str, "<<") == 0)
+	// 	return HEREDOC;
+	else if (str[0] == '\'' || str[0] == '"')
+		return QUOTE;
+	else
+		return WORD;
 }

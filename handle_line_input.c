@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/02 14:37:57 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:06:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,6 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 	char			*line_start;
 
 	line_start = input->line;
-	// if (input->line == NULL)
-	// {
-	// 	printf("exit\n");
-	// 	exit(1);
-	// }
 	if (input->line[0] == '\0')
 		return ;
 	while (*line_start == ' ')
@@ -63,8 +58,17 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 		token = check_token(arr[i]);
 		if (token == PIPE)
 			prepare_for_tokenization_word(arr[i], &data, token);
-		if (token == QUOTE)
+		else if (token == QUOTE)
 			prepare_for_tokenization_quote(arr[i], &data, token);
+		// else if (token == REDIRECT_IN || token == REDIRECT_OUT || token == REDIRECT_APPEND || token == HEREDOC)
+		// {
+		// 	// Prepare for tokenization of redirection
+		// 	prepare_for_tokenization_word(arr[i], &data, token);
+		// 	// Assume the next token is the file/delimiter
+		// 	i++;
+		// 	if (arr[i] != NULL)
+		// 		prepare_for_tokenization_word(arr[i], &data, WORD);
+		// }
 		else if (token == WORD)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		free(arr[i]);
@@ -73,6 +77,8 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 	free(arr);
 	if (check_for_pipe_in_line(data))
     	*env_vars = handle_pipe(data, *env_vars);
+	else if(check_for_redirects_in_line(data))
+		handle_redirects(data, *env_vars);
 	else
 		*env_vars = exec_line(data, *env_vars);
 		// handle_tokens_in_prompt(data,env_vars);

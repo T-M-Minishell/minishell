@@ -145,6 +145,10 @@ char	*get_path(char *command, env_var *env_vars);
 ///--------------------- exec_pipe-------------
 env_var *execute_commands(t_list_commands *current ,int (*pipes)[2], env_var *env_vars);
 
+//---------------------redirects--------------------
+bool    check_for_redirects_in_line(t_list_token *data);
+
+void	handle_redirects(t_list_token *data, env_var *vars);
 
 #endif
 
