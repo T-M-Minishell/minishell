@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:51:28 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/25 17:51:15 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/02 11:01:08 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ typedef struct s_word_info
 typedef struct s_word_info_redirect
 {
     char    **arr;
+	t_token_type token;
+	struct  s_word_info_redirect *next;
 }           t_word_info_redirect;
 
 #endif
