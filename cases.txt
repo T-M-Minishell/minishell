@@ -1,0 +1,22 @@
+
+expr $? + $? | echo $?  // probably need to change in the child process
+
+
+
+unset PATH | ls
+
+
+
+   Execute commands with single quotes as arguments.
+    Try empty arguments.
+    Try environment variables, whitespaces, pipes, redirection in the single quotes.
+    echo '$USER' must print "$USER".
+    Nothing should be interpreted.
+
+    Execute a simple command with arguments and, this time, use also double quotes (you should try to include whitespaces too).
+    Try a command like : echo "cat lol.c | cat > lol.c"
+    Try anything except $.
+    If something crashes, select the "crash" flag.
+    If something doesn't work, select the "incomplete work" flag.
+
+

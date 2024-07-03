@@ -5,12 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 18:20:50 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/25 18:20:57 by tlupu            ###   ########.fr       */
+/*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
+/*   Updated: 2024/07/03 12:37:01 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "errno.h"
 
 void	print_logo(void)
 {
@@ -29,41 +30,42 @@ void	print_logo(void)
 	printf("\n										** MiniShell **\n");
 }
 
-int main(int argc, char **argv, char **envp) {
+int main(int argc, char **argv, char **envp)
+{
 	t_input input;
 	t_list_token *data;
 	env_var *env_vars = NULL;
 	(void)argv;
-
+	// int	last_exit_status;
+	
+	// last_exit_status = 0;
 	input.prompt = PROMPT;
-	print_logo();
 
-//	int i = 0;
 	// Initialize environment variables
 	env_vars = get_env_vars(envp); // works
-
 
 	// Initialize token list
 	data = NULL;
 	if (argc != 1) {
-		printf("args are not allowed\n");
+		printf("Args are not allowed\n");
 		exit(1);
 	}
+	data = NULL;
+
 
 	while (1) {
 		// Set up the signal handler for Ctrl+C and CTRL-"\"
-		ctrl_commands();
-
+		ctrl_commands(&input.line);
 		// Read user input using readline
 		input.line = readline(input.prompt);
 
-		handle_line(&input, data, envp, &env_vars);
+		handle_line(&input, data, &env_vars);
 		// Add the line to history
 		if (input.line && *input.line)
 			add_history(input.line);
 		// Free the memory allocated by readline
-		free(input.line);
-//		free(env_vars);
+		free(input.line);		
 	}
 	return 0;
 }
+
