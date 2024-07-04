@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/04 18:23:15 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/04 19:49:11 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	words_count(const char *str, char c)
 	int		i;
 	int		word;
 	bool	is_quote;
-	bool 	is_pipe = false;
 
 	i = 0;
 	word = 0;
@@ -27,11 +26,17 @@ int	words_count(const char *str, char c)
 		if (str[i] == '"')
 		{
 			is_quote = !is_quote;
-			if (is_quote)
-				word++;
+			i++;
+			continue ;
 		}
-		if (!is_quote && ((i == 0 || str[i - 1] == c || is_pipe)
-				&& str[i] != c && str[i] != '|'))
+		if (!is_quote && str[i] == '|')
+		{
+			word++;
+			i++;
+			continue ;
+		}
+		if (!is_quote && (i == 0 || str[i - 1] == c || str[i - 1] == '|')
+			&& str[i] != c && str[i] != '|')
 		{
 			word++;
 		}
@@ -42,8 +47,9 @@ int	words_count(const char *str, char c)
 		printf("Error: missing quote\n");
 		return (-1);
 	}
-	return (i - word);
+	return (word);
 }
+
 int	allocate_for_strings(const char *str, char c)
 {
 	int		i;
@@ -89,8 +95,6 @@ t_word_info	string_gen(const char *str, char c)
 	is_quote = false;
 	alloc = 0;
 	alloc = allocate_for_strings(str, c);
-	printf("alloc is :%d\n", alloc);
-	exit(0);
 	word_info.word = (char *)malloc(sizeof(char) * (alloc + 1));
 	if (!word_info.word)
 		return (word_info);
@@ -124,7 +128,7 @@ t_word_info	string_gen(const char *str, char c)
 	}
 	// printf("j is :%d\n", j);
 	word_info.word[j] = '\0';
-	word_info.char_counted = i;
+	word_info.char_counted = j;
 	return (word_info);
 }
 
@@ -139,6 +143,8 @@ char	**custom_split(const char *str, char c)
 	i = 0;
 	index_array = 0;
 	word_length = words_count(str, c);
+	// printf("alloc is :%d\n", word_length);
+	// exit(0);
 	if (word_length == -1)
 		return (NULL);
 	arr = (char **)malloc(sizeof(char *) * (word_length + 1));
