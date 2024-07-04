@@ -13,7 +13,7 @@
 #ifndef PARCING_H
 # define PARCING_H
 
-// # include "minishell.h"
+//  # include "minishell.h"
 
 typedef enum s_token_type
 {
@@ -25,8 +25,10 @@ typedef enum s_token_type
 	QUOTE,
 	REDIRECT_IN,     // <
 	REDIRECT_OUT,    // >
-	REDIRECT_APPEND, // >>
-	HEREDOC          // <<
+	REDIRECT_APPEND, // >>  
+	HEREDOC, // <<
+	PIPE_PRES,
+	NO_PIPPE_PRES  
 }						t_token_type;
 
 typedef struct s_list_token
@@ -43,6 +45,7 @@ typedef struct s_list_token
 typedef struct s_word_info
 {
     char    *word;
+	t_token_type details;
     int     char_counted;
 }           t_word_info;
 #endif

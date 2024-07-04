@@ -6,16 +6,17 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/26 15:08:24 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/04 18:19:18 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 int words_count(const char *str, char c)
 {
-    int     i;
-    int     word;
-    bool    is_quote;
+    int i;
+    int word;
+    bool is_quote;
     i = 0;
     word = 0;
     is_quote = false;
@@ -27,8 +28,7 @@ int words_count(const char *str, char c)
             if (is_quote)
                 word++;
         }
-        else if (!is_quote && ((i == 0 || str[i - 1] == c || str[i] == '|')
-                && str[i] != c))
+        else if (!is_quote && ((i == 0 || str[i - 1] == c || str[i] == '|') && str[i] != c))
             word++;
         i++;
     }
@@ -41,10 +41,12 @@ int words_count(const char *str, char c)
 }
 int allocate_for_strings(const char *str, char c)
 {
-    int     i;
-    int     keep_quotes;
-    bool    is_quote;
+    int i;
+    int l;
+    int keep_quotes;
+    bool is_quote;
     i = 0;
+    l = 0;
     keep_quotes = 0;
     is_quote = false;
     while (str[i] != '\0' && (is_quote || str[i] != c))
@@ -54,28 +56,25 @@ int allocate_for_strings(const char *str, char c)
             keep_quotes++;
             is_quote = !is_quote;
             i++;
-            continue ;
+            continue;
         }
         else if (str[i] == '|')
         {
             i++;
-            break ;
+            break;
         }
+        l++;
         i++;
     }
-    if (keep_quotes % 2 == 0)
-    {
-        i = i - keep_quotes;
-    }
-    return (i);
+    return (l);
 }
 // looks for the desired string keeping in mind all the special operators such as "",
 t_word_info string_gen(const char *str, char c)
 {
-    int     i;
-    bool    is_quote;
-    int     j;
-    int     alloc;
+    int i;
+    bool is_quote;
+    int j;
+    int alloc;
     t_word_info word_info;
     word_info.word = NULL;
     i = 0;
@@ -88,18 +87,21 @@ t_word_info string_gen(const char *str, char c)
         return word_info;
     while (str[i] != '\0' && (is_quote || str[i] != c))
     {
-        if (str[i] == '\"')
+
+        if (str[i] == '"')
         {
-            if (is_quote && str[i+1] != ' ' && str[i+1] != '\0')
-                break;
+            if (is_quote && str[i + 1] != ' ' && str[i + 1] != '\0')
+            {
+                word_info.word[j] = str[i];
+            }
             is_quote = !is_quote;
             i++;
-            continue ;
+            continue;
         }
         else if (str[i] == '|')
         {
             word_info.word[j++] = str[i++];
-            break ;
+            word_info.details = PIPE_PRES;
         }
         if (str[i] != '\0' && (is_quote || str[i] != c))
         {
@@ -112,16 +114,18 @@ t_word_info string_gen(const char *str, char c)
     return (word_info);
 }
 
-char    **custom_split(const char *str, char c)
+char **custom_split(const char *str, char c)
 {
-    int     i;
-    int     index_array;
-    char    **arr;
-    int     word_length;
+    int i;
+    int index_array;
+    char **arr;
+    int word_length;
     t_word_info word_info;
     i = 0;
     index_array = 0;
     word_length = words_count(str, c);
+    if (word_length == -1)
+        return (NULL);
     arr = (char **)malloc(sizeof(char *) * (word_length + 1));
     if (!arr)
     {
@@ -131,6 +135,12 @@ char    **custom_split(const char *str, char c)
     while (index_array < word_length)
     {
         word_info = string_gen((char *)(str + i), c);
+        if (word_info.details == PIPE_PRES)
+        {
+            
+            word_info.details = NO_PIPPE_PRES;
+        }
+        
         arr[index_array] = word_info.word;
         // printf("arr contents are: %s\n", arr[index_array]);
         i += word_info.char_counted;
