@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/06/26 16:16:42 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:58:08 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,17 @@ char *get_value_from_var(char *word, env_var *vars)
 	int i;
 
 	i = 0;
+    char *key_from_word;
 	while (vars->arr[i])
 	{
-		if(strcmp(word, get_key_from_word(vars->arr[i])) == 0)
-			return(strchr(vars->arr[i],'=') + 1);  // to skip the equal sign;
-		i++;
+        key_from_word = get_key_from_word(vars->arr[i]);
+		if(strcmp(word,key_from_word ) == 0)
+        {
+            free(key_from_word);
+            return(strchr(vars->arr[i],'=') + 1);
+        }
+		free(key_from_word);
+        i++;
 	}
 	return (NULL);
 }

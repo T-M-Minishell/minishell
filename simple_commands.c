@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/02 14:59:31 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:52:55 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ env_var *exec_line(t_list_token *data, env_var *vars)
 	if(check_if_builtin(argv[0]))
 	{
 		vars = handle_tokens_in_prompt(argv, &vars);
+		i = 0;
+		while(argv[i])
+			free(argv[i++]);
+		free(argv);
 		return(vars);
 	}
     path = get_path(argv[0], vars);

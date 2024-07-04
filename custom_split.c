@@ -6,83 +6,73 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/03 17:29:18 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/04 18:23:15 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
-#include <stdbool.h>
 
-int words_count(const char *str) {
-	int word = 0;
-	bool in_quotes = false;
-	bool in_word = false;
+int	words_count(const char *str, char c)
+{
+	int		i;
+	int		word;
+	bool	is_quote;
+	bool 	is_pipe = false;
 
-	for (int i = 0; str[i] != '\0'; i++) {
-		if (str[i] == '\"') {
-			in_quotes = !in_quotes; // Toggle in_quotes status
-			in_word = true; // We are inside a word because of the quote
-		} else if (!in_quotes && str[i] == ' ') {
-			if (in_word) {
-				// We were in a word, but found a space outside quotes, so increment word count
+	i = 0;
+	word = 0;
+	is_quote = false;
+	while (str[i] != '\0')
+	{
+		if (str[i] == '"')
+		{
+			is_quote = !is_quote;
+			if (is_quote)
 				word++;
-				in_word = false; // Reset in_word status
-			}
-		} else {
-			// Any other character means we are inside a word
-			in_word = true;
 		}
+		if (!is_quote && ((i == 0 || str[i - 1] == c || is_pipe)
+				&& str[i] != c && str[i] != '|'))
+		{
+			word++;
+		}
+		i++;
 	}
-
-	// If we end while still in a word, count it
-	if (in_word) {
-		word++;
+	if (is_quote)
+	{
+		printf("Error: missing quote\n");
+		return (-1);
 	}
-
-	return word;
-}
-
-int main() {
-	const char *command = "echo hey\"gman\"ero";
-	printf("Word count: %d\n", words_count(command));
-	return 0;
+	return (i - word);
 }
 int	allocate_for_strings(const char *str, char c)
 {
 	int		i;
+	int		l;
 	int		keep_quotes;
 	bool	is_quote;
 
 	i = 0;
+	l = 0;
 	keep_quotes = 0;
 	is_quote = false;
 	while (str[i] != '\0' && (is_quote || str[i] != c))
 	{
-		if (str[i] == '\"')
+		if (str[i] == '"')
 		{
 			keep_quotes++;
 			is_quote = !is_quote;
 			i++;
 			continue ;
 		}
-		else if (str[i] == '|')
+		else if (str[i] == '|' && !is_quote)
 		{
 			i++;
 			break ;
 		}
-		else if (str[i] == '>' || str[i] == '<')
-		{
-			i++;
-			break ;
-		}
+		l++;
 		i++;
 	}
-	if (keep_quotes % 2 == 0)
-	{
-		i = i - keep_quotes;
-	}
-	return (i);
+	return (l);
 }
 // looks for the desired string keeping in mind all the special operators such as "",
 t_word_info	string_gen(const char *str, char c)
@@ -99,29 +89,40 @@ t_word_info	string_gen(const char *str, char c)
 	is_quote = false;
 	alloc = 0;
 	alloc = allocate_for_strings(str, c);
+	printf("alloc is :%d\n", alloc);
+	exit(0);
 	word_info.word = (char *)malloc(sizeof(char) * (alloc + 1));
 	if (!word_info.word)
 		return (word_info);
-	while (str[i] != '\0')
+	while (str[i] != '\0' && (is_quote || str[i] != c))
 	{
-		if (str[i] == '\"')
+		if (str[i] == '"')
 		{
 			is_quote = !is_quote;
+			if (is_quote && str[i + 1] != ' ' && str[i + 1] != '\0')
+			{
+				word_info.word[j] = str[i];
+			}
 			i++;
 			continue ;
 		}
-		if (!is_quote && str[i] == c)
+		else if (str[i + 1] == '|' && !is_quote)
 		{
-			break;
+			word_info.word[j++] = str[i];
+			i++;
+			break ;
 		}
-		else if (str[i] == '|')
+		if (str[i] == '|')
 		{
 			word_info.word[j++] = str[i++];
 			break ;
 		}
-		word_info.word[j++] = str[i++];
+		if (str[i] != '\0' && (is_quote || str[i] != c))
+		{
+			word_info.word[j++] = str[i++];
+		}
 	}
-	printf("%s is :\n", word_info.word);
+	// printf("j is :%d\n", j);
 	word_info.word[j] = '\0';
 	word_info.char_counted = i;
 	return (word_info);
@@ -138,12 +139,8 @@ char	**custom_split(const char *str, char c)
 	i = 0;
 	index_array = 0;
 	word_length = words_count(str, c);
-	printf("word_length is: %d\n", word_length);
-	exit(0);
 	if (word_length == -1)
-	{
 		return (NULL);
-	}
 	arr = (char **)malloc(sizeof(char *) * (word_length + 1));
 	if (!arr)
 	{
