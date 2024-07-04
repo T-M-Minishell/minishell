@@ -3,7 +3,7 @@ expr $? + $? | echo $?  // probably need to change in the child process
 
 
 
-unset PATH | ls
+unset PATH | ls // need to check unset on pipe process
 
 
 
@@ -18,5 +18,7 @@ unset PATH | ls
     Try anything except $.
     If something crashes, select the "crash" flag.
     If something doesn't work, select the "incomplete work" flag.
+
+
 
 

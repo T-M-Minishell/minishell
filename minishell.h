@@ -3,11 +3,12 @@
 # include "parcing.h"
 # include <dirent.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdbool.h>
-# include <stdio.h>
+
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -15,6 +16,8 @@
 # include <unistd.h>
 
 # define PROMPT "\033[1m\033[31mminihell*$> \033[0;34m"
+
+
 
 typedef struct s_env_var
 {
@@ -39,6 +42,14 @@ typedef struct s_list_commands
     char **arr;
     struct s_list_commands *next;
 } t_list_commands;
+
+typedef struct s_list_commands_red
+{
+	char **arr;
+	char *red;
+	char *file;
+	struct s_list_commands_red *next;
+} t_list_commands_red;
 
 // utils
 t_list_token	*ft_lstnew(char *content, t_token_type token);
@@ -149,6 +160,9 @@ env_var *execute_commands(t_list_commands *current ,int (*pipes)[2], env_var *en
 bool    check_for_redirects_in_line(t_list_token *data);
 
 void	handle_redirects(t_list_token *data, env_var *vars);
+
+void execute_command_red(t_list_commands_red *cmd, env_var *vars);
+
 
 #endif
 
