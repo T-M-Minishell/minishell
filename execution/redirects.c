@@ -98,13 +98,11 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars)
 	int append;
 
 	append = 0;
-	pid_t pid = fork();
+	int pid = fork();
 	if (pid == 0) { // Child process
 		// Setup redirections based on cmd->red and cmd->file
 		char *input_file = NULL;
 		char *output_file = NULL;
-//		printf("%s\n", cmd->red);
-//		printf("%s\n", cmd->file);
 		if (strcmp(cmd->red, "<") == 0)
 			input_file = cmd->file;
 		else if (strcmp(cmd->red, ">") == 0 || strcmp(cmd->red, ">>") == 0)
@@ -122,10 +120,9 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars)
 		perror("fork");
 	} else
 	{
-		wait(NULL);// need to getb exit status
+		wait(NULL);// need to get exit status
 	}
 }
-
 
 void handle_redirects(t_list_token *data, env_var *vars)
 {
