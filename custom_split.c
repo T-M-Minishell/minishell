@@ -6,11 +6,13 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/04 19:49:11 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/05 17:01:44 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdbool.h>
+#include <stdio.h>
 
 int	words_count(const char *str, char c)
 {
@@ -56,6 +58,7 @@ int	allocate_for_strings(const char *str, char c)
 	int		l;
 	int		keep_quotes;
 	bool	is_quote;
+	int 	quotes = 0;
 
 	i = 0;
 	l = 0;
@@ -65,20 +68,28 @@ int	allocate_for_strings(const char *str, char c)
 	{
 		if (str[i] == '"')
 		{
-			keep_quotes++;
-			is_quote = !is_quote;
 			i++;
-			continue ;
+			quotes++;
+			if (is_quote && str[i + 1] != c && str[i + 1] != '\0')
+			{
+				// l++;
+				continue ;
+			}
 		}
 		else if (str[i] == '|' && !is_quote)
 		{
 			i++;
 			break ;
 		}
-		l++;
+		if (!is_quote && str[i + 1] == c)
+		{
+			break;
+		}
 		i++;
+		
+		l++;
 	}
-	return (l);
+	return (l - quotes);
 }
 // looks for the desired string keeping in mind all the special operators such as "",
 t_word_info	string_gen(const char *str, char c)
@@ -86,6 +97,7 @@ t_word_info	string_gen(const char *str, char c)
 	int			i;
 	bool		is_quote;
 	int			j;
+	int 		counts;
 	int			alloc;
 	t_word_info	word_info;
 
@@ -94,7 +106,9 @@ t_word_info	string_gen(const char *str, char c)
 	j = 0;
 	is_quote = false;
 	alloc = 0;
+	counts = 0;
 	alloc = allocate_for_strings(str, c);
+	printf("%d\n", alloc);
 	word_info.word = (char *)malloc(sizeof(char) * (alloc + 1));
 	if (!word_info.word)
 		return (word_info);
@@ -102,27 +116,32 @@ t_word_info	string_gen(const char *str, char c)
 	{
 		if (str[i] == '"')
 		{
+			i++;
+			counts++;
 			is_quote = !is_quote;
 			if (is_quote && str[i + 1] != ' ' && str[i + 1] != '\0')
 			{
 				word_info.word[j] = str[i];
+				counts++;
+				continue ;
 			}
-			i++;
-			continue ;
 		}
 		else if (str[i + 1] == '|' && !is_quote)
 		{
+			counts++;
 			word_info.word[j++] = str[i];
 			i++;
 			break ;
 		}
 		if (str[i] == '|')
 		{
+			counts++;
 			word_info.word[j++] = str[i++];
 			break ;
 		}
 		if (str[i] != '\0' && (is_quote || str[i] != c))
 		{
+			counts++;
 			word_info.word[j++] = str[i++];
 		}
 	}
@@ -143,7 +162,7 @@ char	**custom_split(const char *str, char c)
 	i = 0;
 	index_array = 0;
 	word_length = words_count(str, c);
-	// printf("alloc is :%d\n", word_length);
+	// printf("%d\n", word_length);
 	// exit(0);
 	if (word_length == -1)
 		return (NULL);
@@ -153,14 +172,14 @@ char	**custom_split(const char *str, char c)
 		printf("Allocation has failed\n");
 		return (NULL);
 	}
-	while (index_array < word_length)
+	while (index_array <= word_length)
 	{
+		while (str[i] == c)
+			i++;
 		word_info = string_gen((char *)(str + i), c);
 		arr[index_array] = word_info.word;
 		printf("arr contents are: %s\n", arr[index_array]);
 		i += word_info.char_counted;
-		while (str[i] == c)
-			i++;
 		index_array++;
 	}
 	arr[word_length] = NULL;
