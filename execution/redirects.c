@@ -57,77 +57,6 @@ char **convert_tokens_to_argv_red(t_list_token *curr) {
 	return argv;
 }
 
-
-//
-//void input_file(char *input_file)
-//{
-//	int fd_in = open(input_file, O_RDONLY);
-//	if (fd_in < 0) {
-//		perror("open input file");
-//		exit(EXIT_FAILURE);
-//	}
-//	if (dup2(fd_in, STDIN_FILENO) < 0)
-//	{
-//		perror("dup2 input file");
-//		exit(EXIT_FAILURE);
-//	}
-//	close(fd_in);
-//}
-//
-//void output_file(char *red, char *output_file)
-//{
-//	int append;
-//
-//	append = 0;
-//	int fd_out;
-//	if(strcmp(red,">>") == 0)
-//		append = 1;
-//	if (append == 1)
-//		fd_out = open(output_file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-//	else
-//		fd_out = open(output_file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-//	if (fd_out < 0) {
-//		perror("open output file");
-//		exit(EXIT_FAILURE);
-//	}
-//	int fd2 = dup2(fd_out, STDOUT_FILENO);
-//	if (fd2 < 0)
-//	{
-//		perror("dup2 output file");
-//		exit(EXIT_FAILURE);
-//	}
-//	close(fd_out);
-//
-//}
-//
-//void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
-//	char *path;
-//	int pid = fork();
-//	if (pid == 0) { // Child process
-//		if(strcmp(cmd->red, "<") == 0)
-//			input_file(cmd->file);
-//		if((strcmp(cmd->red, ">") == 0 )||(strcmp(cmd->red, ">>") == 0))
-//			output_file(cmd->red, cmd->file);
-//
-//		// Check if this is the last redirect command
-//		if (cmd->next == NULL) {
-//			path = get_path(cmd->arr[0], vars); // need to check for path failure
-//			execve(path, cmd->arr, vars->arr);
-//			perror("execve");
-//			exit(EXIT_FAILURE);
-//		} else {
-//			// If not the last command, exit child process successfully
-//			// as redirections are already set up for the next command
-//			exit(EXIT_SUCCESS);
-//		}
-//	} else if (pid < 0) {
-//		perror("fork");
-//	} else {
-//		wait(NULL); // need to get exit status
-//	}
-//}
-
-/////// ----------test--------
 void input_file(char *input_file) {
 	int fd_in = open(input_file, O_RDONLY);
 	if (fd_in < 0) {
@@ -161,31 +90,37 @@ void output_file(char *red, char *output_file, int is_last) {
 	}
 }
 
+void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
+{
+	while (current_cmd != NULL) {
+		if (strcmp(current_cmd->red, "<") == 0) {
+			input_file(current_cmd->file);
+		} else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd == last_cmd) {
+			output_file(current_cmd->red, current_cmd->file, 1); // Only redirect STDOUT for the last output file
+		} else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd != last_cmd) {
+			output_file(current_cmd->red, current_cmd->file, 0); // Open and close the file to ensure it's created
+		}
+		current_cmd = current_cmd->next;
+	}
+}
+
+
 void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 	char *path;
+
 	int pid = fork();
 	if (pid == 0) { // Child process
 		t_list_commands_red *current_cmd = cmd;
 		t_list_commands_red *last_cmd = NULL;
 		// Find the last output redirection command
 		while (current_cmd != NULL) {
-			if (strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) {
+			if (strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0)
 				last_cmd = current_cmd;
-			}
 			current_cmd = current_cmd->next;
 		}
 		// Reset to start of list
 		current_cmd = cmd;
-		while (current_cmd != NULL) {
-			if (strcmp(current_cmd->red, "<") == 0) {
-				input_file(current_cmd->file);
-			} else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd == last_cmd) {
-				output_file(current_cmd->red, current_cmd->file, 1); // Only redirect STDOUT for the last output file
-			} else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd != last_cmd) {
-				output_file(current_cmd->red, current_cmd->file, 0); // Open and close the file to ensure it's created
-			}
-			current_cmd = current_cmd->next;
-		}
+		fd_handeler(current_cmd,last_cmd);
 		path = get_path(cmd->arr[0], vars); // Assume get_path is a function that retrieves the command's path
 		execve(path, cmd->arr, vars->arr);
 		perror("execve");
@@ -195,7 +130,6 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 		wait(NULL); // Parent process waits for the child process to complete
 	}
 }
-////-----------test-------
 
 void handle_redirects(t_list_token *data, env_var *vars)
 {
@@ -246,8 +180,6 @@ void handle_redirects(t_list_token *data, env_var *vars)
 	}
 	// Execute the commands
 	t_list_commands_red *cmd_curr = cmd_head;
-//	cmd_curr->nb_of_red = count_redirects(data);
-//	cmd_curr->count = 0;
 	while (cmd_curr != NULL)
 	{
 		execute_command_red(cmd_curr, vars);
@@ -263,5 +195,5 @@ void handle_redirects(t_list_token *data, env_var *vars)
 	}
 }
 
-/// ------------------------TEST---------------------
+
 
