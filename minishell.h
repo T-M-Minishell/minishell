@@ -51,6 +51,8 @@ typedef struct s_list_commands_red
 	struct s_list_commands_red *next;
 } t_list_commands_red;
 
+
+
 // utils
 t_list_token	*ft_lstnew(char *content, t_token_type token);
 void			ft_lstadd_back(t_list_token **lst, t_list_token *new);
@@ -161,7 +163,7 @@ bool    check_for_redirects_in_line(t_list_token *data);
 
 void	handle_redirects(t_list_token *data, env_var *vars);
 
-void execute_command_red(t_list_commands_red *cmd, env_var *vars);
+void execute_command_red( t_list_commands_red *cmd, env_var *vars);
 
 
 #endif
