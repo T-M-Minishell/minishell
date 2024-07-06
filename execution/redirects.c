@@ -72,8 +72,11 @@ void input_file(char *input_file) {
 
 void output_file(char *red, char *output_file, int is_last) {
 	int fd_out;
-	int flags = O_WRONLY | O_CREAT | (is_last ? O_APPEND : O_TRUNC);
+	int flags;
 
+	flags = O_WRONLY | O_CREAT |  O_TRUNC;
+	if(is_last)
+		flags = O_WRONLY | O_CREAT | O_APPEND ;
 	if (strcmp(red, ">>") == 0 || strcmp(red, ">") == 0) {
 		fd_out = open(output_file, flags, 0644);
 		if (fd_out < 0) {
@@ -90,12 +93,70 @@ void output_file(char *red, char *output_file, int is_last) {
 	}
 }
 
+void write_to_file(int fd, char *buff)
+{
+	int i;
+
+	i = ft_strlen(buff);
+	write(fd, buff, i);
+	write(fd, "\n", 1);
+}
+
+int	open_file(char *name, int mode)
+{
+	if (access(name,F_OK))
+		return (open(name, O_CREAT | O_RDWR, 0666));
+	else
+	{
+		if(mode == 1)
+			return (open(name, O_WRONLY | O_TRUNC, 0666));
+		else if (mode == 2)
+			return (open(name, O_WRONLY | O_APPEND, 0666));
+	}
+	return (-1);
+}
+
+void handle_heredoc(char *delimiter)
+{
+	int temp_fd;
+	char *buff;
+
+	temp_fd = open_file("temp_file", 1);
+	if (temp_fd == -1)
+	{
+		close(temp_fd);
+		perror("here_doc");
+		return ;
+	}
+	while(1)
+	{
+		buff = readline("heredoc>");
+		if(!buff)
+			return ;
+		if(strcmp(buff, delimiter) != 0)
+			write_to_file(temp_fd, buff);
+		else
+		{
+			close(temp_fd);
+			printf("error2 \n");
+			return ;
+		}
+	}
+
+}
+
 void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
 {
+	printf("enter ft_handler\n");
 	while (current_cmd != NULL) {
 		if (strcmp(current_cmd->red, "<") == 0) {
 			input_file(current_cmd->file);
-		} else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd == last_cmd) {
+		}
+		else if (strcmp(current_cmd->red, "<<") == 0) {
+			printf("enter statement\n");
+			handle_heredoc(current_cmd->file);
+		}
+		 else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd == last_cmd) {
 			output_file(current_cmd->red, current_cmd->file, 1); // Only redirect STDOUT for the last output file
 		} else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd != last_cmd) {
 			output_file(current_cmd->red, current_cmd->file, 0); // Open and close the file to ensure it's created
@@ -103,7 +164,6 @@ void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
 		current_cmd = current_cmd->next;
 	}
 }
-
 
 void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 	char *path;
@@ -121,8 +181,10 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 		// Reset to start of list
 		current_cmd = cmd;
 		fd_handeler(current_cmd,last_cmd);
+		// Execute the command
 		path = get_path(cmd->arr[0], vars); // Assume get_path is a function that retrieves the command's path
 		execve(path, cmd->arr, vars->arr);
+		printf("test after execve\n");
 		perror("execve");
 		exit(EXIT_FAILURE);
 	}
@@ -194,6 +256,4 @@ void handle_redirects(t_list_token *data, env_var *vars)
 		free(temp);
 	}
 }
-
-
 
