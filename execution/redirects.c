@@ -116,45 +116,61 @@ int	open_file(char *name, int mode)
 	return (-1);
 }
 
+void input_file_from_temp()
+{
+	int fd_in = open("temp_file", O_RDONLY);
+	if (fd_in < 0)
+	{
+		perror("open temp_file");
+		exit(EXIT_FAILURE);
+	}
+	if (dup2(fd_in, STDIN_FILENO) < 0)
+	{
+		perror("dup2 temp_file");
+		exit(EXIT_FAILURE);
+	}
+	close(fd_in);
+}
+
 void handle_heredoc(char *delimiter)
 {
 	int temp_fd;
 	char *buff;
 
-	temp_fd = open_file("temp_file", 1);
+	temp_fd = open("temp_file", O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	if (temp_fd == -1)
 	{
-		close(temp_fd);
-		perror("here_doc");
-		return ;
-	}
-	while(1)
-	{
-		buff = readline("heredoc>");
-		if(!buff)
-			return ;
-		if(strcmp(buff, delimiter) != 0)
-			write_to_file(temp_fd, buff);
-		else
-		{
-			close(temp_fd);
-			printf("error2 \n");
-			return ;
-		}
+		perror("open temp_file");
+		exit(EXIT_FAILURE);
 	}
 
+	while (1)
+	{
+		buff = readline("heredoc> ");
+		if (!buff)
+			break;
+		if (strcmp(buff, delimiter) == 0)
+		{
+			free(buff);
+			break;
+		}
+		write(temp_fd, buff, strlen(buff));
+		write(temp_fd, "\n", 1);
+		free(buff);
+	}
+	close(temp_fd);
 }
+
 
 void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
 {
-	printf("enter ft_handler\n");
 	while (current_cmd != NULL) {
 		if (strcmp(current_cmd->red, "<") == 0) {
 			input_file(current_cmd->file);
 		}
 		else if (strcmp(current_cmd->red, "<<") == 0) {
-			printf("enter statement\n");
 			handle_heredoc(current_cmd->file);
+			input_file_from_temp();
 		}
 		 else if ((strcmp(current_cmd->red, ">") == 0 || strcmp(current_cmd->red, ">>") == 0) && current_cmd == last_cmd) {
 			output_file(current_cmd->red, current_cmd->file, 1); // Only redirect STDOUT for the last output file
@@ -190,6 +206,7 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 	}
 	else {
 		wait(NULL); // Parent process waits for the child process to complete
+		unlink("temp_file");
 	}
 }
 
