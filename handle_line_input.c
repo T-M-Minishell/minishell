@@ -60,15 +60,6 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		else if (token == QUOTE)
 			prepare_for_tokenization_quote(arr[i], &data, token);
-		// else if (token == REDIRECT_IN || token == REDIRECT_OUT || token == REDIRECT_APPEND || token == HEREDOC)
-		// {
-		// 	// Prepare for tokenization of redirection
-		// 	prepare_for_tokenization_word(arr[i], &data, token);
-		// 	// Assume the next token is the file/delimiter
-		// 	i++;
-		// 	if (arr[i] != NULL)
-		// 		prepare_for_tokenization_word(arr[i], &data, WORD);
-		// }
 		else if (token == WORD)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		free(arr[i]);
@@ -81,8 +72,5 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 		handle_redirects(data, *env_vars);
 	else
 		*env_vars = exec_line(data, *env_vars);
-		// handle_tokens_in_prompt(data,env_vars);
 	free_nodes(data);
-	// print_node(data);
-	// handle_not_existent_builtins(data);
 }

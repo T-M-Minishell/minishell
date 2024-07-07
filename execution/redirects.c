@@ -76,7 +76,11 @@ void output_file(char *red, char *output_file, int is_last) {
 
 	flags = O_WRONLY | O_CREAT |  O_TRUNC;
 	if(is_last)
-		flags = O_WRONLY | O_CREAT | O_APPEND ;
+	{
+		flags = O_WRONLY | O_CREAT;
+		if(strcmp(red, ">>") == 0 )
+			flags = O_WRONLY | O_CREAT | O_APPEND;
+	}
 	if (strcmp(red, ">>") == 0 || strcmp(red, ">") == 0) {
 		fd_out = open(output_file, flags, 0644);
 		if (fd_out < 0) {
@@ -92,7 +96,6 @@ void output_file(char *red, char *output_file, int is_last) {
 		close(fd_out);
 	}
 }
-
 
 
 void input_file_from_temp()
@@ -139,7 +142,6 @@ void handle_heredoc(char *delimiter)
 	close(temp_fd);
 }
 
-
 void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
 {
 	while (current_cmd != NULL) {
@@ -177,10 +179,17 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 		// Reset to start of list
 		current_cmd = cmd;
 		fd_handeler(current_cmd,last_cmd);
-		// Execute the command
-		path = get_path(cmd->arr[0], vars); // Assume get_path is a function that retrieves the command's path
+		if(current_cmd->arr[0] == NULL)
+			exit(127);
+		path = get_path(current_cmd->arr[0], vars);
+		if (!path)
+		{
+			printf("%s: command not found\n", cmd->arr[0]);
+			free(path);
+			_exit(127);
+		}// Assume get_path is a function that retrieves the command's path
 		execve(path, cmd->arr, vars->arr);
-		printf("test after execve\n");
+		free(path);
 		perror("execve");
 		exit(127);
 
@@ -201,7 +210,7 @@ void handle_redirects(t_list_token *data, env_var *vars)
 	t_list_commands_red *cmd_tail = NULL;
 	t_list_token *current = data;
 
-	while (current != NULL) {
+	while (current != NULL && strcmp(current->word, "|") != 0) {
 		t_list_commands_red *new_cmd = malloc(sizeof(t_list_commands_red));
 		if (new_cmd == NULL) {
 			perror("malloc");
