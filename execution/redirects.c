@@ -93,28 +93,7 @@ void output_file(char *red, char *output_file, int is_last) {
 	}
 }
 
-void write_to_file(int fd, char *buff)
-{
-	int i;
 
-	i = ft_strlen(buff);
-	write(fd, buff, i);
-	write(fd, "\n", 1);
-}
-
-int	open_file(char *name, int mode)
-{
-	if (access(name,F_OK))
-		return (open(name, O_CREAT | O_RDWR, 0666));
-	else
-	{
-		if(mode == 1)
-			return (open(name, O_WRONLY | O_TRUNC, 0666));
-		else if (mode == 2)
-			return (open(name, O_WRONLY | O_APPEND, 0666));
-	}
-	return (-1);
-}
 
 void input_file_from_temp()
 {
@@ -143,7 +122,6 @@ void handle_heredoc(char *delimiter)
 		perror("open temp_file");
 		exit(EXIT_FAILURE);
 	}
-
 	while (1)
 	{
 		buff = readline("heredoc> ");
@@ -183,7 +161,9 @@ void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
 
 void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 	char *path;
+	int status;
 
+	status = 0;
 	int pid = fork();
 	if (pid == 0) { // Child process
 		t_list_commands_red *current_cmd = cmd;
@@ -202,11 +182,16 @@ void execute_command_red(t_list_commands_red *cmd, env_var *vars) {
 		execve(path, cmd->arr, vars->arr);
 		printf("test after execve\n");
 		perror("execve");
-		exit(EXIT_FAILURE);
+		exit(127);
+
 	}
 	else {
-		wait(NULL); // Parent process waits for the child process to complete
+		waitpid(pid,&status, 0); // Parent process waits for the child process to complete
 		unlink("temp_file");
+		if (WIFEXITED(status))
+			vars->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			vars->exit_status = WTERMSIG(status);
 	}
 }
 
