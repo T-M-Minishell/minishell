@@ -39,10 +39,12 @@ typedef struct s_input
 
 typedef struct s_list_commands
 {
-    char **arr;
-    struct s_list_commands *next;
+	char **arr;
+	char *input_file; // file for input redirection
+	char *output_file; // file for output redirection
+	int append; // flag to indicate if output should be appended
+	struct s_list_commands *next;
 } t_list_commands;
-
 typedef struct s_list_commands_red
 {
 	char **arr;
@@ -163,7 +165,10 @@ bool    check_for_redirects_in_line(t_list_token *data);
 
 void	handle_redirects(t_list_token *data, env_var *vars);
 
-void execute_command_red( t_list_commands_red *cmd, env_var *vars);
+void 	execute_command_red( t_list_commands_red *cmd, env_var *vars);
+//void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd);
+//void handle_heredoc(char *delimiter);
+//void input_file_from_temp();
 
 
 #endif

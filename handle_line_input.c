@@ -13,6 +13,86 @@
 #include "minishell.h"
 
 
+//void handle_pipe_and_red(t_list_token *data, env_var *vars) {
+//	t_list_token *current = data;
+//	t_list_token *segment_start = data;
+//	bool found_redirect = false;
+//	bool is_last_token = false;
+//
+//	while (current != NULL) {
+//		// Check for redirections
+//		if (strcmp(current->word, ">") == 0 || strcmp(current->word, "<") == 0 ||
+//			strcmp(current->word, ">>") == 0 || strcmp(current->word, "<<") == 0) {
+//			found_redirect = true;
+//		}
+//		// Check if the current token is the last token in the list
+//		is_last_token = (current->next == NULL);
+//		// If a pipe or the end of the list is encountered
+//		if (strcmp(current->word, "|") == 0 || is_last_token) {
+//			// Handle redirections within this segment first
+//			if (found_redirect) {
+//				handle_redirects(segment_start, vars);
+//				found_redirect = false; // Reset for the next segment
+//			}
+//			// Handle pipe operation after handling redirections
+//			if (strcmp(current->word, "|") == 0 || is_last_token) {
+//				vars = handle_pipe(segment_start, vars);
+//				// Ensure to close any open file descriptors here to signal end of input/output as necessary
+//			}
+//			// Move to the next segment
+//			segment_start = current->next;
+//		}
+//		current = current->next; // Ensure progress to avoid infinite loop
+//	}
+//}
+void handle_pipe_and_red(t_list_token *data, env_var *vars) {
+	t_list_token *current = data;
+	t_list_token *segment_start = data;
+	bool found_redirect = false;
+	bool found_pipe = false;
+
+	// First pass: Handle redirections
+	while (current != NULL) {
+		// Check for redirections
+		if (strcmp(current->word, ">") == 0 || strcmp(current->word, "<") == 0 ||
+			strcmp(current->word, ">>") == 0 || strcmp(current->word, "<<") == 0) {
+			found_redirect = true;
+		}
+
+		// Check if the current token is the last token in the list or a pipe
+		if (current->next == NULL || strcmp(current->word, "|") == 0) {
+			if (found_redirect) {
+				handle_redirects(segment_start, vars);
+				found_redirect = false; // Reset for the next segment
+			}
+			segment_start = current->next; // Move to the next segment
+		}
+		current = current->next;
+	}
+
+	// Reset pointers for second pass
+	current = data;
+	segment_start = data;
+
+	// Second pass: Handle pipes
+	while (current != NULL) {
+		// Check for pipe
+		if (strcmp(current->word, "|") == 0) {
+			found_pipe = true;
+		}
+
+		// If it's the end of the list or a pipe, and a pipe was found in this segment
+		if (current->next == NULL || strcmp(current->word, "|") == 0) {
+			if (found_pipe) {
+				vars = handle_pipe(segment_start, vars);
+				found_pipe = false; // Reset for the next segment
+			}
+			segment_start = current->next; // Move to the next segment
+		}
+		current = current->next;
+	}
+}
+
 env_var *handle_tokens_in_prompt(char **commands, env_var **env_vars)
 {
     if (commands[0] != NULL)
@@ -66,7 +146,11 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 		i++;
     }
 	free(arr);
-	if (check_for_pipe_in_line(data))
+	if(check_for_pipe_in_line(data) && check_for_redirects_in_line(data))
+	{
+		handle_pipe_and_red(data, *env_vars);
+	}
+	else if (check_for_pipe_in_line(data))
     	*env_vars = handle_pipe(data, *env_vars);
 	else if(check_for_redirects_in_line(data))
 		handle_redirects(data, *env_vars);
