@@ -67,7 +67,7 @@ bool    check_for_redirects_in_line(t_list_token *data)
     while (curr != NULL)
     {
         // printf("%s\n", curr->word);
-        if (strcmp(curr->word, ">") == 0 || strcmp(curr->word, ">>") == 0 || strcmp(curr->word, "<") == 0)
+        if (strcmp(curr->word, ">") == 0 || strcmp(curr->word, ">>") == 0 || strcmp(curr->word, "<") == 0 || strcmp(curr->word, "<<") == 0)
         {
             nb_of_redirects++;
             if (is_first || last_was_redirect)

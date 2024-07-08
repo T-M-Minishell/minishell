@@ -35,7 +35,6 @@ typedef struct s_list_token
 {
 	t_token_type		type;
 	int					index;
-	char				*red;
 	char				*word;
 	char				*token;
 	char 				**arr;

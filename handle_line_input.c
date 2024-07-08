@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/05 20:46:01 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/08 18:28:13 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,7 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		else if (token == QUOTE)
 			prepare_for_tokenization_quote(arr[i], &data, token);
-
 		else if (token == WORD)
-			prepare_for_tokenization_word(arr[i], &data, token);
-		else if (token == PIPE)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		else if (token == REDIRECT)
 			prepare_for_tokenization_word(arr[i], &data, token);
@@ -81,8 +78,5 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 		handle_redirects(data, *env_vars);
 	else
 		*env_vars = exec_line(data, *env_vars);
-	// handle_tokens_in_prompt(data,env_vars);
 	free_nodes(data);
-	// print_node(data);
-	// handle_not_existent_builtins(data);
 }

@@ -141,7 +141,8 @@ void free_command_list(t_list_commands *cmd_head) {
 	}
 }
 
-env_var *handle_pipe(t_list_token *data, env_var *env_vars) {
+env_var *handle_pipe(t_list_token *data, env_var *env_vars)
+{
 	t_list_commands *cmd_head = NULL;
 	t_list_commands *cmd_tail = NULL;
 	t_list_token *current = data;

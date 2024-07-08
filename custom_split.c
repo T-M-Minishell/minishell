@@ -6,60 +6,82 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/08 18:24:41 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/08 18:51:16 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	words_count(const char *str, char c)
+int words_count(const char *str, char c)
 {
 	int		i;
 	int		word;
+	static int 	quotes;
 	bool	is_quote;
 	bool	is_word_started;
 
 	i = 0;
 	word = 0;
+	quotes = 0;
 	is_quote = false;
 	is_word_started = false;
+
 	while (str[i] != '\0')
 	{
 		if (str[i] == '"')
+        {
+            if (!is_quote) // Opening quote
+            {
+                quotes++; // Increment only for opening quotes
+            }
+            is_quote = !is_quote; // Toggle is_quote status
+            if (is_quote)
+            {
+                is_word_started = true;
+            }
+            else
+            {
+                if (is_word_started)
+                {
+                    word++;
+                    is_word_started = false;
+                }
+            }
+            i++;
+            continue;
+        }
+
+		if (!is_quote)
 		{
-			is_quote = !is_quote;
-			if (is_quote)
+			if (str[i] == '>' || str[i] == '<')
 			{
-				is_word_started = true;
-			}
-			else
-			{
-				if (is_word_started)
+				if (i > 0 && str[i - 1] == '>')
+				{
+					word++;
+				}
+				else if (is_word_started)
 				{
 					word++;
 					is_word_started = false;
 				}
-			}
-			i++;
-			while (str[i] == '"')
-			{
+				
+				if (str[i] == '>' && str[i + 1] == '>')
+				{
+					i++;
+				}
+				word++;
 				i++;
+				continue;
 			}
-			continue ;
-		}
-		if (!is_quote)
-		{
-			if ((i == 0 || str[i - 1] == c || str[i] == '|' || str[i] == '>'
-					|| str[i] == '<') && str[i] != c)
+			if ((i == 0 || str[i - 1] == c || str[i] == '|') && str[i] != c)
 			{
 				is_word_started = true;
-				if ((str[i] == '|' || str[i] == '>' || str[i] == '<') && str[i
-						- 1] != c)
+				if (str[i] == '|' && str[i - 1] != c)
 				{
 					word++;
 				}
 			}
-			if (str[i] == c || str[i] == '|' || str[i] == '>' || str[i] == '<')
+			// End current word if encountering separator or pipe
+			if (str[i] == c || str[i] == '|')
 			{
 				if (is_word_started)
 				{
@@ -77,17 +99,16 @@ int	words_count(const char *str, char c)
 		{
 			is_word_started = true;
 		}
+
 		i++;
 	}
+
 	if (is_word_started)
 	{
 		word++;
 	}
-	if (is_quote)
-	{
-		printf("Error: missing quote\n");
-		return (-1);
-	}
+
+
 	return (word);
 }
 
@@ -116,7 +137,7 @@ int	allocate_for_strings(const char *str, char c)
 				continue ;
 			}
 		}
-		else if ((str[i] == '|' || str[i] == '>' || str[i] == '<') && !is_quote)
+		else if (str[i] == '|' && !is_quote)
 		{
 			i++;
 			break ;
@@ -160,14 +181,13 @@ t_word_info	string_gen(const char *str, char c)
 				continue ;
 			}
 		}
-		else if ((str[i] == '>' || str[i] == '<' || str[i + 1] == '|')
-			&& !is_quote)
+		else if (str[i + 1] == '|' && !is_quote)
 		{
 			word_info.word[j++] = str[i];
 			i++;
 			break ;
 		}
-		if ((str[i] == '>' || str[i] == '<' || str[i] == '|') && !is_quote)
+		if (str[i] == '|' && !is_quote)
 		{
 			word_info.word[j++] = str[i++];
 			break ;
