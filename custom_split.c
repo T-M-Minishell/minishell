@@ -6,50 +6,49 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/08 18:51:16 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/08 19:41:54 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-int words_count(const char *str, char c)
+
+int	words_count(const char *str, char c)
 {
-	int		i;
-	int		word;
-	static int 	quotes;
-	bool	is_quote;
-	bool	is_word_started;
+	int			i;
+	int			word;
+	static int	quotes;
+	bool		is_quote;
+	bool		is_word_started;
 
 	i = 0;
 	word = 0;
 	quotes = 0;
 	is_quote = false;
 	is_word_started = false;
-
 	while (str[i] != '\0')
 	{
 		if (str[i] == '"')
-        {
-            if (!is_quote) // Opening quote
-            {
-                quotes++; // Increment only for opening quotes
-            }
-            is_quote = !is_quote; // Toggle is_quote status
-            if (is_quote)
-            {
-                is_word_started = true;
-            }
-            else
-            {
-                if (is_word_started)
-                {
-                    word++;
-                    is_word_started = false;
-                }
-            }
-            i++;
-            continue;
-        }
-
+		{
+			if (!is_quote) // Opening quote
+			{
+				quotes++; // Increment only for opening quotes
+			}
+			is_quote = !is_quote; // Toggle is_quote status
+			if (is_quote)
+			{
+				is_word_started = true;
+			}
+			else
+			{
+				if (is_word_started)
+				{
+					word++;
+					is_word_started = false;
+				}
+			}
+			i++;
+			continue ;
+		}
 		if (!is_quote)
 		{
 			if (str[i] == '>' || str[i] == '<')
@@ -63,14 +62,13 @@ int words_count(const char *str, char c)
 					word++;
 					is_word_started = false;
 				}
-				
 				if (str[i] == '>' && str[i + 1] == '>')
 				{
 					i++;
 				}
 				word++;
 				i++;
-				continue;
+				continue ;
 			}
 			if ((i == 0 || str[i - 1] == c || str[i] == '|') && str[i] != c)
 			{
@@ -99,16 +97,12 @@ int words_count(const char *str, char c)
 		{
 			is_word_started = true;
 		}
-
 		i++;
 	}
-
 	if (is_word_started)
 	{
 		word++;
 	}
-
-
 	return (word);
 }
 
@@ -116,40 +110,42 @@ int	allocate_for_strings(const char *str, char c)
 {
 	int		i;
 	int		l;
-	int		keep_quotes;
 	bool	is_quote;
-	int		quotes;
 
-	quotes = 0;
 	i = 0;
 	l = 0;
-	keep_quotes = 0;
 	is_quote = false;
-	while (str[i] != '\0' && (is_quote || str[i] != c))
+	while (str[i] != '\0')
 	{
 		if (str[i] == '"')
 		{
-			i++;
-			quotes++;
-			if (is_quote && str[i + 1] != c && str[i + 1] != '\0')
+			is_quote = !is_quote;
+			l++; // Count the quote itself if needed, or remove if not
+		}
+		else if (!is_quote)
+		{
+			if (str[i] != c)
 			{
-				// l++;
-				continue ;
+				if (str[i] == '>' || str[i] == '<')
+				{
+					if (str[i] == '>' && str[i + 1] == '>')
+					{
+						i++;
+					}
+					l++; // Ensure special characters are counted
+				}
+				// Adjusted logic: Do not break for pipes; count them if needed
+				l++;
 			}
 		}
-		else if (str[i] == '|' && !is_quote)
+		else
 		{
-			i++;
-			break ;
-		}
-		if (!is_quote && str[i + 1] == c)
-		{
-			break ;
+			// Inside quotes, count all characters including pipes
+			l++;
 		}
 		i++;
-		l++;
 	}
-	return (l - quotes);
+	return (l);
 }
 // looks for the desired string keeping in mind all the special operators such as "",
 t_word_info	string_gen(const char *str, char c)
