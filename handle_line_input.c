@@ -6,7 +6,7 @@
 /*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/05 17:08:29 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/05 20:46:01 by tlupu            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,7 @@ void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		else if (token == QUOTE)
 			prepare_for_tokenization_quote(arr[i], &data, token);
-		// else if (token == REDIRECT_IN || token == REDIRECT_OUT
-			// || token == REDIRECT_APPEND || token == HEREDOC)
-		// {
-		// 	// Prepare for tokenization of redirection
-		// 	prepare_for_tokenization_word(arr[i], &data, token);
-		// 	// Assume the next token is the file/delimiter
-		// 	i++;
-		// 	if (arr[i] != NULL)
-		// 		prepare_for_tokenization_word(arr[i], &data, WORD);
-		// }
+
 		else if (token == WORD)
 			prepare_for_tokenization_word(arr[i], &data, token);
 		else if (token == PIPE)
