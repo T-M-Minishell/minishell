@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/09 11:19:13 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:09:17 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	free_exec_args(char *path, char **argv)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	while (argv[i])
 		free(argv[i++]);
@@ -25,23 +25,22 @@ void	free_exec_args(char *path, char **argv)
 
 void	execute_process(char *path, char **argv, env_var *vars)
 {
-	int pid;
-	int status;
+	int	pid;
+	int	status;
 
 	pid = fork();
-	if (pid == 0) {
-		// Child process
-		if (execve(path, argv, vars->arr) == -1) {
+	if (pid == 0)
+	{
+		if (execve(path, argv, vars->arr) == -1)
+		{
 			perror("execve");
-			// if(!path)
-			// 	free_exec_args(path, argv);
 			exit(127);
 		}
 	}
 	else if (pid < 0)
 		perror("fork");
 	else
-	{// Parent process
+	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 			vars->exit_status = WEXITSTATUS(status);
@@ -50,55 +49,52 @@ void	execute_process(char *path, char **argv, env_var *vars)
 	}
 }
 
-env_var *exec_line(t_list_token *data, env_var *vars)
+env_var	*exec_line(t_list_token *data, env_var *vars)
 {
-    t_list_token *curr;
-    int i;
-    char **argv;
-    char *path;
+	t_list_token	*curr;
+	int				i;
+	char			**argv;
+	char			*path;
 
-    i = 0;
-    curr = data;
-    while (curr != NULL)
+	i = 0;
+	curr = data;
+	while (curr != NULL)
 	{
-        i++;
-        curr = curr->next;
-    }
-    argv = (char **)malloc(sizeof(char *) * (i + 1));
-    i = 0;
-    curr = data;
-    while (curr != NULL)
+		i++;
+		curr = curr->next;
+	}
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	curr = data;
+	while (curr != NULL)
 	{
-        if (strcmp(curr->word, "$?") == 0)
-            argv[i++] = ft_itoa(vars->exit_status); 
-        else 
-            argv[i++] = strdup(curr->word); 
-        curr = curr->next;
-    }
-    argv[i] = NULL;
-	if(check_if_builtin(argv[0]))
+		if (strcmp(curr->word, "$?") == 0)
+			argv[i++] = ft_itoa(vars->exit_status);
+		else
+			argv[i++] = strdup(curr->word);
+		curr = curr->next;
+	}
+	argv[i] = NULL;
+	if (check_if_builtin(argv[0]))
 	{
 		vars = handle_tokens_in_prompt(argv, &vars);
 		i = 0;
-		while(argv[i])
+		while (argv[i])
 			free(argv[i++]);
 		free(argv);
-		return(vars);
+		return (vars);
 	}
-    path = get_path(argv[0], vars);
-	if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell")) {
+	path = get_path(argv[0], vars);
+	if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell"))
 		path = (strdup("./minishell"));
-	}
-    if (!path)
+	if (!path)
 	{
-        printf("%s: command not found\n", argv[0]);
-		free_exec_args(path,argv);
+		printf("%s: command not found\n", argv[0]);
+		free_exec_args(path, argv);
 		vars->exit_status = 127;
-		return(vars);
-    }
-    execute_process(path, argv, vars);
-  	free_exec_args(path,argv);
+		return (vars);
+	}
+	execute_process(path, argv, vars);
+	free_exec_args(path, argv);
 	return (vars);
 }
-
-

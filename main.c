@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 11:26:55 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 14:48:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,50 +30,40 @@ void	print_logo(void)
 	printf("\n										** MiniShell **\n");
 }
 
-
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
-	t_input input;
-	t_list_token *data;
-	env_var *env_vars = NULL;
+	t_input			input;
+	t_list_token	*data;
+	env_var			*env_vars;
+
 	(void)argv;
-	// int	last_exit_status;
-	
-	// last_exit_status = 0;
+	env_vars = NULL;
 	input.prompt = PROMPT;
-
-	// Initialize environment variables
 	env_vars = get_env_vars(envp); // works
-
 	// update_shlvl(env_vars) {
 	//	
-	
 	//}
-
 	// Initialize token list
-	if (argc != 1) {
+	if (argc != 1)
+	{
 		printf("Args are not allowed\n");
-		exit(1);
+		exit (1);
 	}
 	print_logo();
 	data = NULL;
 	while (1)
 	{
-		// Set up the signal handler for Ctrl+C and CTRL-"\"
 		ctrl_commands(&input.line);
-		// Read user input using readline
 		input.line = readline(input.prompt);
 		if (input.line == NULL)
 		{
 			printf("exit\n");
 			exit(1);
-        }	
+		}
 		handle_line(&input, data, &env_vars);
-		// Add the line to history
 		if (input.line && *input.line)
 			add_history(input.line);
-		// Free the memory allocated by readline
-		free(input.line);		
+		free(input.line);
 	}
-	return 0;
+	return (0);
 }
