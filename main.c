@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:57:49 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 18:59:07 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,12 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_input			input;
 	t_list_token	*data;
-	t_env_var			*env_vars;
-
+	t_env_var		*env_vars;
+	
 	(void)argv;
 	env_vars = NULL;
 	input.prompt = PROMPT;
-	env_vars = get_env_vars(envp); // works
-	// update_shlvl(env_vars) {
-	//	
-	//}
-	// Initialize token list
+	env_vars = get_env_vars(envp);
 	if (argc != 1)
 	{
 		printf("Args are not allowed\n");
