@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:57:37 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:26:37 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,39 +23,33 @@ void	handle_pipe_and_red(t_list_token *data, t_env_var *vars)
 	segment_start = data;
 	found_redirect = false;
 	processed_segment = false;
-	// First pass: Handle redirections
 	while (current != NULL)
 	{
-		// Check for redirections
 		if (strcmp(current->word, ">") == 0 || strcmp(current->word, "<") == 0
 			|| strcmp(current->word, ">>") == 0
 			|| strcmp(current->word, "<<") == 0)
 			found_redirect = true;
-		// Check if the current token is the last token or a pipe
 		if (current->next == NULL || strcmp(current->word, "|") == 0)
 		{
 			if (found_redirect)
 			{
 				handle_redirects(segment_start, vars);
-				found_redirect = false; // Reset for the next segment
+				found_redirect = false;
 			}
-			segment_start = current->next; // Move to the next segment
+			segment_start = current->next;
 		}
 		current = current->next;
 	}
-	// Reset pointers for second pass
 	current = data;
 	segment_start = data;
-	// Second pass: Handle pipes
 	while (current != NULL)
 	{
-		// If it's a pipe and not already processed
-		if (current->next != NULL && strcmp(current->word, "|") == 0 && !processed_segment)
+		if (current->next != NULL && strcmp(current->word, "|") == 0
+			&& !processed_segment)
 		{
 			vars = handle_pipe(segment_start, vars);
 			processed_segment = true;
 		}
-		// Always advance the loop, but only mark processed once per segment
 		current = current->next;
 	}
 }

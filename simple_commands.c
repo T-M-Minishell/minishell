@@ -6,22 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/09 17:57:59 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:21:44 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	free_exec_args(char *path, char **argv)
-{
-	int	i;
-
-	i = 0;
-	while (argv[i])
-		free(argv[i++]);
-	free(argv);
-	free (path);
-}
 
 void	execute_process(char *path, char **argv, t_env_var *vars)
 {
@@ -49,32 +38,26 @@ void	execute_process(char *path, char **argv, t_env_var *vars)
 	}
 }
 
-t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
+int	count_tokens(t_list_token *data)
 {
+	int				count;
 	t_list_token	*curr;
-	int				i;
-	char			**argv;
-	char			*path;
+
+	count = 0;
+	curr = data;
+	while (curr != NULL)
+	{
+		count++;
+		curr = curr->next;
+	}
+	return (count);
+}
+
+t_env_var	*bultin_check(char **argv, t_env_var *vars)
+{
+	int	i;
 
 	i = 0;
-	curr = data;
-	while (curr != NULL)
-	{
-		i++;
-		curr = curr->next;
-	}
-	argv = (char **)malloc(sizeof(char *) * (i + 1));
-	i = 0;
-	curr = data;
-	while (curr != NULL)
-	{
-		if (strcmp(curr->word, "$?") == 0)
-			argv[i++] = ft_itoa(vars->exit_status);
-		else
-			argv[i++] = strdup(curr->word);
-		curr = curr->next;
-	}
-	argv[i] = NULL;
 	if (check_if_builtin(argv[0]))
 	{
 		vars = handle_tokens_in_prompt(argv, &vars);
@@ -84,6 +67,39 @@ t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
 		free(argv);
 		return (vars);
 	}
+	return (vars);
+}
+
+char	**fill_argv(t_list_token *data, char **argv, t_env_var *vars)
+{
+	int				i;
+	t_list_token	*curr;
+
+	curr = data;
+	i = 0;
+	while (curr != NULL)
+	{
+		if (strcmp(curr->word, "$?") == 0)
+			argv[i++] = ft_itoa(vars->exit_status);
+		else
+			argv[i++] = strdup(curr->word);
+		curr = curr->next;
+	}
+	argv[i] = NULL;
+	return (argv);
+}
+
+t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
+{
+	int				i;
+	char			**argv;
+	char			*path;
+
+	i = count_tokens(data);
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	argv = fill_argv(data, argv, vars);
+	vars = bultin_check(argv, vars);
 	path = get_path(argv[0], vars);
 	if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell"))
 		path = (strdup("./minishell"));

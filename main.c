@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 18:59:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:25:33 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,25 @@ void	print_logo(void)
 	printf("\n										** MiniShell **\n");
 }
 
+void	check_nb_of_args(int argc)
+{
+	if (argc != 1)
+	{
+		printf("Args are not allowed\n");
+		exit(1);
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_input			input;
 	t_list_token	*data;
 	t_env_var		*env_vars;
-	
+
 	(void)argv;
-	env_vars = NULL;
+	check_nb_of_args(argc);
 	input.prompt = PROMPT;
 	env_vars = get_env_vars(envp);
-	if (argc != 1)
-	{
-		printf("Args are not allowed\n");
-		exit (1);
-	}
 	print_logo();
 	data = NULL;
 	while (1)
