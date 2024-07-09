@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/02 15:52:55 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:19:13 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,9 @@ env_var *exec_line(t_list_token *data, env_var *vars)
 		return(vars);
 	}
     path = get_path(argv[0], vars);
+	if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell")) {
+		path = (strdup("./minishell"));
+	}
     if (!path)
 	{
         printf("%s: command not found\n", argv[0]);

@@ -3,7 +3,6 @@ expr $? + $? | echo $?  // probably need to change in the child process
 
 
 
-unset PATH | ls // need to check unset on pipe process
 cd ---> $PWD update
 export with redirects ,, also maybe some other builtins
 
@@ -16,11 +15,6 @@ export with redirects ,, also maybe some other builtins
     echo '$USER' must print "$USER".
     Nothing should be interpreted.
 
-    Execute a simple command with arguments and, this time, use also double quotes (you should try to include whitespaces too).
-    Try a command like : echo "cat lol.c | cat > lol.c"
-    Try anything except $.
-    If something crashes, select the "crash" flag.
-    If something doesn't work, select the "incomplete work" flag.
 
 
 

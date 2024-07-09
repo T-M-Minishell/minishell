@@ -108,7 +108,7 @@ char			*get_value_from_var(char *word, env_var *vars);
 bool 			check_if_alphanumeric(char *str);
 			//---------BUILTINS-----------
 void			mini_echo(char **commands, env_var *vars);
-int				mini_cd(char **commands);
+int				mini_cd(char **commands, env_var *vars);
 void			mini_pwd(void);
 void			mini_exit(char **commands,int last_exit_status);
 void			mini_env(env_var *env_vars);

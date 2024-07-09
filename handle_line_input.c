@@ -12,54 +12,6 @@
 
 #include "minishell.h"
 
-//void handle_pipe_and_red(t_list_token *data, env_var *vars) {
-//	t_list_token *current = data;
-//	t_list_token *segment_start = data;
-//	bool found_redirect = false;
-//	bool found_pipe = false;
-//
-//	// First pass: Handle redirections
-//	while (current != NULL) {
-//		// Check for redirections
-//		if (strcmp(current->word, ">") == 0 || strcmp(current->word, "<") == 0 ||
-//			strcmp(current->word, ">>") == 0 || strcmp(current->word, "<<") == 0) {
-//			found_redirect = true;
-//		}
-//
-//		// Check if the current token is the last token in the list or a pipe
-//		if (current->next == NULL || strcmp(current->word, "|") == 0) {
-//			if (found_redirect) {
-//				handle_redirects(segment_start, vars);
-//				found_redirect = false; // Reset for the next segment
-//			}
-//			segment_start = current->next; // Move to the next segment
-//		}
-//		current = current->next;
-//	}
-//
-//	// Reset pointers for second pass
-//	current = data;
-//	segment_start = data;
-//
-//	// Second pass: Handle pipes
-//	while (current != NULL) {
-//		// Check for pipe
-//		if (strcmp(current->word, "|") == 0) {
-//			found_pipe = true;
-//		}
-////
-//		// If it's the end of the list or a pipe, and a pipe was found in this segment
-//		if (current->next == NULL || strcmp(current->word, "|") == 0) {
-//			if (found_pipe) {
-//				vars = handle_pipe(segment_start, vars);
-//				found_pipe = false; // Reset for the next segment
-//			}
-//			segment_start = current->next; // Move to the next segment
-//		}
-//		current = current->next;
-//	}
-//}
-
 void handle_pipe_and_red(t_list_token *data, env_var *vars) {
 	t_list_token *current = data;
 	t_list_token *segment_start = data;
@@ -111,7 +63,7 @@ env_var *handle_tokens_in_prompt(char **commands, env_var **env_vars)
         if (strcmp(commands[0], "echo") == 0)
             mini_echo(commands, *env_vars);
         else if (strcmp(commands[0], "cd") == 0)
-            mini_cd(commands);
+            mini_cd(commands, *env_vars);
         else if (strcmp(commands[0], "pwd") == 0)
             mini_pwd();
         else if (strcmp(commands[0], "exit") == 0)

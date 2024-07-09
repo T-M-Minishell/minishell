@@ -13,6 +13,37 @@
 #include "minishell.h"
 
 //CVb3d2023
+//
+//void update_env_pwd(env_var *vars)
+//{
+//	char *cwd;
+//	int i;
+//	char *key;
+//	char *new_path;
+//
+//	i = 0;
+//	cwd = getcwd(NULL, 0);
+//	if (cwd == NULL)
+//	{
+//		perror("pwd");
+//		return ;
+//	}
+//	new_pwd = malloc(strlen("PWD=") + strlen(cwd) + 1);
+//	if (new_pwd == NULL) {
+//		perror("malloc");
+//		free(cwd);
+//		return;
+//	}
+//	(void)new_path;
+//	while (vars->arr[i] != NULL)
+//	{
+//		key = get_key_from_word(vars->arr[i]);
+//		if(strcmp("PWD", key) == 0)
+//			add_env_var(vars, )
+//		i++;
+//	}
+//	free(cwd);
+//}
 
 
 void mini_echo(char **commands, env_var *vars)
@@ -25,7 +56,6 @@ void mini_echo(char **commands, env_var *vars)
         ft_putstr("\n");
         return;
     }
-
     // Check for -n flag
     while (commands[i] != NULL && commands[i][0] == '-' && commands[i][1] != '\0') {
         int j = 1;
@@ -60,15 +90,15 @@ void mini_echo(char **commands, env_var *vars)
         }
         i++;
     }
-
-    if (print_newline) {
+    if (print_newline)
         ft_putstr("\n");
-    }
     vars->exit_status = 0;
 }
 
-int mini_cd(char **commands)
+int mini_cd(char **commands, env_var *vars)
 {
+
+	(void)vars;
     if (commands[1] == NULL)
     { // No argument, use HOME directory
         if (chdir(getenv("HOME")) != 0)
@@ -84,6 +114,7 @@ int mini_cd(char **commands)
             perror("cd");
             return 1;
         }
+//		update_env_pwd(vars);
     }
     return 0;
 }

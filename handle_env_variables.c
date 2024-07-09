@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/02 15:58:08 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:26:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,14 @@ env_var *get_env_vars(char **envp)
 	env_var *vars;
 
 	vars = malloc(sizeof(env_var));
-	if(!vars)
+	if(!vars) {
+        /** !create 3 additional vars 
+         *  PWD=/home/msacaliu/42_projects/github_repos/minishell
+         *  SHLVL=1
+         *  _=/usr/bin/env
+         * */
 		return(NULL);
+    }
 	i = 0;
 	while (envp[i])
 		i++;

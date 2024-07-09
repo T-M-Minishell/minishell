@@ -33,7 +33,7 @@ int	execute_builtins_with_no_output(char **commands ,env_var *vars)
 	flag = 0;
 	if(strcmp(commands[0], "cd") == 0)
 	{
-		mini_cd(commands);
+		mini_cd(commands, vars);
 		flag++;
 	}
 	if(strcmp(commands[0], "exit") == 0)

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/02 14:44:33 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 11:26:55 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ int main(int argc, char **argv, char **envp)
 
 	// Initialize environment variables
 	env_vars = get_env_vars(envp); // works
+
+	// update_shlvl(env_vars) {
+	//	
+	
+	//}
 
 	// Initialize token list
 	if (argc != 1) {
