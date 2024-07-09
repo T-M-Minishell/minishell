@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 16:56:23 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:55:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	check_for_env_commands(char **commands)
 		return (false);
 }
 
-int	execute_builtins_with_no_output(char **commands, env_var *vars)
+int	execute_builtins_with_no_output(char **commands, t_env_var *vars)
 {
 	int	flag;
 
@@ -43,7 +43,7 @@ int	execute_builtins_with_no_output(char **commands, env_var *vars)
 	return (flag);
 }
 
-int	execute_builtins_with_output(char **commands, env_var *vars)
+int	execute_builtins_with_output(char **commands, t_env_var *vars)
 {
 	int	flag;
 
@@ -71,9 +71,9 @@ int	execute_builtins_with_output(char **commands, env_var *vars)
 	return (flag);
 }
 
-env_var	*exec_env_var_fct(char **commands, env_var *vars)
+t_env_var	*exec_env_var_fct(char **commands, t_env_var *vars)
 {
-	env_var	*env_vars;
+	t_env_var	*env_vars;
 
 	env_vars = vars;
 

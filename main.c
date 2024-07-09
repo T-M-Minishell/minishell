@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:37:18 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 14:48:49 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:57:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_input			input;
 	t_list_token	*data;
-	env_var			*env_vars;
+	t_env_var			*env_vars;
 
 	(void)argv;
 	env_vars = NULL;

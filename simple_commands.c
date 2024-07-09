@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/09 15:09:17 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:57:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	free_exec_args(char *path, char **argv)
 	free (path);
 }
 
-void	execute_process(char *path, char **argv, env_var *vars)
+void	execute_process(char *path, char **argv, t_env_var *vars)
 {
 	int	pid;
 	int	status;
@@ -49,7 +49,7 @@ void	execute_process(char *path, char **argv, env_var *vars)
 	}
 }
 
-env_var	*exec_line(t_list_token *data, env_var *vars)
+t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
 {
 	t_list_token	*curr;
 	int				i;

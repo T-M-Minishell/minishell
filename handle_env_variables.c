@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 14:41:50 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:57:22 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool	check_if_alphanumeric(char *str)
 	return (true);
 }
 
-char	*get_value_from_var(char *word, env_var *vars)
+char	*get_value_from_var(char *word, t_env_var *vars)
 {
 	int		i;
 	char	*key_from_word;
@@ -67,12 +67,12 @@ char	*get_key_from_word(char *word)
 	return (key);
 }
 
-env_var	*get_env_vars(char **envp)
+t_env_var	*get_env_vars(char **envp)
 {
 	int		i;
-	env_var	*vars;
+	t_env_var	*vars;
 
-	vars = malloc(sizeof(env_var));
+	vars = malloc(sizeof(t_env_var));
 	if (!vars)
 	{
 		/** !create 3 additional vars 
@@ -115,7 +115,7 @@ bool	check_word(char *str)
 	return (true);
 }
 
-void	free_vars(env_var *vars)
+void	free_vars(t_env_var *vars)
 {
 	int	i;
 
@@ -129,13 +129,13 @@ void	free_vars(env_var *vars)
 	free(vars);
 }
 
-env_var	*add_env_var(env_var *old_env_vars, char *word)
+t_env_var	*add_env_var(t_env_var *old_env_vars, char *word)
 {
-	int		i;
-	int		j;
-	env_var	*new_env;
+	int			i;
+	int			j;
+	t_env_var	*new_env;
 
-	new_env = malloc(sizeof(env_var));
+	new_env = malloc(sizeof(t_env_var));
 	if (!new_env)
 		return (NULL);
 	i = 0;
@@ -166,15 +166,15 @@ env_var	*add_env_var(env_var *old_env_vars, char *word)
 	return (new_env);
 }
 
-env_var	*delete_env_var(env_var *old_env_vars, char *key)
+t_env_var	*delete_env_var(t_env_var *old_env_vars, char *key)
 {
 	int		i;
 	int		j;
-	env_var	*new_env;
+	t_env_var	*new_env;
 	char	*old_key;
 
 	j = 0;
-	new_env = malloc(sizeof(env_var));
+	new_env = malloc(sizeof(t_env_var));
 	if (!new_env)
 		return (NULL);
 	i = 0;

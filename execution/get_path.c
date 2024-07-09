@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:52:15 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 16:59:53 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:54:52 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ void	free_arr_path(char **arr)
 }
 
 
-char	*get_env_path(env_var *env_vars)
+char	*get_env_path(t_env_var *env_vars)
 {
 	int		i;
 	char	*path;
@@ -157,7 +157,7 @@ char	*get_env_path(env_var *env_vars)
 	i = 0;
 	while (env_vars->arr[i])
 	{
-		if (strncmp(env_vars->arr[i], "PATH=",5) == 0)
+		if (strncmp(env_vars->arr[i], "PATH=", 5) == 0)
 		{
 			path = env_vars->arr[i] + 5;
 			return (path);
@@ -167,7 +167,7 @@ char	*get_env_path(env_var *env_vars)
 	return (NULL);
 }
 
-char	*get_path(char *command, env_var *env_vars)
+char	*get_path(char *command, t_env_var *env_vars)
 {
 	char	*path;
 	char	**paths;

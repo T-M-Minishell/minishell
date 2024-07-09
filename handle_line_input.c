@@ -6,13 +6,13 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 14:46:20 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:57:37 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_pipe_and_red(t_list_token *data, env_var *vars)
+void	handle_pipe_and_red(t_list_token *data, t_env_var *vars)
 {
 	t_list_token	*current;
 	t_list_token	*segment_start;
@@ -60,7 +60,7 @@ void	handle_pipe_and_red(t_list_token *data, env_var *vars)
 	}
 }
 
-env_var	*handle_tokens_in_prompt(char **commands, env_var **env_vars)
+t_env_var	*handle_tokens_in_prompt(char **commands, t_env_var **env_vars)
 {
 	if (commands[0] != NULL)
 	{
@@ -82,7 +82,7 @@ env_var	*handle_tokens_in_prompt(char **commands, env_var **env_vars)
 	return (*env_vars);
 }
 
-void	handle_line(t_input *input, t_list_token *data, env_var **env_vars)
+void	handle_line(t_input *input, t_list_token *data, t_env_var **env_vars)
 {
 	t_token_type	token;
 	char			**arr;

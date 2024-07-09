@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/09 17:18:10 by msacaliu          #+#    #+#             */
+/*   Updated: 2024/07/09 17:59:55 by msacaliu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "parcing.h"
@@ -25,7 +37,7 @@ typedef struct s_env_var
 	int			flag_mod;
 	int			index;
 	int			*exported;
-} env_var;
+}	t_env_var;
 
 typedef struct s_input
 {
@@ -87,25 +99,25 @@ void			ctrl_commands(char **line);
 
 		// --------------handle line_input--------------
 void			handle_line(t_input *input, t_list_token *data,
-					env_var **env_vars);
-env_var			*handle_tokens_in_prompt(char **commands, env_var **env_vars);
+					t_env_var **env_vars);
+t_env_var		*handle_tokens_in_prompt(char **commands, t_env_var **env_vars);
 
 			// -----HANDLE ENV-VARS--------
-void			free_vars(env_var *vars);
-env_var			*get_env_vars(char **envp);
-env_var			*add_env_var(env_var *old_env_vars, char *word);
-env_var			*delete_env_var(env_var *old_env_vars, char *key);
+void			free_vars(t_env_var *vars);
+t_env_var			*get_env_vars(char **envp);
+t_env_var			*add_env_var(t_env_var *old_env_vars, char *word);
+t_env_var			*delete_env_var(t_env_var *old_env_vars, char *key);
 char			*get_key_from_word(char *word);
-char			*get_value_from_var(char *word, env_var *vars);
+char			*get_value_from_var(char *word, t_env_var *vars);
 bool			check_if_alphanumeric(char *str);
 			//---------BUILTINS-----------
-void			mini_echo(char **commands, env_var *vars);
-int				mini_cd(char **commands, env_var *vars);
+void			mini_echo(char **commands, t_env_var *vars);
+int				mini_cd(char **commands, t_env_var *vars);
 void			mini_pwd(void);
 void			mini_exit(char **commands, int last_exit_status);
-void			mini_env(env_var *env_vars);
-env_var			*mini_unset(char **commands, env_var *env_vars);
-env_var			*mini_export(char **commands, env_var **env_vars);
+void			mini_env(t_env_var *env_vars);
+t_env_var			*mini_unset(char **commands, t_env_var *env_vars);
+t_env_var			*mini_export(char **commands, t_env_var **env_vars);
 
 			//---------- token assignation----------
 t_token_type	check_token(char *str);
@@ -118,42 +130,42 @@ void			prepare_for_tokenization_word(char *str, t_list_token **data,
 
 // ------------------------ceva --------------
 char			**turn_word_into_arr(t_list_token *data);
-void			handle_not_existent_builtins(t_list_token *data, env_var **var);
+void			handle_not_existent_builtins(t_list_token *data, t_env_var **var);
 
 // -------------------custom_split.c-----------------
 char			**custom_split(const char *s, char c);
 
 //----------------HANDLE_PIPE---------
 bool			check_for_pipe_in_line(t_list_token *data);
-env_var			*handle_pipe(t_list_token *data, env_var *env_vars);
+t_env_var			*handle_pipe(t_list_token *data, t_env_var *env_vars);
 
 // -------------------exec_utils
 bool			check_if_builtin(char *word);
 
 // -----------------handle_builtins_type-----------
-int				execute_builtins_with_no_output(char **commands, env_var *vars);
-int				execute_builtins_with_output(char **commands, env_var *vars);
-env_var			*exec_env_var_fct(char **commands, env_var *vars);
+int				execute_builtins_with_no_output(char **commands, t_env_var *vars);
+int				execute_builtins_with_output(char **commands, t_env_var *vars);
+t_env_var			*exec_env_var_fct(char **commands, t_env_var *vars);
 bool			check_for_env_commands(char **commands);
 
 // -----------------simple comands-----------
-void			execute_process(char *path, char **argv, env_var *vars);
-env_var			*exec_line(t_list_token *data, env_var *vars);
+void			execute_process(char *path, char **argv, t_env_var *vars);
+t_env_var			*exec_line(t_list_token *data, t_env_var *vars);
 
 // --------------------get_path-----------
-char			*get_env_path(env_var *env_vars);
-char			*get_path(char *command, env_var *env_vars);
+char			*get_env_path(t_env_var *env_vars);
+char			*get_path(char *command, t_env_var *env_vars);
 
 ///--------------------- exec_pipe-------------
-env_var			*execute_commands(t_list_commands *current,
-					int (*pipes)[2], env_var *env_vars);
+t_env_var			*execute_commands(t_list_commands *current,
+					int (*pipes)[2], t_env_var *env_vars);
 
 //---------------------redirects--------------------
 bool			check_for_redirects_in_line(t_list_token *data);
 
-void			handle_redirects(t_list_token *data, env_var *vars);
+void			handle_redirects(t_list_token *data, t_env_var *vars);
 
-void		execute_command_red( t_list_commands_red *cmd, env_var *vars);
+void		execute_command_red( t_list_commands_red *cmd, t_env_var *vars);
 //void handle_heredoc(char *delimiter);
 //void input_file_from_temp();
 

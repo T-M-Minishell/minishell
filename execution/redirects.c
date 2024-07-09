@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:17:35 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 15:31:57 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:55:53 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,7 +181,7 @@ void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
 	}
 }
 
-void	execute_command_red(t_list_commands_red *cmd, env_var *vars)
+void	execute_command_red(t_list_commands_red *cmd, t_env_var *vars)
 {
 	char				*path;
 	int					status;
@@ -229,7 +229,7 @@ void	execute_command_red(t_list_commands_red *cmd, env_var *vars)
 	}
 }
 
-void	handle_redirects(t_list_token *data, env_var *vars)
+void	handle_redirects(t_list_token *data, t_env_var *vars)
 {
 	t_list_commands_red	*cmd_head;
 	t_list_commands_red	*cmd_tail;

@@ -6,14 +6,14 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:16:30 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:54:27 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 
-env_var	*builtin_check_in_pipe(t_list_commands *cmd, env_var *vars)
+t_env_var	*builtin_check_in_pipe(t_list_commands *cmd, t_env_var *vars)
 {
 	vars->flag_mod = 0;
 	if (check_if_builtin(cmd->arr[0]))
@@ -33,7 +33,7 @@ env_var	*builtin_check_in_pipe(t_list_commands *cmd, env_var *vars)
 }
 
 void	child_process(t_list_commands *current,
-		int (*pipes)[2], env_var *vars, int i)
+		int (*pipes)[2], t_env_var *vars, int i)
 {
 	int		j;
 	char	*path;
@@ -68,8 +68,8 @@ void	child_process(t_list_commands *current,
 	}
 }
 
-env_var	*parent_process(t_list_commands *current, int pid,
-	int (*pipes)[2], env_var *vars)
+t_env_var	*parent_process(t_list_commands *current, int pid,
+	int (*pipes)[2], t_env_var *vars)
 {
 	int	status;
 	int	i;
@@ -89,8 +89,8 @@ env_var	*parent_process(t_list_commands *current, int pid,
 	return (vars);
 }
 
-env_var	*execute_commands(t_list_commands *current,
-	int (*pipes)[2], env_var *vars)
+t_env_var	*execute_commands(t_list_commands *current,
+	int (*pipes)[2], t_env_var *vars)
 {
 	int	i;
 	int	pid;

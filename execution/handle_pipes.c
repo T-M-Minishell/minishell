@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 16:53:50 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:55:41 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,8 @@ void	cleanup_pipes_and_wait(int (*pipes)[2], int num_cmds)
 	free(pipes);
 }
 
-env_var	*implementing_pipe(t_list_commands *cmd,
-	env_var *env_vars, t_list_token *data)
+t_env_var	*implementing_pipe(t_list_commands *cmd,
+	t_env_var *env_vars, t_list_token *data)
 {
 	int	(*pipes)[2];
 
@@ -180,7 +180,7 @@ void	free_command_list(t_list_commands *cmd_head)
 	}
 }
 
-env_var	*handle_pipe(t_list_token *data, env_var *env_vars)
+t_env_var	*handle_pipe(t_list_token *data, t_env_var *env_vars)
 {
 	t_list_commands	*cmd_head;
 	t_list_commands	*cmd_tail;
