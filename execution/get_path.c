@@ -6,13 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 11:52:15 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 11:30:21 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:44:43 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -51,7 +49,6 @@ void	free_arr_path(char **arr)
 	}
 	free(arr);
 }
-
 
 char	*get_env_path(t_env_var *env_vars)
 {
@@ -99,4 +96,3 @@ char	*get_path(char *command, t_env_var *env_vars)
 	free_arr_path(paths);
 	return (NULL);
 }
-

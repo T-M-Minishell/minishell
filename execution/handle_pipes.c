@@ -6,104 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 13:00:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 16:06:01 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	count_nb_of_pipes(t_list_token *data)
-{
-	int				nb;
-	t_list_token	*curr;
-
-	nb = 0;
-	curr = data;
-	while (curr != NULL)
-	{
-		if (strcmp(curr->word, "|") == 0)
-			nb++;
-		curr = curr->next;
-	}
-	return (nb);
-}
-
-char	**fill_argv_array_pipe(t_list_token *data, char **argv, int count )
-{
-	t_list_token	*current;
-	int				i;
-
-	current = data;
-	i = 0;
-	while (i < count)
-	{
-		if (strcmp(current->word, "|") == 0)
-			break ;
-		argv[i] = strdup(current->word);
-		if (argv[i] == NULL)
-		{
-			perror("strdup");
-			exit(EXIT_FAILURE);
-		}
-		current = current->next;
-		i++;
-	}
-	argv[count] = NULL;
-	return (argv);
-}
-
-char	**convert_tokens_to_argv(t_list_token *data)
-{
-	int				count;
-	t_list_token	*current;
-	char			**argv;
-
-	count = 0;
-	current = data;
-	while (current != NULL && strcmp(current->word, "|") != 0)
-	{
-		count++;
-		current = current->next;
-	}
-	argv = malloc((count + 1) * sizeof(char *));
-	if (argv == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	argv = fill_argv_array_pipe(data, argv, count);
-	return (argv);
-}
-
-int	count_commands(t_list_commands *cmd)
-{
-	int				num_cmds;
-	t_list_commands	*current;
-
-	num_cmds = 0;
-	current = cmd;
-	while (current != NULL)
-	{
-		num_cmds++;
-		current = current->next;
-	}
-	return (num_cmds);
-}
-
-int	(*allocate_pipes(int num_cmds))[2]
-{
-	int	(*pipes)[2];
-
-	if (num_cmds < 2)
-		return (NULL);
-	pipes = malloc (sizeof(int [2]) * (num_cmds - 1));
-	if (pipes == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
-	return (pipes);
-}
 
 void	create_pipes(int (*pipes)[2], int num_cmds)
 {
@@ -122,27 +29,19 @@ void	create_pipes(int (*pipes)[2], int num_cmds)
 	}
 }
 
-
-void	cleanup_pipes_and_wait(int (*pipes)[2], int num_cmds)
+int	(*allocate_pipes(int num_cmds))[2]
 {
-	int	j;
+	int	(*pipes)[2];
 
-	j = 0;
-	while (j < num_cmds - 1)
+	if (num_cmds < 2)
+		return (NULL);
+	pipes = malloc (sizeof(int [2]) * (num_cmds - 1));
+	if (pipes == NULL)
 	{
-		close(pipes[j][0]);
-		close(pipes[j][1]);
-		j++;
+		perror("malloc");
+		exit(EXIT_FAILURE);
 	}
-
-	j = 0;
-	while (j < num_cmds)
-	{
-		wait(NULL);
-		j++;
-	}
-
-	free(pipes);
+	return (pipes);
 }
 
 t_env_var	*implementing_pipe(t_list_commands *cmd,
@@ -152,25 +51,27 @@ t_env_var	*implementing_pipe(t_list_commands *cmd,
 
 	env_vars->num_cmds = count_commands(cmd);
 	(void) data;
-
 	if (env_vars->num_cmds < 1)
 		return (env_vars);
-
 	pipes = allocate_pipes(env_vars->num_cmds);
 	if (pipes != NULL)
 		create_pipes(pipes, env_vars->num_cmds);
-
 	env_vars = execute_commands(cmd, pipes, env_vars, -1);
 	if (pipes != NULL)
 		cleanup_pipes_and_wait(pipes, env_vars->num_cmds);
-
 	return (env_vars);
 }
 
+t_list_token	*move_node(t_list_token *current)
+{
+	while (current != NULL && strcmp(current->word, "|") != 0)
+		current = current->next;
+	if (current != NULL && strcmp(current->word, "|") == 0)
+		current = current->next;
+	return (current);
+}
 
-
-
-
+// maybe need to initialize with null;
 t_env_var	*handle_pipe(t_list_token *data, t_env_var *env_vars)
 {
 	t_list_commands	*cmd_head;
@@ -179,18 +80,10 @@ t_env_var	*handle_pipe(t_list_token *data, t_env_var *env_vars)
 	t_list_commands	*new_cmd;
 
 	cmd_head = NULL;
-	cmd_tail = NULL;
 	current = data;
 	while (current != NULL)
 	{
-		new_cmd = malloc(sizeof(t_list_commands));
-		if (new_cmd == NULL)
-		{
-			perror("malloc");
-			exit(EXIT_FAILURE);
-		}
-		new_cmd->arr = convert_tokens_to_argv(current);
-		new_cmd->next = NULL;
+		new_cmd = handle_malloc_fail(new_cmd, current);
 		if (cmd_head == NULL)
 		{
 			cmd_head = new_cmd;
@@ -201,10 +94,7 @@ t_env_var	*handle_pipe(t_list_token *data, t_env_var *env_vars)
 			cmd_tail->next = new_cmd;
 			cmd_tail = new_cmd;
 		}
-		while (current != NULL && strcmp(current->word, "|") != 0)
-			current = current->next;
-		if (current != NULL && strcmp(current->word, "|") == 0)
-			current = current->next;
+		current = move_node(current);
 	}
 	env_vars = implementing_pipe(cmd_head, env_vars, data);
 	free_command_list(cmd_head);

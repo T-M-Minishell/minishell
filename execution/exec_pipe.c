@@ -6,12 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 12:56:43 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:44:06 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 t_env_var	*builtin_check_in_pipe(t_list_commands *cmd, t_env_var *vars)
 {

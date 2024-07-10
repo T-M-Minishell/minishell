@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 11:41:43 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 15:44:14 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ bool	check_for_pipe_in_line(t_list_token *data)
 		return (false);
 	return (true);
 }
-
 
 bool	check_for_redirects_in_line(t_list_token *data)
 {
