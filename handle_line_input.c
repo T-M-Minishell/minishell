@@ -6,12 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 23:28:27 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:43:32 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 // void	handle_pipe_and_red(t_list_token *data, t_env_var *vars)
 // {
@@ -78,13 +77,32 @@ t_env_var	*handle_tokens_in_prompt(char **commands, t_env_var **env_vars)
 	return (*env_vars);
 }
 
+void	process_tokens(char **arr, t_list_token **data)
+{
+	int				i;
+	t_token_type	token;
+
+	i = 0;
+	while (arr[i] != NULL)
+	{
+		token = check_token(arr[i]);
+		if (token == PIPE)
+			prepare_for_tokenization_word(arr[i], data, token);
+		else if (token == QUOTE)
+			prepare_for_tokenization_quote(arr[i], data, token);
+		else if (token == WORD)
+			prepare_for_tokenization_word(arr[i], data, token);
+		else if (token == REDIRECT)
+			prepare_for_tokenization_word(arr[i], data, token);
+		free(arr[i]);
+		i++;
+	}
+}
 
 void	handle_line(t_input *input, t_list_token *data, t_env_var **env_vars)
 {
-	t_token_type	token;
-	char			**arr;
-	int				i;
-	char			*line_start;
+	char	**arr;
+	char	*line_start;
 
 	line_start = input->line;
 	if (input->line[0] == '\0')
@@ -96,21 +114,7 @@ void	handle_line(t_input *input, t_list_token *data, t_env_var **env_vars)
 	arr = custom_split((char *)(input->line + (line_start - input->line)), ' ');
 	if (arr == NULL)
 		return ;
-	i = 0;
-	while (arr[i] != NULL)
-	{
-		token = check_token(arr[i]);
-		if (token == PIPE)
-			prepare_for_tokenization_word(arr[i], &data, token);
-		else if (token == QUOTE)
-			prepare_for_tokenization_quote(arr[i], &data, token);
-		else if (token == WORD)
-			prepare_for_tokenization_word(arr[i], &data, token);
-		else if (token == REDIRECT)
-			prepare_for_tokenization_word(arr[i], &data, token);
-		free(arr[i]);
-		i++;
-	}
+	process_tokens(arr, &data);
 	free(arr);
 	if (check_for_pipe_in_line(data) && check_for_redirects_in_line(data))
 		handle_pipe_and_red(data, *env_vars);

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:18:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 23:29:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:34:40 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void				handle_line(t_input *input, t_list_token *data,
 						t_env_var **env_vars);
 t_env_var			*handle_tokens_in_prompt(char **commands,
 						t_env_var **env_vars);
-void	handle_pipe_and_red(t_list_token *data, t_env_var *vars);
+void				handle_pipe_and_red(t_list_token *data, t_env_var *vars);
 
 			// -----HANDLE ENV-VARS--------
 void				free_vars(t_env_var *vars);
