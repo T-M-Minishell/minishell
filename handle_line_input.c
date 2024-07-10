@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 19:26:37 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 17:46:20 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_env_var	*handle_tokens_in_prompt(char **commands, t_env_var **env_vars)
 		if (strcmp(commands[0], "echo") == 0)
 			mini_echo(commands, *env_vars);
 		else if (strcmp(commands[0], "cd") == 0)
-			mini_cd(commands, *env_vars);
+			(*env_vars)->exit_status = mini_cd(commands, *env_vars);
 		else if (strcmp(commands[0], "pwd") == 0)
 			mini_pwd();
 		else if (strcmp(commands[0], "exit") == 0)

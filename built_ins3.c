@@ -6,12 +6,13 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 18:46:41 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 18:48:55 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 19:23:32 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+//update env->$PWD -- need to do
 int	mini_cd(char **commands, t_env_var *vars)
 {
 	(void)vars;
@@ -20,6 +21,7 @@ int	mini_cd(char **commands, t_env_var *vars)
 		if (chdir(getenv("HOME")) != 0)
 		{
 			perror("cd");
+			vars->exit_status = 1;
 			return (1);
 		}
 	}
@@ -30,7 +32,6 @@ int	mini_cd(char **commands, t_env_var *vars)
 			perror("cd");
 			return (1);
 		}
-//		update_env_pwd(vars);
 	}
 	return (0);
 }

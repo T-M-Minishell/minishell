@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 18:56:25 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:24:56 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ char	*get_key_from_word(char *word)
 	return (key);
 }
 
+/** !create 3 additional vars 
+		 *  PWD=/home/msacaliu/42_projects/github_repos/minishell
+		 *  SHLVL=1
+		 *  _=/usr/bin/env
+		 * */
 t_env_var	*get_env_vars(char **envp)
 {
 	int			i;
@@ -75,17 +80,12 @@ t_env_var	*get_env_vars(char **envp)
 	vars = malloc(sizeof(t_env_var));
 	if (!vars)
 	{
-		/** !create 3 additional vars 
-		 *  PWD=/home/msacaliu/42_projects/github_repos/minishell
-		 *  SHLVL=1
-		 *  _=/usr/bin/env
-		 * */
 		return (NULL);
 	}
 	i = 0;
 	while (envp[i])
 		i++;
-	vars->arr = malloc(sizeof(char *) * (i+1));
+	vars->arr = malloc(sizeof(char *) * (i + 1));
 	if (!vars->arr)
 	{
 		free(vars);

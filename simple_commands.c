@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/10 13:24:19 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 19:20:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	execute_process(char *path, char **argv, t_env_var *vars)
 	int	pid;
 	int	status;
 
+	status = 0;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -53,27 +54,14 @@ int	count_tokens(t_list_token *data)
 	return (count);
 }
 
-t_env_var	*bultin_check(char **argv, t_env_var *vars)
-{
-	int	i;
-
-	i = 0;
-	if (check_if_builtin(argv[0]))
-	{
-		vars = handle_tokens_in_prompt(argv, &vars);
-		i = 0;
-		while (argv[i])
-			free(argv[i++]);
-		free(argv);
-	}
-	return (vars);
-}
-
-char	**fill_argv(t_list_token *data, char **argv, t_env_var *vars)
+char	**fill_argv(t_list_token *data, t_env_var *vars)
 {
 	int				i;
 	t_list_token	*curr;
+	char			**argv;
 
+	i = count_tokens(data);
+	argv = (char **)malloc(sizeof(char *) * (i + 1));
 	curr = data;
 	i = 0;
 	while (curr != NULL)
@@ -88,31 +76,19 @@ char	**fill_argv(t_list_token *data, char **argv, t_env_var *vars)
 	return (argv);
 }
 
-// t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
-// {
-// 	int				i;
-// 	char			**argv;
-// 	char			*path;
-
-// 	i = count_tokens(data);
-// 	argv = (char **)malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	argv = fill_argv(data, argv, vars);
-// 	vars = bultin_check(argv, vars);
-// 	path = get_path(argv[0], vars);
-// 	// if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell"))
-// 	// 	path = (strdup("./minishell"));
-// 	if (!path)
-// 	{
-// 		printf("%s: command not found\n", argv[0]);
-// 		free_exec_args(path, argv);
-// 		vars->exit_status = 127;
-// 		return (vars);
-// 	}
-// 	execute_process(path, argv, vars);
-// 	free_exec_args(path, argv);
-// 	return (vars);
-// }
+t_env_var	*check_path_fail(t_env_var *vars, char *path, char **argv)
+{
+	vars->flag_path = 0;
+	if (!path)
+	{
+		printf("%s: command not found\n", argv[0]);
+		free_exec_args(path, argv);
+		vars->exit_status = 127;
+		vars->flag_path = 1;
+		return (vars);
+	}
+	return (vars);
+}
 
 t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
 {
@@ -120,9 +96,7 @@ t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
 	char	**argv;
 	char	*path;
 
-	i = count_tokens(data);
-	argv = (char **)malloc(sizeof(char *) * (i + 1));
-	fill_argv(data, argv, vars);
+	argv = fill_argv(data, vars);
 	if (check_if_builtin(argv[0]))
 	{
 		vars = handle_tokens_in_prompt(argv, &vars);
@@ -135,13 +109,9 @@ t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
 	path = get_path(argv[0], vars);
 	if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell"))
 		path = (strdup("./minishell"));
-	if (!path)
-	{
-		printf("%s: command not found\n", argv[0]);
-		free_exec_args(path, argv);
-		vars->exit_status = 127;
+	vars = check_path_fail(vars, path, argv);
+	if (vars->flag_path)
 		return (vars);
-	}
 	execute_process(path, argv, vars);
 	free_exec_args(path, argv);
 	return (vars);
