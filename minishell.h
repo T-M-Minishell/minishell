@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:18:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 21:24:39 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:11:35 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_env_var
 	int			*exported;
 	int			flag_path;
 	int			pid; //just because norminettel
+	int			i; // norminette shit
 }	t_env_var;
 
 typedef struct s_input
@@ -157,28 +158,28 @@ void				handle_not_existent_builtins(t_list_token *data,
 						t_env_var **var);
 
 //-------------------custom_split---------------
-char	**custom_split(const char *str, char c);
+char				**custom_split(const char *str, char c);
 
-int	allocate_for_strings(const char *str, char c);
+int					allocate_for_strings(const char *str, char c);
 
 // --------------------SPLIT_utils-------------------
 
-void							update_word_flag1(t_info *p, const char *str);
-void							update_word_flag2(t_info *p, const char *str,
-									char c);
-void							init_info_dat(t_dat *p);
-void							init_info(t_info *p);
+void				update_word_flag1(t_info *p, const char *str);
+void				update_word_flag2(t_info *p, const char *str,
+						char c);
+void				init_info_dat(t_dat *p);
+void				init_info(t_info *p);
 
 //-------------------SPLIT_utils2--------------------
 
-void							skip_word_quotes(t_dat *indexes,
-									t_word_info *word_info, char *str);
-int								allocate_memory(char *str, char c,
-									t_word_info *word_info);
-void							process_string(char *str, t_dat *indexes,
-									t_word_info *word_info, char c);
-void							finalize_word_info(t_dat *indexes,
-									t_word_info *word_info);
+void				skip_word_quotes(t_dat *indexes,
+						t_word_info *word_info, char *str);
+int					allocate_memory(char *str, char c,
+						t_word_info *word_info);
+void				process_string(char *str, t_dat *indexes,
+						t_word_info *word_info, char c);
+void				finalize_word_info(t_dat *indexes,
+						t_word_info *word_info);
 
 //----------------HANDLE_PIPE---------
 bool				check_for_pipe_in_line(t_list_token *data);
@@ -214,7 +215,9 @@ char				*get_path(char *command, t_env_var *env_vars);
 ///--------------------- exec_pipe-------------
 // t_env_var			*execute_commands(t_list_commands *current,
 // 						int (*pipes)[2], t_env_var *env_vars, int i);
-t_env_var *execute_commands(t_list_commands *current, int (*pipes)[2], t_env_var *vars);
+t_env_var			*execute_commands(t_list_commands *current,
+						int (*pipes)[2], t_env_var *vars);
+void				check_pid(t_env_var *vars, int (*pipes)[2]);
 
 //---------------------redirects--------------------
 bool				check_for_redirects_in_line(t_list_token *data);
@@ -237,6 +240,7 @@ void				output_file(char *red, char *output_file, int is_last);
 void				input_file(char *input_file);
 ///-----------------helper_functions---------
 void				free_exec_args(char *path, char **argv);
+t_env_var			*remove_env_var(char *command, t_env_var *env_vars);
 
 ///-----------------helper_functions_exec---------
 void				free_command_list(t_list_commands *cmd_head);

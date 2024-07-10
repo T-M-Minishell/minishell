@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 18:46:41 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 19:23:32 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:12:12 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,44 +88,44 @@ void	mini_env(t_env_var *env_vars)
 	}
 }
 
-t_env_var	*mini_unset(char **commands, t_env_var *env_vars)
-{
-	int		i;
-	int		flag;
-	char	*key;
-	int		j;
+// t_env_var	*mini_unset(char **commands, t_env_var *env_vars)
+// {
+// 	int		i;
+// 	int		flag;
+// 	char	*key;
+// 	int		j;
 
-	i = 0;
-	if (commands[1] == NULL)
-	{
-		printf("unset: requires an argument\n");
-		env_vars->exit_status = 1;
-		return (env_vars);
-	}
-	while (commands[i] != NULL)
-	{
-		if (strchr(commands[i], '=') != NULL)
-		{
-			i++;
-			continue ;
-		}
-		flag = 0;
-		j = -1;
-		while (env_vars->arr[++j] != NULL)
-		{
-			key = get_key_from_word(env_vars->arr[j]);
-			if (strcmp(commands[i], key) == 0)
-			{
-				flag = 1;
-				free(key);
-				break ;
-			}
-			free(key);
-		}
-		if (flag == 1)
-			env_vars = delete_env_var(env_vars, commands[i]);
-		i++;
-	}
-	env_vars->exit_status = 0;
-	return (env_vars);
-}
+// 	i = 0;
+// 	if (commands[1] == NULL)
+// 	{
+// 		printf("unset: requires an argument\n");
+// 		env_vars->exit_status = 1;
+// 		return (env_vars);
+// 	}
+// 	while (commands[i] != NULL)
+// 	{
+// 		if (strchr(commands[i], '=') != NULL)
+// 		{
+// 			i++;
+// 			continue ;
+// 		}
+// 		flag = 0;
+// 		j = -1;
+// 		while (env_vars->arr[++j] != NULL)
+// 		{
+// 			key = get_key_from_word(env_vars->arr[j]);
+// 			if (strcmp(commands[i], key) == 0)
+// 			{
+// 				flag = 1;
+// 				free(key);
+// 				break ;
+// 			}
+// 			free(key);
+// 		}
+// 		if (flag == 1)
+// 			env_vars = delete_env_var(env_vars, commands[i]);
+// 		i++;
+// 	}
+// 	env_vars->exit_status = 0;
+// 	return (env_vars);
+// }

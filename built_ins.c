@@ -6,12 +6,32 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 16:21:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 18:54:16 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:45:01 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_env_var	*mini_unset(char **commands, t_env_var *env_vars)
+{
+	int	i;
+
+	if (commands[1] == NULL)
+	{
+		printf("unset: requires an argument\n");
+		env_vars->exit_status = 1;
+		return (env_vars);
+	}
+	i = 1;
+	while (commands[i] != NULL)
+	{
+		if (strchr(commands[i], '=') == NULL)
+			env_vars = remove_env_var(commands[i], env_vars);
+		i++;
+	}
+	env_vars->exit_status = 0;
+	return (env_vars);
+}
 
 void	print_env_vars(char **commands, t_env_var *env_vars)
 {
