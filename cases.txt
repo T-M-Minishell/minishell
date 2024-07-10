@@ -15,7 +15,5 @@ norm -- >handle_pipe
     echo '$USER' must print "$USER".
     Nothing should be interpreted.
 
-
-
-
+wc< cat pula -- child process probaly payth error 
 

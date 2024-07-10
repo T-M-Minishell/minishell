@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:18:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 19:22:52 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:24:39 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,25 @@ typedef struct s_list_commands_red
 	char						*file;
 	struct s_list_commands_red	*next;
 }	t_list_commands_red;
+
+typedef struct s_info
+{
+	int							i;
+	int							word;
+	int							quotes;
+	bool						is_quote;
+	bool						is_word_started;
+}								t_info;
+
+typedef struct s_dat
+{
+	int							i;
+	int							word;
+	int							alloc;
+	int							j;
+	bool						is_quotes;
+	bool						is_word_started;
+}								t_dat;
 
 // utils
 t_list_token		*ft_lstnew(char *content, t_token_type token);
@@ -137,8 +156,29 @@ char				**turn_word_into_arr(t_list_token *data);
 void				handle_not_existent_builtins(t_list_token *data,
 						t_env_var **var);
 
-// -------------------custom_split.c-----------------
-char				**custom_split(const char *s, char c);
+//-------------------custom_split---------------
+char	**custom_split(const char *str, char c);
+
+int	allocate_for_strings(const char *str, char c);
+
+// --------------------SPLIT_utils-------------------
+
+void							update_word_flag1(t_info *p, const char *str);
+void							update_word_flag2(t_info *p, const char *str,
+									char c);
+void							init_info_dat(t_dat *p);
+void							init_info(t_info *p);
+
+//-------------------SPLIT_utils2--------------------
+
+void							skip_word_quotes(t_dat *indexes,
+									t_word_info *word_info, char *str);
+int								allocate_memory(char *str, char c,
+									t_word_info *word_info);
+void							process_string(char *str, t_dat *indexes,
+									t_word_info *word_info, char c);
+void							finalize_word_info(t_dat *indexes,
+									t_word_info *word_info);
 
 //----------------HANDLE_PIPE---------
 bool				check_for_pipe_in_line(t_list_token *data);
@@ -172,8 +212,9 @@ char				*get_env_path(t_env_var *env_vars);
 char				*get_path(char *command, t_env_var *env_vars);
 
 ///--------------------- exec_pipe-------------
-t_env_var			*execute_commands(t_list_commands *current,
-						int (*pipes)[2], t_env_var *env_vars, int i);
+// t_env_var			*execute_commands(t_list_commands *current,
+// 						int (*pipes)[2], t_env_var *env_vars, int i);
+t_env_var *execute_commands(t_list_commands *current, int (*pipes)[2], t_env_var *vars);
 
 //---------------------redirects--------------------
 bool				check_for_redirects_in_line(t_list_token *data);

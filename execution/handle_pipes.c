@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 16:06:01 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 21:28:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_env_var	*implementing_pipe(t_list_commands *cmd,
 	pipes = allocate_pipes(env_vars->num_cmds);
 	if (pipes != NULL)
 		create_pipes(pipes, env_vars->num_cmds);
-	env_vars = execute_commands(cmd, pipes, env_vars, -1);
+	env_vars = execute_commands(cmd, pipes, env_vars);
 	if (pipes != NULL)
 		cleanup_pipes_and_wait(pipes, env_vars->num_cmds);
 	return (env_vars);
