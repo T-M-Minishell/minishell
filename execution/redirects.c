@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:17:35 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:55:53 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:56:34 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,8 @@ void	handle_heredoc(char *delimiter)
 	close(temp_fd);
 }
 
-void	fd_handeler(t_list_commands_red *current_cmd,t_list_commands_red *last_cmd)
+void	fd_handeler(t_list_commands_red *current_cmd,
+		t_list_commands_red *last_cmd)
 {
 	while (current_cmd != NULL)
 	{

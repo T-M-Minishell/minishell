@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:55:41 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 13:00:07 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,11 @@ int	count_nb_of_pipes(t_list_token *data)
 	return (nb);
 }
 
-char	**convert_tokens_to_argv(t_list_token *data)
+char	**fill_argv_array_pipe(t_list_token *data, char **argv, int count )
 {
-	int				count;
 	t_list_token	*current;
-	char			**argv;
 	int				i;
 
-	count = 0;
-	current = data;
-	while (current != NULL && strcmp(current->word, "|") != 0)
-	{
-		count++;
-		current = current->next;
-	}
-	argv = malloc((count + 1) * sizeof(char *));
-	if (argv == NULL)
-	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
-	}
 	current = data;
 	i = 0;
 	while (i < count)
@@ -64,6 +49,29 @@ char	**convert_tokens_to_argv(t_list_token *data)
 		i++;
 	}
 	argv[count] = NULL;
+	return (argv);
+}
+
+char	**convert_tokens_to_argv(t_list_token *data)
+{
+	int				count;
+	t_list_token	*current;
+	char			**argv;
+
+	count = 0;
+	current = data;
+	while (current != NULL && strcmp(current->word, "|") != 0)
+	{
+		count++;
+		current = current->next;
+	}
+	argv = malloc((count + 1) * sizeof(char *));
+	if (argv == NULL)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	argv = fill_argv_array_pipe(data, argv, count);
 	return (argv);
 }
 
@@ -152,7 +160,7 @@ t_env_var	*implementing_pipe(t_list_commands *cmd,
 	if (pipes != NULL)
 		create_pipes(pipes, env_vars->num_cmds);
 
-	env_vars = execute_commands(cmd, pipes, env_vars);
+	env_vars = execute_commands(cmd, pipes, env_vars, -1);
 	if (pipes != NULL)
 		cleanup_pipes_and_wait(pipes, env_vars->num_cmds);
 
@@ -160,25 +168,8 @@ t_env_var	*implementing_pipe(t_list_commands *cmd,
 }
 
 
-void	free_command_list(t_list_commands *cmd_head)
-{
-	t_list_commands	*temp;
-	int				i;
 
-	while (cmd_head != NULL)
-	{
-		temp = cmd_head;
-		cmd_head = cmd_head->next;
-		i = 0;
-		while (temp->arr[i])
-		{
-			free(temp->arr[i]);
-			i++;
-		}
-		free(temp->arr);
-		free(temp);
-	}
-}
+
 
 t_env_var	*handle_pipe(t_list_token *data, t_env_var *env_vars)
 {

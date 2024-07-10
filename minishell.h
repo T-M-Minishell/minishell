@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:18:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 19:23:12 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:59:45 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_env_var
 	int			flag_mod;
 	int			index;
 	int			*exported;
+	int			pid; //just because norminettel
 }	t_env_var;
 
 typedef struct s_input
@@ -161,7 +162,7 @@ char			*get_path(char *command, t_env_var *env_vars);
 
 ///--------------------- exec_pipe-------------
 t_env_var		*execute_commands(t_list_commands *current,
-					int (*pipes)[2], t_env_var *env_vars);
+					int (*pipes)[2], t_env_var *env_vars, int i);
 
 //---------------------redirects--------------------
 bool			check_for_redirects_in_line(t_list_token *data);
@@ -173,5 +174,10 @@ void			execute_command_red( t_list_commands_red *cmd, t_env_var *vars);
 //void input_file_from_temp();
 ///-----------------helper_functions---------
 void			free_exec_args(char *path, char **argv);
+
+///-----------------helper_functions_exec---------
+void			free_command_list(t_list_commands *cmd_head);
+//----------split_for_path------------
+char			**ft_split(char const *s, char c);
 
 #endif

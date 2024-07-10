@@ -5,7 +5,7 @@ expr $? + $? | echo $?  // probably need to change in the child process
 
 cd ---> $PWD update
 export with redirects ,, also maybe some other builtins
-
+norm -- >exec_pipe
 
 
 

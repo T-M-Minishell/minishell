@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:12:29 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:41:43 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 bool	check_if_builtin(char *word)
 {
-	int	num_of_builtins;
-	int	i;
+	int		num_of_builtins;
+	char	*arr_of_builtins[7];
+	int		i;
 
 	i = 0;
-	char *arr_of_builtins[] =
-		{"echo","cd","export", "unset", "env", "exit","pwd"};
-
+	arr_of_builtins[0] = "echo";
+	arr_of_builtins[1] = "cd";
+	arr_of_builtins[2] = "export";
+	arr_of_builtins[3] = "unset";
+	arr_of_builtins[4] = "env";
+	arr_of_builtins[5] = "exit";
+	arr_of_builtins[6] = "pwd";
 	num_of_builtins = sizeof(arr_of_builtins) / sizeof(arr_of_builtins[0]);
-
 	while (i < num_of_builtins)
 	{
 		if (strcmp(word, arr_of_builtins[i]) == 0)
@@ -43,7 +47,6 @@ bool	check_for_pipe_in_line(t_list_token *data)
 
 	nb_of_pipes = 0;
 	curr = data;
-	last_was_pipe = false;
 	is_first = true;
 	while (curr != NULL)
 	{
@@ -67,19 +70,16 @@ bool	check_for_pipe_in_line(t_list_token *data)
 
 bool	check_for_redirects_in_line(t_list_token *data)
 {
-	t_list_token	*curr;
 	bool			is_first;
 	bool			last_was_redirect;
 	int				nb_of_redirects;
 
-	curr = data;
 	is_first = true;
-	last_was_redirect = false;
 	nb_of_redirects = 0;
-	while (curr != NULL)
+	while (data != NULL)
 	{
-		if (strcmp(curr->word, ">") == 0 || strcmp(curr->word, ">>") == 0
-			|| strcmp(curr->word, "<") == 0 || strcmp(curr->word, "<<") == 0)
+		if (strcmp(data->word, ">") == 0 || strcmp(data->word, ">>") == 0
+			|| strcmp(data->word, "<") == 0 || strcmp(data->word, "<<") == 0)
 		{
 			nb_of_redirects++;
 			if (is_first || last_was_redirect)
@@ -89,7 +89,7 @@ bool	check_for_redirects_in_line(t_list_token *data)
 		else
 			last_was_redirect = false;
 		is_first = false;
-		curr = curr->next;
+		data = data->next;
 	}
 	if (last_was_redirect || nb_of_redirects == 0)
 		return (false);

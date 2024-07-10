@@ -6,12 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/20 12:35:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:55:04 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 11:27:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
 
 bool	check_for_env_commands(char **commands)
 {
@@ -76,7 +75,6 @@ t_env_var	*exec_env_var_fct(char **commands, t_env_var *vars)
 	t_env_var	*env_vars;
 
 	env_vars = vars;
-
 	if (strcmp(commands[0], "unset") == 0)
 	{
 		env_vars = mini_unset(commands, vars);

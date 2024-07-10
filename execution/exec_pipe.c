@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/09 17:54:27 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 12:56:43 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,9 @@ t_env_var	*builtin_check_in_pipe(t_list_commands *cmd, t_env_var *vars)
 	return (vars);
 }
 
-void	child_process(t_list_commands *current,
-		int (*pipes)[2], t_env_var *vars, int i)
+void	dup_and_close_pipes(int (*pipes)[2], t_env_var *vars, int i)
 {
-	int		j;
-	char	*path;
+	int	j;
 
 	j = 0;
 	if (i > 0)
@@ -49,6 +47,14 @@ void	child_process(t_list_commands *current,
 		close(pipes[j][1]);
 		j++;
 	}
+}
+
+void	child_process(t_list_commands *current,
+		int (*pipes)[2], t_env_var *vars, int i)
+{
+	char	*path;
+
+	dup_and_close_pipes(pipes, vars, i);
 	if (check_if_builtin(current->arr[0]))
 	{
 		if (execute_builtins_with_output(current->arr, vars) == 1)
@@ -90,13 +96,9 @@ t_env_var	*parent_process(t_list_commands *current, int pid,
 }
 
 t_env_var	*execute_commands(t_list_commands *current,
-	int (*pipes)[2], t_env_var *vars)
+	int (*pipes)[2], t_env_var *vars, int i)
 {
-	int	i;
-	int	pid;
-
-	i = 0;
-	while (i < vars->num_cmds)
+	while (++i < vars->num_cmds)
 	{
 		vars = builtin_check_in_pipe(current, vars);
 		if (vars->flag_mod == 1)
@@ -104,22 +106,21 @@ t_env_var	*execute_commands(t_list_commands *current,
 			current = current->next;
 			continue ;
 		}
-		pid = fork();
-		if (pid < 0)
+		vars->pid = fork();
+		if (vars->pid < 0)
 		{
-			perror("fork");
+			perror("fork\n");
 			free(pipes);
 			exit(EXIT_FAILURE);
 		}
-		else if (pid == 0)
+		else if (vars->pid == 0)
 			child_process(current, pipes, vars, i);
 		else
 		{
 			vars->index = i;
-			vars = parent_process(current, pid, pipes, vars);
+			vars = parent_process(current, vars->pid, pipes, vars);
 		}
 		current = current->next;
-		i++;
 	}
 	return (vars);
 }
