@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 15:50:59 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/10 19:55:34 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:45:15 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	new->prev = NULL;
 	if (token == QUOTE || token == WORD || token == REDIRECT || token == PIPE)
 	{
-		new->word = strdup(content);
+		new->word = ft_strdup(content);
 		new->type = token;
 	}
 	else
@@ -90,7 +90,6 @@ t_list_token	*ft_lstnew(char *content, t_token_type token)
 	new->next = NULL;
 	return (new);
 }
-
 
 bool	is_space(char *line)
 {

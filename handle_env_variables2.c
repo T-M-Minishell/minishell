@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 18:56:35 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 19:17:20 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:40:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ t_env_var	*add_env_var(t_env_var *old_env_vars, char *word)
 	new_env = init_and_copy_env_var(old_env_vars, size);
 	if (!new_env)
 		return (NULL);
-	new_env->arr[size] = strdup(word);
+	new_env->arr[size] = ft_strdup(word);
 	if (!new_env->arr[size])
 	{
 		free_vars(new_env);
@@ -117,7 +117,7 @@ char	**refill_arr(t_env_var *old_env_vars, t_env_var *new_env, char *key)
 	while (old_env_vars->arr[++i] != NULL)
 	{
 		old_key = get_key_from_word(old_env_vars->arr[i]);
-		if (strcmp(key, old_key) != 0)
+		if (ft_strcmp(key, old_key) != 0)
 		{
 			new_env->arr[j] = old_env_vars->arr[i];
 			j++;

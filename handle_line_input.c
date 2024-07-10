@@ -6,75 +6,78 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/15 11:00:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 20:21:07 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:28:27 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_pipe_and_red(t_list_token *data, t_env_var *vars)
-{
-	t_list_token	*current;
-	t_list_token	*segment_start;
-	bool			found_redirect;
-	bool			processed_segment;
 
-	current = data;
-	segment_start = data;
-	found_redirect = false;
-	processed_segment = false;
-	while (current != NULL)
-	{
-		if (strcmp(current->word, ">") == 0 || strcmp(current->word, "<") == 0
-			|| strcmp(current->word, ">>") == 0
-			|| strcmp(current->word, "<<") == 0)
-			found_redirect = true;
-		if (current->next == NULL || strcmp(current->word, "|") == 0)
-		{
-			if (found_redirect)
-			{
-				handle_redirects(segment_start, vars);
-				found_redirect = false;
-			}
-			segment_start = current->next;
-		}
-		current = current->next;
-	}
-	current = data;
-	segment_start = data;
-	while (current != NULL)
-	{
-		if (current->next != NULL && strcmp(current->word, "|") == 0
-			&& !processed_segment)
-		{
-			vars = handle_pipe(segment_start, vars);
-			processed_segment = true;
-		}
-		current = current->next;
-	}
-}
+// void	handle_pipe_and_red(t_list_token *data, t_env_var *vars)
+// {
+// 	t_list_token	*current;
+// 	t_list_token	*segment_start;
+// 	bool			found_redirect;
+// 	bool			processed_segment;
+
+// 	current = data;
+// 	segment_start = data;
+// 	found_redirect = false;
+// 	processed_segment = false;
+// 	while (current != NULL)
+// 	{
+// 		if (ft_strcmp(current->word, ">") == 0
+// 			|| ft_strcmp(current->word, "<") == 0
+// 			|| ft_strcmp(current->word, ">>") == 0
+// 			|| ft_strcmp(current->word, "<<") == 0)
+// 			found_redirect = true;
+// 		if (current->next == NULL || ft_strcmp(current->word, "|") == 0)
+// 		{
+// 			if (found_redirect)
+// 			{
+// 				handle_redirects(segment_start, vars);
+// 				found_redirect = false;
+// 			}
+// 			segment_start = current->next;
+// 		}
+// 		current = current->next;
+// 	}
+// 	current = data;
+// 	segment_start = data;
+// 	while (current != NULL)
+// 	{
+// 		if (current->next != NULL && ft_strcmp(current->word, "|") == 0
+// 			&& !processed_segment)
+// 		{
+// 			vars = handle_pipe(segment_start, vars);
+// 			processed_segment = true;
+// 		}
+// 		current = current->next;
+// 	}
+// }
 
 t_env_var	*handle_tokens_in_prompt(char **commands, t_env_var **env_vars)
 {
 	if (commands[0] != NULL)
 	{
-		if (strcmp(commands[0], "echo") == 0)
+		if (ft_strcmp(commands[0], "echo") == 0)
 			mini_echo(commands, *env_vars);
-		else if (strcmp(commands[0], "cd") == 0)
+		else if (ft_strcmp(commands[0], "cd") == 0)
 			(*env_vars)->exit_status = mini_cd(commands, *env_vars);
-		else if (strcmp(commands[0], "pwd") == 0)
+		else if (ft_strcmp(commands[0], "pwd") == 0)
 			mini_pwd();
-		else if (strcmp(commands[0], "exit") == 0)
+		else if (ft_strcmp(commands[0], "exit") == 0)
 			mini_exit(commands, (*env_vars)->exit_status);
-		else if (strcmp(commands[0], "export") == 0)
+		else if (ft_strcmp(commands[0], "export") == 0)
 			*env_vars = mini_export(commands, env_vars);
-		else if (strcmp(commands[0], "unset") == 0)
+		else if (ft_strcmp(commands[0], "unset") == 0)
 			*env_vars = mini_unset(commands, *env_vars);
-		else if (strcmp(commands[0], "env") == 0)
+		else if (ft_strcmp(commands[0], "env") == 0)
 			mini_env(*env_vars);
 	}
 	return (*env_vars);
 }
+
 
 void	handle_line(t_input *input, t_list_token *data, t_env_var **env_vars)
 {

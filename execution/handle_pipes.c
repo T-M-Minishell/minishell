@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/17 14:34:38 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 21:28:49 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,9 @@ t_env_var	*implementing_pipe(t_list_commands *cmd,
 
 t_list_token	*move_node(t_list_token *current)
 {
-	while (current != NULL && strcmp(current->word, "|") != 0)
+	while (current != NULL && ft_strcmp(current->word, "|") != 0)
 		current = current->next;
-	if (current != NULL && strcmp(current->word, "|") == 0)
+	if (current != NULL && ft_strcmp(current->word, "|") == 0)
 		current = current->next;
 	return (current);
 }

@@ -6,10 +6,9 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 15:50:41 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/10 19:56:08 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:16:25 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "minishell.h"
 
@@ -64,7 +63,7 @@ void	prepare_for_tokenization_word(char *str, t_list_token **data,
 
 t_token_type	check_token(char *str)
 {
-	if (strcmp(str, "|") == 0)
+	if (ft_strcmp(str, "|") == 0)
 		return (PIPE);
 	else if (str[0] == '\'' || str[0] == '\'')
 		return (QUOTE);

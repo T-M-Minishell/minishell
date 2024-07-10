@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 18:06:50 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 18:24:56 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:43:51 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,10 @@ char	*get_value_from_var(char *word, t_env_var *vars)
 	while (vars->arr[i])
 	{
 		key_from_word = get_key_from_word(vars->arr[i]);
-		if (strcmp(word, key_from_word) == 0)
+		if (ft_strcmp(word, key_from_word) == 0)
 		{
 			free(key_from_word);
-			return (strchr(vars->arr[i], '=') + 1);
+			return (ft_strchr(vars->arr[i], '=') + 1);
 		}
 		free(key_from_word);
 		i++;
@@ -93,7 +93,7 @@ t_env_var	*get_env_vars(char **envp)
 	}
 	i = -1;
 	while (envp[++i])
-		vars->arr[i] = strdup(envp[i]);
+		vars->arr[i] = ft_strdup(envp[i]);
 	vars->arr[i] = NULL;
 	vars->exit_status = 0;
 	return (vars);

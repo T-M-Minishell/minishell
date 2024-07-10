@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/22 20:37:01 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/10 19:20:49 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:40:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ char	**fill_argv(t_list_token *data, t_env_var *vars)
 	i = 0;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->word, "$?") == 0)
+		if (ft_strcmp(curr->word, "$?") == 0)
 			argv[i++] = ft_itoa(vars->exit_status);
 		else
-			argv[i++] = strdup(curr->word);
+			argv[i++] = ft_strdup(curr->word);
 		curr = curr->next;
 	}
 	argv[i] = NULL;
@@ -107,8 +107,8 @@ t_env_var	*exec_line(t_list_token *data, t_env_var *vars)
 		return (vars);
 	}
 	path = get_path(argv[0], vars);
-	if (!strcmp(argv[0], "./minishell") || !strcmp(argv[0], "minishell"))
-		path = (strdup("./minishell"));
+	if (!ft_strcmp(argv[0], "./minishell") || !ft_strcmp(argv[0], "minishell"))
+		path = (ft_strdup("./minishell"));
 	vars = check_path_fail(vars, path, argv);
 	if (vars->flag_path)
 		return (vars);

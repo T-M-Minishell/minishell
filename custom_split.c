@@ -6,12 +6,11 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 19:17:27 by tlupu             #+#    #+#             */
-/*   Updated: 2024/07/10 20:04:22 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:16:05 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 int	words_count(const char *str, char c)
 {
@@ -31,7 +30,6 @@ int	words_count(const char *str, char c)
 			p.is_word_started = true;
 		p.i++;
 	}
-	// printf("%d\n", p.quotes);
 	if (p.quotes % 2 != 0)
 		return (printf("Error: Missing end quote\n"), -1);
 	if (p.is_word_started)

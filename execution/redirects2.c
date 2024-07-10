@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 15:13:02 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 21:06:13 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ void	execute_child_process(t_list_commands_red *cmd, t_env_var *vars)
 	last_cmd = NULL;
 	while (current_cmd != NULL)
 	{
-		if ((strcmp(current_cmd->red, ">") == 0
-				|| strcmp(current_cmd->red, ">>") == 0
-				|| strcmp(current_cmd->red, "<") == 0
-				|| strcmp(current_cmd->red, "<") == 0))
+		if ((ft_strcmp(current_cmd->red, ">") == 0
+				|| ft_strcmp(current_cmd->red, ">>") == 0
+				|| ft_strcmp(current_cmd->red, "<") == 0
+				|| ft_strcmp(current_cmd->red, "<") == 0))
 			last_cmd = current_cmd;
 		current_cmd = current_cmd->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 18:46:41 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 22:12:12 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:43:51 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	mini_env(t_env_var *env_vars)
 	i = 0;
 	while (env_vars->arr[i])
 	{
-		if (strchr(env_vars->arr[i], '=') != NULL)
+		if (ft_strchr(env_vars->arr[i], '=') != NULL)
 		{
 			ft_putstr(env_vars->arr[i]);
 			ft_putstr("\n");

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/19 11:50:33 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 22:09:47 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:14:27 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	check_if_builtin(char *word)
 	num_of_builtins = sizeof(arr_of_builtins) / sizeof(arr_of_builtins[0]);
 	while (i < num_of_builtins)
 	{
-		if (strcmp(word, arr_of_builtins[i]) == 0)
+		if (ft_strcmp(word, arr_of_builtins[i]) == 0)
 		{
 			return (true);
 		}
@@ -50,7 +50,7 @@ bool	check_for_pipe_in_line(t_list_token *data)
 	is_first = true;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->word, "|") == 0)
+		if (ft_strcmp(curr->word, "|") == 0)
 		{
 			nb_of_pipes++;
 			if (is_first || last_was_pipe)
@@ -77,8 +77,9 @@ bool	check_for_redirects_in_line(t_list_token *data)
 	nb_of_redirects = 0;
 	while (data != NULL)
 	{
-		if (strcmp(data->word, ">") == 0 || strcmp(data->word, ">>") == 0
-			|| strcmp(data->word, "<") == 0 || strcmp(data->word, "<<") == 0)
+		if (ft_strcmp(data->word, ">") == 0 || ft_strcmp(data->word, ">>") == 0
+			|| ft_strcmp(data->word, "<") == 0
+			|| ft_strcmp(data->word, "<<") == 0)
 		{
 			nb_of_redirects++;
 			if (is_first || last_was_redirect)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tlupu <tlupu@student.42.fr>                +#+  +:+       +#+        */
+/*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:23:21 by tlupu             #+#    #+#             */
-/*   Updated: 2024/06/12 17:00:16 by tlupu            ###   ########.fr       */
+/*   Updated: 2024/07/10 22:46:54 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	int	i;
 
@@ -29,9 +29,11 @@ char	*ft_strchr(const char *s, int c)
 		return (NULL);
 }
 
-void 	free_arr(char **arr)
+void	free_arr(char **arr)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (arr[i] != NULL)
 	{
 		free(arr[i]);

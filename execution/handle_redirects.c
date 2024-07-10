@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 14:36:21 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 15:19:32 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	handle_redirection(t_list_commands_red *new_cmd, t_list_token **current)
 {
-	if (*current && (strcmp((*current)->word, "<") == 0
-			|| strcmp((*current)->word, ">") == 0
-			|| strcmp((*current)->word, "<<") == 0
-			|| strcmp((*current)->word, ">>") == 0))
+	if (*current && (ft_strcmp((*current)->word, "<") == 0
+			|| ft_strcmp((*current)->word, ">") == 0
+			|| ft_strcmp((*current)->word, "<<") == 0
+			|| ft_strcmp((*current)->word, ">>") == 0))
 	{
 		new_cmd->red = (*current)->word;
 		if ((*current)->next)
@@ -41,10 +41,10 @@ t_list_commands_red	*create_new_cmd(t_list_token **current)
 
 	new_cmd = initialize_new_cmd();
 	new_cmd->arr = convert_tokens_to_argv_red(*current);
-	while (*current && strcmp((*current)->word, "<") != 0
-		&& strcmp((*current)->word, ">") != 0
-		&& strcmp((*current)->word, "<<") != 0
-		&& strcmp((*current)->word, ">>") != 0)
+	while (*current && ft_strcmp((*current)->word, "<") != 0
+		&& ft_strcmp((*current)->word, ">") != 0
+		&& ft_strcmp((*current)->word, "<<") != 0
+		&& ft_strcmp((*current)->word, ">>") != 0)
 		*current = (*current)->next;
 	handle_redirection(new_cmd, current);
 	return (new_cmd);
@@ -60,7 +60,7 @@ t_list_commands_red	*build_command_list(t_list_token *data)
 	cmd_head = NULL;
 	cmd_tail = NULL;
 	current = data;
-	while (current && strcmp(current->word, "|") != 0)
+	while (current && ft_strcmp(current->word, "|") != 0)
 	{
 		new_cmd = create_new_cmd(&current);
 		if (!cmd_head)

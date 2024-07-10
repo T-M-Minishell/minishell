@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:17:35 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 15:43:50 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:14:52 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ int	count_redirects(t_list_token *data)
 	curr = data;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->word, "<") == 0 || strcmp(curr->word, ">") == 0
-			|| strcmp(curr->word, "<<") == 0 || strcmp(curr->word, ">>") == 0)
+		if (ft_strcmp(curr->word, "<") == 0 || ft_strcmp(curr->word, ">") == 0
+			|| ft_strcmp(curr->word, "<<") == 0
+			|| ft_strcmp(curr->word, ">>") == 0)
 			count++;
 		curr = curr->next;
 	}
@@ -51,9 +52,9 @@ char	**convert_tokens_to_argv_red(t_list_token *curr)
 
 	temp = curr;
 	count = 0;
-	while (temp != NULL && strcmp(temp->word, "<") != 0
-		&& strcmp(temp->word, ">") != 0
-		&& strcmp(temp->word, "<<") != 0 && strcmp(temp->word, ">>") != 0)
+	while (temp != NULL && ft_strcmp(temp->word, "<") != 0
+		&& ft_strcmp(temp->word, ">") != 0
+		&& ft_strcmp(temp->word, "<<") != 0 && ft_strcmp(temp->word, ">>") != 0)
 	{
 		count++;
 		temp = temp->next;
@@ -95,10 +96,10 @@ void	output_file(char *red, char *output_file, int is_last)
 	if (is_last)
 	{
 		flags = O_WRONLY | O_CREAT;
-		if (strcmp(red, ">>") == 0)
+		if (ft_strcmp(red, ">>") == 0)
 			flags = O_WRONLY | O_CREAT | O_APPEND;
 	}
-	if (strcmp(red, ">>") == 0 || strcmp(red, ">") == 0)
+	if (ft_strcmp(red, ">>") == 0 || ft_strcmp(red, ">") == 0)
 	{
 		fd_out = open(output_file, flags, 0644);
 		if (fd_out < 0)

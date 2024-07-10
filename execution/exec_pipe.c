@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 13:22:42 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 22:12:22 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ t_env_var	*parent_process(t_list_commands *current, int pid,
 		close(pipes[i - 1][0]);
 	if (i < vars->num_cmds - 1)
 		close(pipes[i][1]);
-	if (strcmp(current->arr[0], "cat") != 0)
+	if (ft_strcmp(current->arr[0], "cat") != 0)
 		waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		vars->exit_status = WEXITSTATUS(status);

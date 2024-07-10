@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 18:45:08 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 18:38:15 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	process_command(char **commands, int i, t_env_var *vars)
 	{
 		if (commands[i][0] == '$')
 		{
-			if (strcmp(commands[i], "$?") == 0)
+			if (ft_strcmp(commands[i], "$?") == 0)
 			{
 				print_exit_status(vars);
 				vars->exit_status = 0;

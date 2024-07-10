@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:19:12 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 21:37:51 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:43:28 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ t_env_var	*remove_env_var(char *command, t_env_var *env_vars)
 	while (env_vars->arr[++j] != NULL)
 	{
 		key = get_key_from_word(env_vars->arr[j]);
-		if (strcmp(command, key) == 0)
+		if (ft_strcmp(command, key) == 0)
 		{
 			flag = 1;
 			free(key);
@@ -46,3 +46,35 @@ t_env_var	*remove_env_var(char *command, t_env_var *env_vars)
 		env_vars = delete_env_var(env_vars, command);
 	return (env_vars);
 }
+
+void	ft_putstr(char *str)
+{
+	write (1, str, strlen(str));
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	while (*s1 && (*s1 == *s2))
+	{
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
+}
+
+// char	*ft_strchr(char *s, int c)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	c = c % 256;
+// 	while (s[i] != '\0')
+// 	{
+// 		if (s[i] == c)
+// 			return ((char *) s + i);
+// 		i++;
+// 	}
+// 	if (c == '\0')
+// 		return ((char *) s + i);
+// 	return (NULL);
+// }

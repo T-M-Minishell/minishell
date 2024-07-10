@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 13:00:41 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 15:42:47 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:40:04 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	count_nb_of_pipes(t_list_token *data)
 	curr = data;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->word, "|") == 0)
+		if (ft_strcmp(curr->word, "|") == 0)
 			nb++;
 		curr = curr->next;
 	}
@@ -37,9 +37,9 @@ char	**fill_argv_array_pipe(t_list_token *data, char **argv, int count)
 	i = 0;
 	while (i < count)
 	{
-		if (strcmp(current->word, "|") == 0)
+		if (ft_strcmp(current->word, "|") == 0)
 			break ;
-		argv[i] = strdup(current->word);
+		argv[i] = ft_strdup(current->word);
 		if (argv[i] == NULL)
 		{
 			perror("strdup");
@@ -60,7 +60,7 @@ char	**convert_tokens_to_argv(t_list_token *data)
 
 	count = 0;
 	current = data;
-	while (current != NULL && strcmp(current->word, "|") != 0)
+	while (current != NULL && ft_strcmp(current->word, "|") != 0)
 	{
 		count++;
 		current = current->next;

@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:18:10 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 22:11:35 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 23:29:07 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ typedef struct s_list_commands
 	char					*output_file;
 	int						append;
 	struct s_list_commands	*next;
-}	t_list_commands;
+}							t_list_commands;
 typedef struct s_list_commands_red
 {
 	char						**arr;
 	char						*red;
 	char						*file;
 	struct s_list_commands_red	*next;
-}	t_list_commands_red;
+}								t_list_commands_red;
 
 typedef struct s_info
 {
@@ -84,6 +84,16 @@ typedef struct s_dat
 	bool						is_word_started;
 }								t_dat;
 
+typedef struct s_ex
+{
+	int							i;
+	char						*equal_pos;
+	char						*key;
+	char						*value;
+	int							key_len;
+	int							j;
+	char						*copy;
+}								t_ex;
 // utils
 t_list_token		*ft_lstnew(char *content, t_token_type token);
 void				ft_lstadd_back(t_list_token **lst, t_list_token *new);
@@ -91,6 +101,12 @@ void				free_token_list(t_list_token **stack);
 char				*ft_strdnup(const char *s1, int n);
 bool				is_space(char *line);
 
+// builtins_new
+void				handle_command_with_equal(char **command, t_ex *params);
+void				handle_command_without_equal(char **command, t_ex *params);
+int					validate_command(char *command, t_env_var **env_vars);
+void				print_env_vars(char **commands, t_env_var *env_vars);
+void				init_ex(t_ex *param);
 // utils2
 
 t_list_token		*ft_lstnew_init(void);
@@ -101,7 +117,7 @@ char				*ft_strrchr(const char *s, int c);
 void				free_list(t_list_token *head);
 
 // utils3
-char				*ft_strchr(const char *s, int c);
+char				*ft_strchr(char *s, int c);
 char				*ft_strdnnup(const char *s1, int n);
 void				free_arr(char **arr);
 void				ft_lstrest(t_list_token *data, t_token_type token);
@@ -110,7 +126,7 @@ char				**ft_split(const char *s, char c);
 //-----------utils4
 
 t_list_token		*ft_lstlast(t_list_token *lst);
-char				*ft_strdup(const char *s1);
+char				*ft_strdup(char *s1);
 void				print_node(t_list_token *node);
 void				ft_putstr(char *str);
 char				*ft_itoa(int n);
@@ -123,6 +139,7 @@ void				handle_line(t_input *input, t_list_token *data,
 						t_env_var **env_vars);
 t_env_var			*handle_tokens_in_prompt(char **commands,
 						t_env_var **env_vars);
+void	handle_pipe_and_red(t_list_token *data, t_env_var *vars);
 
 			// -----HANDLE ENV-VARS--------
 void				free_vars(t_env_var *vars);
@@ -241,6 +258,8 @@ void				input_file(char *input_file);
 ///-----------------helper_functions---------
 void				free_exec_args(char *path, char **argv);
 t_env_var			*remove_env_var(char *command, t_env_var *env_vars);
+int					ft_strcmp(char *s1, char *s2);
+// char				*ft_strchr(char *s, int c);
 
 ///-----------------helper_functions_exec---------
 void				free_command_list(t_list_commands *cmd_head);

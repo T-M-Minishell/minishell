@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 15:20:05 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 20:58:50 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	handle_heredoc(char *delimiter)
 		buff = readline("heredoc> ");
 		if (!buff)
 			break ;
-		if (strcmp(buff, delimiter) == 0)
+		if (ft_strcmp(buff, delimiter) == 0)
 		{
 			free(buff);
 			break ;
@@ -63,21 +63,21 @@ void	fd_handeler(t_list_commands_red *current_cmd,
 {
 	while (current_cmd != NULL)
 	{
-		if (strcmp(current_cmd->red, "<") == 0)
+		if (ft_strcmp(current_cmd->red, "<") == 0)
 			input_file(current_cmd->file);
-		else if (strcmp(current_cmd->red, "<<") == 0)
+		else if (ft_strcmp(current_cmd->red, "<<") == 0)
 		{
 			handle_heredoc(current_cmd->file);
 			input_file_from_temp();
 		}
-		else if ((strcmp(current_cmd->red, ">") == 0
-				|| strcmp(current_cmd->red, ">>") == 0)
+		else if ((ft_strcmp(current_cmd->red, ">") == 0
+				|| ft_strcmp(current_cmd->red, ">>") == 0)
 			&& current_cmd == last_cmd)
 		{
 			output_file(current_cmd->red, current_cmd->file, 1);
 		}
-		else if ((strcmp(current_cmd->red, ">") == 0
-				|| strcmp(current_cmd->red, ">>") == 0)
+		else if ((ft_strcmp(current_cmd->red, ">") == 0
+				|| ft_strcmp(current_cmd->red, ">>") == 0)
 			&& current_cmd != last_cmd)
 		{
 			output_file(current_cmd->red, current_cmd->file, 0);
