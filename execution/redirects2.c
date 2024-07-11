@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/10 15:13:02 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 22:36:59 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/11 12:24:53 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	execute_child_process(t_list_commands_red *cmd, t_env_var *vars)
 		current_cmd = current_cmd->next;
 	}
 	fd_handeler(cmd, last_cmd);
-	if (cmd->arr[0] == NULL)
+	if (cmd->arr[0] == NULL && cmd->arr == NULL)
 		exit(127);
 	path = get_path(cmd->arr[0], vars);
 	check_path_fail_red(path, cmd);

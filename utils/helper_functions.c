@@ -6,7 +6,7 @@
 /*   By: msacaliu <msacaliu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:19:12 by msacaliu          #+#    #+#             */
-/*   Updated: 2024/07/10 22:43:28 by msacaliu         ###   ########.fr       */
+/*   Updated: 2024/07/11 12:28:49 by msacaliu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,20 @@ void	ft_putstr(char *str)
 
 int	ft_strcmp(char *s1, char *s2)
 {
+	if (!s1 || !s2)
+	{
+		if (s1 == s2)
+			return (0);
+		if (s1)
+			return (1);
+		return (-1);
+	}
 	while (*s1 && (*s1 == *s2))
 	{
 		s1++;
 		s2++;
 	}
-	return (*s1 - *s2);
+	return (*(unsigned char *)s1 - *(unsigned char *)s2);
 }
 
 // char	*ft_strchr(char *s, int c)
